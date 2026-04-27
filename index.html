@@ -9,64 +9,59 @@
     <style>
         /* БАЗОВЫЕ НАСТРОЙКИ И ФОН */
         body {
-            background-color: #F7F5F0; /* Цвет теплой бумаги */
+            background-color: #F7F5F0;
             background-image: radial-gradient(#d5d0c4 1px, transparent 1px);
-            background-size: 20px 20px; /* Легкая сетка/текстура */
+            background-size: 20px 20px;
             margin: 0;
             padding: 40px 20px;
             font-family: 'Cormorant Garamond', serif;
             color: #333;
             overflow-x: hidden;
+            position: relative;
+            min-height: 1500px; /* Чтобы было куда скроллить */
         }
 
         h1 {
             text-align: center;
             font-weight: 600;
             font-size: 2.5rem;
+            margin-top: 50px;
             margin-bottom: 5px;
             letter-spacing: 1px;
+            position: relative;
+            z-index: 20;
         }
         
         p.subtitle {
             text-align: center;
-            font-family: 'Caveat', cursive; /* Рукописный шрифт */
+            font-family: 'Caveat', cursive;
             font-size: 1.5rem;
             color: #666;
             margin-bottom: 50px;
+            position: relative;
+            z-index: 20;
         }
 
-        /* МУДБОРД (СЕТКА) */
-        .moodboard {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding-bottom: 100px;
-        }
-
-        /* КАРТОЧКИ ПОЛАРОИД */
+        /* КАРТОЧКИ ПОЛАРОИД (Свободное плавание) */
         .polaroid {
             background: #fff;
             padding: 15px 15px 40px 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            position: relative;
+            position: absolute; /* Теперь они не в сетке, а раскиданы по координатам */
             transition: transform 0.3s ease;
             max-width: 250px;
+            z-index: 5;
         }
 
         .polaroid:hover {
             transform: scale(1.05) !important;
-            z-index: 10;
+            z-index: 30 !important;
         }
 
-        .polaroid img {
+        .polaroid img, .polaroid video {
             width: 100%;
             height: auto;
             display: block;
-            filter: sepia(10%); /* Легкий теплый фильтр */
         }
 
         .caption {
@@ -90,229 +85,179 @@
             background: rgba(255, 255, 255, 0.4);
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             backdrop-filter: blur(2px);
-            z-index: 2;
+            z-index: 10;
         }
 
-        /* Углы наклона для эффекта хаоса */
-        .rot-left-1 { transform: rotate(-4deg); }
-        .rot-right-1 { transform: rotate(5deg); margin-top: 40px; }
-        .rot-left-2 { transform: rotate(-2deg); margin-top: -20px;}
-        .rot-right-2 { transform: rotate(6deg); }
-
-        /* ТАЙМЕР ПОМОДОРО В УГЛУ */
+        /* ТАЙМЕР ПОМОДОРО (Сворачиваемый) */
         .pomodoro-widget {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(5px);
             padding: 20px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             display: flex;
             flex-direction: column;
             align-items: center;
             z-index: 100;
             border: 1px solid #eaeaea;
+            width: 200px;
+            transition: all 0.3s ease;
+        }
+
+        /* Кнопка сворачивания */
+        .toggle-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #888;
+            padding: 0;
+            line-height: 1;
+        }
+        .toggle-btn:hover { color: #333; }
+
+        /* Класс для свернутого состояния */
+        .pomodoro-widget.collapsed {
+            padding: 10px 20px;
+            width: auto;
+            border-radius: 30px;
+        }
+        .pomodoro-widget.collapsed .clock-face {
+            width: auto; height: auto; border: none; margin: 0; background: none;
+        }
+        .pomodoro-widget.collapsed .time-display {
+            font-size: 1.2rem;
+            margin-right: 30px;
+        }
+        .pomodoro-widget.collapsed .controls,
+        .pomodoro-widget.collapsed .modes {
+            display: none; /* Прячем все кнопки режимов */
+        }
+        .pomodoro-widget.collapsed .toggle-btn {
+            top: 50%; transform: translateY(-50%); right: 15px; font-size: 1.2rem;
         }
 
         .clock-face {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 3px solid #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 15px;
-            position: relative;
-            background: #fff;
+            width: 120px; height: 120px;
+            border-radius: 50%; border: 3px solid #333;
+            display: flex; justify-content: center; align-items: center;
+            margin-bottom: 15px; margin-top: 15px; background: #fff;
         }
 
         .time-display {
-            font-size: 2rem;
-            font-weight: 600;
-            letter-spacing: 2px;
+            font-size: 2rem; font-weight: 600; letter-spacing: 2px;
         }
 
         .controls button, .modes button {
-            background: none;
-            border: 1px solid #ccc;
-            padding: 5px 12px;
-            margin: 3px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.2s;
-            font-size: 0.9rem;
+            background: none; border: 1px solid #ccc;
+            padding: 5px 12px; margin: 3px; border-radius: 15px;
+            cursor: pointer; font-family: inherit; font-size: 0.9rem;
         }
+        .controls button:hover, .modes button:hover { background: #333; color: #fff; border-color: #333;}
 
-        .controls button:hover, .modes button:hover {
-            background: #333;
-            color: #fff;
-            border-color: #333;
-        }
-
-        .modes {
-            margin-top: 10px;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-        }
-
+        .modes { margin-top: 10px; display: flex; flex-direction: column; width: 100%; }
         .modes button {
-            font-family: 'Caveat', cursive;
-            font-size: 1.2rem;
-            border: none;
-            border-bottom: 1px dashed #ccc;
-            border-radius: 0;
+            font-family: 'Caveat', cursive; font-size: 1.2rem;
+            border: none; border-bottom: 1px dashed #ccc; border-radius: 0;
         }
-        
-        .modes button:hover {
-            background: none;
-            color: #8C6239; /* Терракотовый цвет при наведении */
-        }
+        .modes button:hover { background: none; color: #8C6239; }
 
-        /* СТИЛИ ДЛЯ ВИДЕО-КАРТОЧКИ */
-        .video-wrapper {
-            position: relative;
-            cursor: pointer;
-        }
-
-        .polaroid video {
-            width: 100%;
-            height: auto;
-            display: block;
-            background: #000;
-        }
-
-        /* Эстетичная кнопка Play по центру */
-        .play-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-            z-index: 5;
-        }
-
-        /* Треугольник внутри кнопки */
-        .play-button::after {
-            content: '';
-            width: 0; 
-            height: 0; 
-            border-top: 10px solid transparent;
-            border-bottom: 10px solid transparent;
-            border-left: 15px solid #333;
-            margin-left: 4px; /* визуальное выравнивание */
-        }
-
-        .video-wrapper:hover .play-button {
-            background: #fff;
-            transform: translate(-50%, -50%) scale(1.1);
-        }
         /* СВОБОДНЫЕ ЭЛЕМЕНТЫ (без рамок) */
         .scrap-item {
-            position: relative;
-            max-width: 220px; /* Размер можно менять прямо в HTML */
-            /* Тень, которая обтекает прозрачный PNG по контуру! */
-            filter: drop-shadow(2px 5px 8px rgba(0,0,0,0.15)); 
-            transition: transform 0.3s ease;
-            z-index: 2;
-        }
-
-        .scrap-item img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .scrap-item:hover {
-            transform: scale(1.05) !important;
-            z-index: 10;
-        }
-
-        /* МАГИЯ ДЛЯ РИСУНКОВ ТУШЬЮ ИЛИ ПЯТЕН */
-        .blend-mode {
-            /* Этот режим убирает белый фон у картинок и "впечатывает" их в бумагу сайта */
-            mix-blend-mode: multiply; 
-            filter: none; /* Для рисунков тень не нужна */
-            opacity: 0.8;
-            z-index: 0; /* Кладем их на задний план, под фото */
-        }
-        
-        /* Класс для абсолютного позиционирования (чтобы кинуть картинку поверх других) */
-        .float-free {
             position: absolute;
+            z-index: 2;
+            filter: drop-shadow(2px 5px 8px rgba(0,0,0,0.15));
+            transition: transform 0.3s ease;
         }
+        .scrap-item img { width: 100%; height: auto; display: block; }
+        .scrap-item:hover { transform: scale(1.05) !important; z-index: 30 !important; }
 
+                /* МАГИЯ ДЛЯ РИСУНКОВ ТУШЬЮ ИЛИ ПЯТЕН */
+        .blend-mode {
+            position: absolute; /* ОБЯЗАТЕЛЬНО absolute, чтобы скроллился с бумагой */
+            mix-blend-mode: multiply; 
+            filter: none; 
+            opacity: 0.7;
+            z-index: 0; /* Строго под всеми фото */
+            pointer-events: none; /* Чтобы мышка проваливалась сквозь рисунок */
+        }
     </style>
 </head>
 <body>
 
-     <!-- Скетч, "нарисованный" в верхнем правом углу бумаги -->
-    <div class="scrap-item blend-mode rot-left-1" style="position: absolute; top: 40px; right: 50px; width: 200px; z-index: 0; pointer-events: none;">
+     <!-- РИСУНКИ ТУШЬЮ (ФОНОВЫЕ). Они "впитаны" в бумагу и уезжают при скролле -->
+    <div class="blend-mode" style="top: 50px; right: 10%; width: 250px; transform: rotate(-5deg);">
         <img src="DROW_19.png" alt="Скетч">
     </div>
+    
+    <div class="blend-mode" style="top: 800px; left: 5%; width: 180px; transform: rotate(10deg);">
+        <img src="DROW_19.png" alt="Скетч 2">
+    </div>
 
+    <!-- ЗАГОЛОВКИ -->
     <h1>Наш мир</h1>
     <p class="subtitle">Место, где математический план встречается с творческим хаосом</p>
 
-    <!-- МУДБОРД (Добавляй сюда свои карточки) -->
-    <div class="moodboard">
-        
-        <!-- Карточка 1 -->
-        <div class="polaroid rot-left-1">
-            <div class="tape" style="transform: translateX(-50%) rotate(-2deg);"></div>
-            <!-- ЗАМЕНИ ССЫЛКУ НА СВОЕ ФОТО -->
-            <img src="pictures_7.png">
-            <div class="caption">Рабочий стол Дани</div>
-        </div>
 
-        <!-- Карточка 2 -->
-        <div class="polaroid rot-right-1">
-            <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
-            <img src="pictures_9.png" alt="Рисунки">
-            <div class="caption">Рабочий стол Эвелины</div>
-        </div>
+    <!-- ХАОТИЧНЫЕ КАРТОЧКИ (Раскиданы по экрану с помощью top и left) -->
+    
+    <!-- Карточка 1 (Слева сверху) -->
+    <div class="polaroid" style="top: 200px; left: 10%; transform: rotate(-4deg);">
+        <div class="tape" style="transform: translateX(-50%) rotate(-2deg);"></div>
+        <img src="pictures_7.png" alt="Стол Дани">
+        <div class="caption">Рабочий стол Дани</div>
+    </div>
 
-        <!-- Карточка 3 -->
-        <div class="polaroid rot-left-2">
-            <div class="tape" style="transform: translateX(-50%) rotate(-1deg);"></div>
-            <img src="pictures_24.png" alt="Пейзаж Стамбула">
-            <div class="caption">Невероятные дни в Самбуле</div>
-        </div>
+    <!-- Карточка 2 (Справа сверху, чуть ниже) -->
+    <div class="polaroid" style="top: 250px; right: 15%; transform: rotate(5deg);">
+        <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
+        <img src="pictures_9.png" alt="Стол Эвелины">
+        <div class="caption">Рабочий стол Эвелины</div>
+    </div>
 
-        <!-- Карточка 4 -->
-        <div class="polaroid rot-right-2">
-            <div class="tape" style="transform: translateX(-50%) rotate(-4deg);"></div>
-            <img src="pictures_8.png" alt="Испачканые руки">
-            <div class="caption">Максимум 2 серии!</div>
-        </div>
+    <!-- Билет в Стамбул (Между карточками по центру) -->
+    <div class="scrap-item" style="top: 450px; left: 45%; width: 180px; transform: rotate(12deg); z-index: 2;">
+        <img src="PNG_8.png" alt="Билет">
+    </div>
 
-   <div class="polaroid rot-left-1">
-    <!-- Удалили обертку video-wrapper и хитрый скрипт с кнопкой Play, 
-         чтобы точно работало на всех устройствах -->
-    <video 
-        src="VIDEO_4.mp4" 
-        poster="pictures_25.png" 
-        controls 
-        playsinline 
-        style="width: 100%; max-height: 400px; object-fit: cover; background: #000;">
-    </video>
-    <div class="caption">Глазами оператора</div>
-</div>
+    <!-- Карточка 3 (Слева по центру) -->
+    <div class="polaroid" style="top: 600px; left: 20%; transform: rotate(-2deg); z-index: 6;">
+        <div class="tape" style="transform: translateX(-50%) rotate(-1deg);"></div>
+        <img src="pictures_24.png" alt="Стамбул">
+        <div class="caption">Невероятные дни в Стамбуле</div>
+    </div>
 
-    <!-- ВИДЖЕТ ТАЙМЕРА -->
-    <div class="pomodoro-widget">
+    <!-- Карточка 4 (Видео, по центру справа) -->
+    <div class="polaroid" style="top: 650px; right: 25%; transform: rotate(4deg); z-index: 7;">
+        <div class="tape" style="transform: translateX(-50%) rotate(2deg);"></div>
+        <video src="VIDEO_4.mp4" poster="pictures_25.png" controls playsinline style="width: 100%; max-height: 400px; object-fit: cover; background: #000;"></video>
+        <div class="caption">Глазами оператора</div>
+    </div>
+
+    <!-- Засушенный цветок (Наехал на видео снизу) -->
+    <div class="scrap-item" style="top: 900px; right: 35%; width: 120px; transform: rotate(-15deg); z-index: 10;">
+        <img src="PNG_4.png" alt="Цветок">
+    </div>
+
+    <!-- Карточка 5 (Внизу по центру) -->
+    <div class="polaroid" style="top: 1050px; left: 40%; transform: rotate(-6deg);">
+        <div class="tape" style="transform: translateX(-50%) rotate(-4deg);"></div>
+        <img src="pictures_8.png" alt="Испачканые руки">
+        <div class="caption">Максимум 2 серии!</div>
+    </div>
+
+
+    <!-- ВИДЖЕТ ТАЙМЕРА (Сворачиваемый) -->
+    <div class="pomodoro-widget" id="timer-widget">
+        <!-- Кнопка свернуть/развернуть -->
+        <button class="toggle-btn" onclick="toggleTimer()">−</button>
+
         <div class="clock-face">
             <div class="time-display" id="time-display">55:00</div>
         </div>
@@ -326,34 +271,30 @@
         <div class="modes">
             <button onclick="setMode(55)">Режим: Даня (50м)</button>
             <button onclick="setMode(5)">Перерыв на поцелуй (5м)</button>
-            <button onclick="setMode(30)">Ражим: Эвелина (30м)</button>
+            <button onclick="setMode(30)">Режим: Эвелина (30м)</button>
             <button onclick="setMode(90)">Глубокая концентрация (90м)</button>
         </div>
-
-        <!-- Билет в Стамбул или Выборг -->
-        <div class="scrap-item rot-right-2" style="width: 180px;">
-            <img src="PNG_8.png" alt="Билет">
-        </div>
-
-        <!-- Записка от руки или набросок скалы -->
-        <div class="scrap-item blend-mode rot-left-1" style="width: 200px; top: 30px; right: 40px;">
-            <img src="DROW_19.png" alt="Скетч">
-        </div>
-
-        <!-- Засушенный цветок, случайно упавший слева вверху -->
-        <div class="scrap-item float-free" style="top: 50px; left: 10%; width: 120px; transform: rotate(-15deg);">
-            <img src="PNG_4.png" alt="Красная зацепка">
-        </div>
-
     </div>
 
-    <!-- ЛОГИКА ТАЙМЕРА -->
+    <!-- ЛОГИКА ТАЙМЕРА И СВОРАЧИВАНИЯ -->
     <script>
-        let timeLeft = 55 * 60; // По умолчанию 55 минут
+        let timeLeft = 55 * 60;
         let timerId = null;
         let initialTime = 55 * 60;
 
         const display = document.getElementById('time-display');
+        const widget = document.getElementById('timer-widget');
+        const toggleBtn = document.querySelector('.toggle-btn');
+
+        // Функция сворачивания/разворачивания виджета
+        function toggleTimer() {
+            widget.classList.toggle('collapsed');
+            if (widget.classList.contains('collapsed')) {
+                toggleBtn.innerHTML = '+'; // Меняем минус на плюс
+            } else {
+                toggleBtn.innerHTML = '−'; // Меняем обратно
+            }
+        }
 
         function updateDisplay() {
             let minutes = Math.floor(timeLeft / 60);
@@ -394,24 +335,14 @@
             initialTime = minutes * 60;
             timeLeft = initialTime;
             updateDisplay();
-        }
-
-        // Инициализация при загрузке
-        updateDisplay();
-        // Функция для запуска/паузы видео в карточках
-        function toggleVideo(wrapper) {
-            const video = wrapper.querySelector('video');
-            const playBtn = wrapper.querySelector('.play-button');
-
-            if (video.paused) {
-                video.play();
-                video.setAttribute('controls', 'true'); // Включаем ползунок времени и звук
-                playBtn.style.display = 'none'; // Прячем кнопку Play
-            } else {
-                video.pause();
-                playBtn.style.display = 'flex'; // Возвращаем кнопку Play
+            
+            // Если таймер был свернут, разворачиваем его, чтобы показать, что режим сменился
+            if (widget.classList.contains('collapsed')) {
+                toggleTimer();
             }
         }
+
+        updateDisplay();
     </script>
 </body>
 </html>
