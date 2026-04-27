@@ -269,27 +269,27 @@
             <div class="tape" style="transform: translateX(-50%) rotate(-2deg);"></div>
             <!-- ЗАМЕНИ ССЫЛКУ НА СВОЕ ФОТО -->
             <img src="pictures_7.png">
-            <div class="caption">Твой рабочий стол</div>
+            <div class="caption">Рабочий стол Дани</div>
         </div>
 
         <!-- Карточка 2 -->
         <div class="polaroid rot-right-1">
             <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
-            <img src="https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Кофе">
-            <div class="caption">Банан в овсянке</div>
+            <img src="pictures_9.png" alt="Рисунки">
+            <div class="caption">Рабочий стол Эвелины</div>
         </div>
 
         <!-- Карточка 3 -->
         <div class="polaroid rot-left-2">
             <div class="tape" style="transform: translateX(-50%) rotate(-1deg);"></div>
-            <img src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Билет">
-            <div class="caption">Стамбул. Мечты сбываются</div>
+            <img src="pictures_24.png" alt="Пейзаж Стамбула">
+            <div class="caption">Невероятные дни в Самбуле</div>
         </div>
 
         <!-- Карточка 4 -->
         <div class="polaroid rot-right-2">
             <div class="tape" style="transform: translateX(-50%) rotate(-4deg);"></div>
-            <img src="https://images.unsplash.com/photo-1522093007474-d86e9bf7ba6f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Париж">
+            <img src="pictures_8" alt="Испачканые руки">
             <div class="caption">Максимум 2 серии!</div>
         </div>
 
@@ -305,21 +305,21 @@
                   src="" - это ссылка на само видео (.mp4).
                 -->
                 <video 
-                    poster="https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" 
-                    src="https://www.w3schools.com/html/mov_bbb.mp4" 
+                    poster="pictures_25.png" 
+                    src="VIDEO_2mp4" 
                     preload="none"
                     playsinline>
                 </video>
                 <div class="play-button"></div>
             </div>
             
-            <div class="caption">Глазами моего лучшего оператора</div>
+            <div class="caption">Зимние радости</div>
         </div>
 
     <!-- ВИДЖЕТ ТАЙМЕРА -->
     <div class="pomodoro-widget">
         <div class="clock-face">
-            <div class="time-display" id="time-display">25:00</div>
+            <div class="time-display" id="time-display">55:00</div>
         </div>
         
         <div class="controls">
@@ -329,34 +329,34 @@
         </div>
 
         <div class="modes">
-            <button onclick="setMode(25)">Режим: Даня (Фокус 25м)</button>
+            <button onclick="setMode(55)">Режим: Даня (50м)</button>
             <button onclick="setMode(5)">Перерыв на поцелуй (5м)</button>
-            <button onclick="setMode(50)">Пишем курсовую (50м)</button>
-            <button onclick="setMode(90)">Кино на шведском (90м)</button>
+            <button onclick="setMode(30)">Ражим: Эвелина (30м)</button>
+            <button onclick="setMode(90)">Глубокая концентрация (90м)</button>
         </div>
 
         <!-- Билет в Стамбул или Выборг -->
         <div class="scrap-item rot-right-2" style="width: 180px;">
-            <img src="ссылка_на_твой_билет.png" alt="Билет">
+            <img src="PNG_8.png" alt="Билет">
         </div>
 
         <!-- Записка от руки или набросок скалы -->
         <div class="scrap-item blend-mode rot-left-1" style="width: 200px;">
-            <img src="ссылка_на_набросок_на_белом_фоне.jpg" alt="Скетч">
+            <img src="DROW_19.png" alt="Скетч">
         </div>
 
         <!-- Засушенный цветок, случайно упавший слева вверху -->
         <div class="scrap-item float-free" style="top: 50px; left: 10%; width: 120px; transform: rotate(-15deg);">
-            <img src="ссылка_на_осибану_или_цветок.png" alt="Цветок">
+            <img src="PNG_4.png" alt="Цветок">
         </div>
 
     </div>
 
     <!-- ЛОГИКА ТАЙМЕРА -->
     <script>
-        let timeLeft = 25 * 60; // По умолчанию 25 минут
+        let timeLeft = 55 * 60; // По умолчанию 55 минут
         let timerId = null;
-        let initialTime = 25 * 60;
+        let initialTime = 55 * 60;
 
         const display = document.getElementById('time-display');
 
