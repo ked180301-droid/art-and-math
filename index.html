@@ -293,28 +293,18 @@
             <div class="caption">Максимум 2 серии!</div>
         </div>
 
-    </div>
-        <!-- ВИДЕО-КАРТОЧКА -->
-        <div class="polaroid rot-left-1">
-            <div class="tape" style="transform: translateX(-50%) rotate(2deg);"></div>
-            
-            <!-- Обертка для видео -->
-            <div class="video-wrapper" onclick="toggleVideo(this)">
-                <!-- 
-                  poster="" - это обложка (фото), которая видна до нажатия.
-                  src="" - это ссылка на само видео (.mp4).
-                -->
-                <video 
-                    poster="pictures_25.png" 
-                    src="VIDEO_2.mp4" 
-                    preload="none"
-                    playsinline>
-                </video>
-                <div class="play-button"></div>
-            </div>
-            
-            <div class="caption">Зимние радости</div>
-        </div>
+   <div class="polaroid rot-left-1">
+    <!-- Удалили обертку video-wrapper и хитрый скрипт с кнопкой Play, 
+         чтобы точно работало на всех устройствах -->
+    <video 
+        src="VIDEO_4.mp4" 
+        poster="pictures_25.png" 
+        controls 
+        playsinline 
+        style="width: 100%; max-height: 400px; object-fit: cover; background: #000;">
+    </video>
+    <div class="caption">Глазами оператора</div>
+</div>
 
     <!-- ВИДЖЕТ ТАЙМЕРА -->
     <div class="pomodoro-widget">
