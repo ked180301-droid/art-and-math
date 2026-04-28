@@ -47,6 +47,23 @@
             position: relative;
             z-index: 20;
         }
+        .reset-board-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            border: 1px solid #ccc;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-family: 'Caveat', cursive;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .reset-board-btn:hover { background: #333; color: #fff; }
 
         /* ========================================= */
         /* КАРТОЧКИ ПОЛАРОИД И СКРАП-ЭЛЕМЕНТЫ        */
@@ -270,6 +287,8 @@
 </head>
 <body>
 
+    <button class="reset-board-btn" onclick="resetBoard()">✨ Вернуть как было</button>
+    
     <!-- РИСУНКИ ТУШЬЮ (ФОНОВЫЕ) -->
     <div class="blend-mode" style="top: 200px; right: 10%; width: 180px; transform: rotate(-5deg);"><img src="DROW_190.png" loading="lazy" alt="график"></div>
     <div class="blend-mode" style="top: 500px; left: 8%; width: 220px; transform: rotate(10deg);"><img src="DROW_40.png" loading="lazy" alt="Стамбул"></div>
@@ -598,7 +617,115 @@
         allVideos.forEach(video => {
             video.addEventListener('ended', function() {
                 this.load(); // Возвращает видео к исходному состоянию (постеру)
+
+        function resetBoard() {
+            if(confirm("Вернуть все карточки на исходные места?")) {
+                localStorage.removeItem('moodboard_positions');
+                location.reload(); // Перезагружает страницу
+            }
+        }
             });
+        });
+    </script>
+        <!-- ========================================= -->
+    <!-- СКРИПТ ДЛЯ ПЕРЕТАСКИВАНИЯ И СОХРАНЕНИЯ    -->
+    <!-- ========================================= -->
+    <script>
+        const draggables = document.querySelectorAll('.polaroid, .scrap-item');
+        
+        // 1. Достаем сохраненные координаты из памяти браузера
+        let savedPositions = JSON.parse(localStorage.getItem('moodboard_positions')) || {};
+
+        draggables.forEach((el, index) => {
+            // Даем каждому элементу уникальный ID
+            const id = 'drag-item-' + index;
+            el.id = id;
+
+            // Меняем курсор мыши, чтобы было понятно, что карточку можно взять
+            el.style.cursor = 'grab';
+
+            // 2. Если для этой карточки есть сохраненная позиция — применяем её
+            if (savedPositions[id]) {
+                el.style.setProperty('left', savedPositions[id].left, 'important');
+                el.style.setProperty('top', savedPositions[id].top, 'important');
+                el.style.setProperty('right', 'auto', 'important'); 
+                el.style.setProperty('margin', '0', 'important'); 
+            }
+
+            // Переменные для "физики" перетаскивания
+            let isDragging = false;
+            let startX, startY, initialLeft, initialTop;
+
+            // Слушаем нажатие мышки (компьютер) или касание пальцем (телефон)
+            el.addEventListener('mousedown', startDrag);
+            el.addEventListener('touchstart', startDrag, {passive: false});
+
+            function startDrag(e) {
+                // ИСКЛЮЧЕНИЕ: Если мы кликнули на видео или плеер — не тащим (иначе не сможем нажать Play)
+                if (e.target.tagName.toLowerCase() === 'video' || e.target.tagName.toLowerCase() === 'button') return;
+
+                e.preventDefault();
+                isDragging = true;
+                el.style.cursor = 'grabbing';
+                
+                // Выводим карточку поверх остальных, пока тащим
+                el.style.zIndex = 1000;
+
+                // Определяем координаты клика (мышь или палец)
+                const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+                const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+
+                startX = clientX;
+                startY = clientY;
+                
+                initialLeft = el.offsetLeft;
+                initialTop = el.offsetTop;
+
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('touchmove', drag, {passive: false});
+                document.addEventListener('mouseup', stopDrag);
+                document.addEventListener('touchend', stopDrag);
+            }
+
+            function drag(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+
+                const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+                const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+
+                const dx = clientX - startX;
+                const dy = clientY - startY;
+
+                // Перемещаем элемент за мышкой/пальцем
+                const newLeft = (initialLeft + dx) + 'px';
+                const newTop = (initialTop + dy) + 'px';
+
+                el.style.setProperty('left', newLeft, 'important');
+                el.style.setProperty('top', newTop, 'important');
+                el.style.setProperty('right', 'auto', 'important');
+            }
+
+            function stopDrag() {
+                if (!isDragging) return;
+                isDragging = false;
+                el.style.cursor = 'grab';
+
+                // Опускаем элемент обратно (но оставляем чуть выше остальных)
+                el.style.zIndex = 50;
+
+                // 3. СОХРАНЯЕМ новую позицию в память браузера!
+                savedPositions[id] = {
+                    left: el.style.left,
+                    top: el.style.top
+                };
+                localStorage.setItem('moodboard_positions', JSON.stringify(savedPositions));
+
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('touchmove', drag);
+                document.removeEventListener('mouseup', stopDrag);
+                document.removeEventListener('touchend', stopDrag);
+            }
         });
     </script>
 </body>
