@@ -86,14 +86,16 @@
         .tape {
             position: absolute;
             top: -10px;
-            left: 50%;
+            left: 0;
+            right: 0;
+            margin: 0 auto; /* Вот эта магия теперь центрирует скотч железобетонно */
             width: 80px;
             height: 25px;
             background: rgba(255, 255, 255, 0.4);
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             backdrop-filter: blur(2px);
             z-index: 10;
-            transform: translateX(-50%);
+            /* Строчку transform отсюда убрали, чтобы она не мешала наклонам */
         }
 
         .scrap-item {
