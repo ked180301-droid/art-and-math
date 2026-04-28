@@ -10,6 +10,10 @@
         /* ========================================= */
         /* БАЗОВЫЕ НАСТРОЙКИ И ФОН                   */
         /* ========================================= */
+        html {
+            overflow-x: hidden; /* Жестко отрезаем пустоту по бокам на телефонах */
+        }
+        
         body {
             background-color: #F7F5F0;
             background-image: radial-gradient(#d5d0c4 1px, transparent 1px);
@@ -189,14 +193,13 @@
             display: flex; justify-content: center; align-items: center;
         }
 
-
         /* ========================================= */
         /* АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ (МОБИЛЬНАЯ ЛЕНТА) */
         /* ========================================= */
         @media screen and (max-width: 768px) {
             body {
                 min-height: auto;
-                padding: 20px 10px 100px 10px;
+                padding: 20px 10px 120px 10px; /* Отступ снизу больше, чтобы кнопка таймера не закрывала фото */
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -226,29 +229,38 @@
             .blend-mode:nth-of-type(7) { top: 4300px !important; }
 
             /* ========================================= */
-            /* ТАЙМЕР НА ТЕЛЕФОНЕ (ИСПРАВЛЕНО)           */
+            /* ТАЙМЕР НА ТЕЛЕФОНЕ (ЖЕЛЕЗНЫЙ ЦЕНТР)       */
             /* ========================================= */
             
-            /* Свернутое состояние (круглая кнопка висит справа внизу) */
+            /* Свернутое состояние (Огромная кнопка ровно внизу по центру) */
             .pomodoro-widget.collapsed {
-                width: 60px !important;
-                height: 60px !important;
-                bottom: 20px !important; 
-                right: 20px !important; 
-                left: auto !important;
-                transform: none !important;
+                width: 75px !important;
+                height: 75px !important;
+                bottom: 25px !important; 
+                left: 50% !important; 
+                right: auto !important;
+                transform: translateX(-50%) !important; /* Идеальный центр */
+                box-shadow: 0 5px 20px rgba(0,0,0,0.25) !important;
+                background: #fff !important;
+                border: 2px solid #eaeaea !important;
+            }
+            
+            /* Делаем саму иконку внутри кнопки огромной */
+            .pomodoro-widget.collapsed .btn-maximize {
+                font-size: 2.8rem !important; 
             }
 
-            /* Развернутое состояние (Жестко центрируем по экрану) */
+            /* Развернутое состояние (Меню ровно по центру) */
             .pomodoro-widget:not(.collapsed) {
                 width: 90% !important; 
                 max-width: 350px !important;
-                bottom: 20px !important;
+                bottom: 25px !important;
                 left: 50% !important;
                 right: auto !important;
-                transform: translateX(-50%) !important; /* Эта команда ровно ставит окно по центру */
-                border-radius: 20px !important;
+                transform: translateX(-50%) !important;
+                border-radius: 25px !important;
                 padding: 20px !important;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.3) !important;
             }
         }
     </style>
