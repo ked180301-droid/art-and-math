@@ -185,6 +185,106 @@
             z-index: 0; 
             pointer-events: none; 
         }
+                /* ========================================= */
+        /* АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ (МЕДИАЗАПРОСЫ)    */
+        /* ========================================= */
+        @media screen and (max-width: 768px) {
+            /* 1. Отменяем огромную высоту и делаем обертку для ленты */
+            body {
+                min-height: auto;
+                padding: 20px 10px 100px 10px; /* Отступ снизу для таймера */
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            /* 2. Заголовки */
+            h1 { font-size: 2rem; margin-top: 20px; }
+            p.subtitle { font-size: 1.2rem; margin-bottom: 30px; }
+
+            /* 3. Отменяем абсолютное позиционирование для карточек и деталей */
+            .polaroid, .scrap-item {
+                position: relative !important; /* Отменяем absolute */
+                top: auto !important; /* Сбрасываем все твои координаты top */
+                left: auto !important; /* Сбрасываем left */
+                right: auto !important; /* Сбрасываем right */
+                margin-bottom: 30px; /* Расстояние между карточками в ленте */
+                max-width: 90%; /* Чтобы не вылезали за края экрана */
+            }
+
+            /* Немного уменьшаем ширину билетов и цветов */
+            .scrap-item {
+                max-width: 120px !important;
+                margin-bottom: 20px;
+            }
+
+            /* 4. Рисунки тушью (DROW) оставляем абсолютными, 
+               но сбрасываем координаты, чтобы они равномерно распределились по фону */
+            .blend-mode {
+                position: absolute !important;
+                left: -10% !important; /* Прячем их частично за край экрана */
+                right: auto !important;
+                width: 150px !important;
+            }
+            /* Разносим фоновые рисунки по высоте ленты */
+            .blend-mode:nth-of-type(1) { top: 200px !important; }
+            .blend-mode:nth-of-type(2) { top: 800px !important; left: auto !important; right: -10% !important; }
+            .blend-mode:nth-of-type(3) { top: 1500px !important; }
+            .blend-mode:nth-of-type(4) { top: 2200px !important; left: auto !important; right: -10% !important; }
+            .blend-mode:nth-of-type(5) { top: 2900px !important; }
+            .blend-mode:nth-of-type(6) { top: 3500px !important; left: auto !important; right: -10% !important; }
+            .blend-mode:nth-of-type(7) { top: 4200px !important; }
+            .blend-mode:nth-of-type(8) { top: 4800px !important; left: auto !important; right: -10% !important; }
+
+            /* 5. Таймер Помодоро (Делаем его компактным внизу экрана) */
+            .pomodoro-widget {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                width: auto;
+                padding: 10px;
+                flex-direction: row; /* Выстраиваем элементы в строку */
+                justify-content: space-between;
+                border-radius: 15px;
+            }
+
+            /* Скрываем всё лишнее, оставляем только часы и кнопку сворачивания */
+            .pomodoro-widget .clock-face {
+                width: auto; height: auto; border: none; margin: 0; background: none;
+            }
+            .pomodoro-widget .time-display {
+                font-size: 1.5rem;
+                margin: 0;
+            }
+            .pomodoro-widget .controls, .pomodoro-widget .modes {
+                display: none; /* Прячем кнопки на телефоне (развернет, если надо) */
+            }
+            
+            /* Кнопка открытия таймера */
+            .toggle-btn {
+                position: relative;
+                top: auto;
+                right: auto;
+            }
+
+            /* 6. Поведение развернутого таймера на телефоне */
+            .pomodoro-widget:not(.collapsed) {
+                flex-direction: column;
+                bottom: 0; left: 0; right: 0;
+                border-radius: 20px 20px 0 0;
+                padding: 20px;
+            }
+            .pomodoro-widget:not(.collapsed) .controls, 
+            .pomodoro-widget:not(.collapsed) .modes {
+                display: flex;
+            }
+            .pomodoro-widget:not(.collapsed) .toggle-btn {
+                position: absolute; top: 15px; right: 20px;
+            }
+            .pomodoro-widget:not(.collapsed) .clock-face {
+                width: 100px; height: 100px; border: 3px solid #333; margin: 10px 0;
+            }
+        }
     </style>
 </head>
 <body>
