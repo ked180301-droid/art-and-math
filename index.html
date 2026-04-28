@@ -543,6 +543,13 @@
         }
 
         updateDisplay();
+                // Автоматический возврат обложки (постера) после окончания видео
+        const allVideos = document.querySelectorAll('video');
+        allVideos.forEach(video => {
+            video.addEventListener('ended', function() {
+                this.load(); // Эта команда сбрасывает плеер в исходное состояние с обложкой
+            });
+        });
     </script>
 </body>
 </html>
