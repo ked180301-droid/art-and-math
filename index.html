@@ -236,55 +236,103 @@
             .blend-mode:nth-of-type(7) { top: 4200px !important; }
             .blend-mode:nth-of-type(8) { top: 4800px !important; left: auto !important; right: -10% !important; }
 
-            /* 5. Таймер Помодоро (Делаем его компактным внизу экрана) */
+                       /* 5. Таймер Помодоро (Мобильная плашка) */
             .pomodoro-widget {
-                bottom: 10px;
-                right: 10px;
-                left: 10px;
-                width: auto;
-                padding: 10px;
-                flex-direction: row; /* Выстраиваем элементы в строку */
-                justify-content: space-between;
-                border-radius: 15px;
+                bottom: 20px !important;
+                right: 20px !important;
+                left: auto !important;
+                width: 60px !important; /* Делаем его маленьким круглым значком */
+                height: 60px !important;
+                padding: 0 !important;
+                border-radius: 50% !important; /* Круглая кнопка */
+                flex-direction: row !important;
+                justify-content: center !important;
+                align-items: center !important;
+                overflow: hidden; /* Обрезаем всё лишнее */
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+                z-index: 999 !important;
             }
 
-            /* Скрываем всё лишнее, оставляем только часы и кнопку сворачивания */
-            .pomodoro-widget .clock-face {
-                width: auto; height: auto; border: none; margin: 0; background: none;
-            }
-            .pomodoro-widget .time-display {
-                font-size: 1.5rem;
-                margin: 0;
-            }
-            .pomodoro-widget .controls, .pomodoro-widget .modes {
-                display: none; /* Прячем кнопки на телефоне (развернет, если надо) */
-            }
-            
-            /* Кнопка открытия таймера */
-            .toggle-btn {
-                position: relative;
-                top: auto;
-                right: auto;
+            /* Скрываем всё содержимое таймера по умолчанию на телефоне */
+            .pomodoro-widget .clock-face,
+            .pomodoro-widget .time-display,
+            .pomodoro-widget .controls,
+            .pomodoro-widget .modes {
+                display: none !important;
             }
 
-            /* 6. Поведение развернутого таймера на телефоне */
+            /* Кнопка сворачивания становится кнопкой ОТКРЫТИЯ (иконка таймера) */
+            .pomodoro-widget .toggle-btn {
+                position: static !important;
+                font-size: 1.8rem !important;
+                width: 100% !important;
+                height: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                color: #333 !important;
+            }
+            .pomodoro-widget .toggle-btn::before {
+                content: '⏱'; /* Иконка секундомера для закрытого состояния */
+            }
+
+            /* 6. Поведение РАЗВЕРНУТОГО таймера на телефоне */
             .pomodoro-widget:not(.collapsed) {
-                flex-direction: column;
-                bottom: 0; left: 0; right: 0;
-                border-radius: 20px 20px 0 0;
-                padding: 20px;
+                width: 90% !important; /* Занимает почти всю ширину, но не вылезает */
+                max-width: 320px !important; /* Ограничиваем максимальную ширину */
+                height: auto !important;
+                bottom: 20px !important;
+                right: 5% !important;
+                left: 5% !important;
+                margin: 0 auto !important;
+                border-radius: 20px !important;
+                padding: 20px !important;
+                flex-direction: column !important;
+                align-items: center !important;
             }
-            .pomodoro-widget:not(.collapsed) .controls, 
-            .pomodoro-widget:not(.collapsed) .modes {
-                display: flex;
-            }
-            .pomodoro-widget:not(.collapsed) .toggle-btn {
-                position: absolute; top: 15px; right: 20px;
-            }
+
+            /* Возвращаем элементы при разворачивании */
             .pomodoro-widget:not(.collapsed) .clock-face {
-                width: 100px; height: 100px; border: 3px solid #333; margin: 10px 0;
+                display: flex !important;
+                width: 100px !important;
+                height: 100px !important;
+                border: 3px solid #333 !important;
+                margin: 10px 0 !important;
             }
-        }
+            .pomodoro-widget:not(.collapsed) .time-display {
+                display: block !important;
+                font-size: 1.8rem !important;
+            }
+            .pomodoro-widget:not(.collapsed) .controls,
+            .pomodoro-widget:not(.collapsed) .modes {
+                display: flex !important;
+                width: 100% !important;
+            }
+
+            /* Уменьшаем шрифты кнопок, чтобы они влезли */
+            .pomodoro-widget:not(.collapsed) .controls button {
+                font-size: 0.8rem !important;
+                padding: 5px 8px !important;
+            }
+            .pomodoro-widget:not(.collapsed) .modes button {
+                font-size: 1rem !important;
+                white-space: normal !important; /* Разрешаем тексту кнопок переноситься на 2 строки */
+                line-height: 1.2 !important;
+                padding: 8px 0 !important;
+            }
+
+            /* Крестик закрытия */
+            .pomodoro-widget:not(.collapsed) .toggle-btn {
+                position: absolute !important;
+                top: 10px !important;
+                right: 15px !important;
+                width: auto !important;
+                height: auto !important;
+                font-size: 1.5rem !important;
+            }
+            .pomodoro-widget:not(.collapsed) .toggle-btn::before {
+                content: '×'; /* Иконка крестика для открытого состояния */
+            }
     </style>
 </head>
 <body>
@@ -557,8 +605,8 @@
   
 
     <!-- ВИДЖЕТ ТАЙМЕРА (Сворачиваемый) -->
-    <div class="pomodoro-widget" id="timer-widget">
-        <button class="toggle-btn" onclick="toggleTimer()">−</button>
+     <div class="pomodoro-widget collapsed" id="timer-widget">
+        <button class="toggle-btn" onclick="toggleTimer()"></button>
 
         <div class="clock-face">
             <div class="time-display" id="time-display">55:00</div>
@@ -571,7 +619,7 @@
         </div>
 
         <div class="modes">
-            <button onclick="setMode(55)">Режим: Даня (50м)</button>
+            <button onclick="setMode(55)">Режим: Даня (55м)</button>
             <button onclick="setMode(5)">Перерыв на поцелуй (5м)</button>
             <button onclick="setMode(30)">Режим: Эвелина (30м)</button>
             <button onclick="setMode(90)">Глубокая концентрация (90м)</button>
@@ -588,13 +636,8 @@
         const widget = document.getElementById('timer-widget');
         const toggleBtn = document.querySelector('.toggle-btn');
 
-        function toggleTimer() {
+               function toggleTimer() {
             widget.classList.toggle('collapsed');
-            if (widget.classList.contains('collapsed')) {
-                toggleBtn.innerHTML = '+'; 
-            } else {
-                toggleBtn.innerHTML = '−'; 
-            }
         }
 
         function updateDisplay() {
