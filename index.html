@@ -18,7 +18,7 @@
             color: #333;
             overflow-x: hidden;
             position: relative;
-            min-height: 1500px; /* Чтобы было куда скроллить */
+            min-height: 4300px; /* Увеличено, чтобы поместился 31 полароид! */
         }
 
         h1 {
@@ -47,7 +47,7 @@
             background: #fff;
             padding: 15px 15px 40px 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            position: absolute; /* Теперь они не в сетке, а раскиданы по координатам */
+            position: absolute; 
             transition: transform 0.3s ease;
             max-width: 250px;
             z-index: 5;
@@ -107,7 +107,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Кнопка сворачивания */
         .toggle-btn {
             position: absolute;
             top: 10px;
@@ -122,7 +121,6 @@
         }
         .toggle-btn:hover { color: #333; }
 
-        /* Класс для свернутого состояния */
         .pomodoro-widget.collapsed {
             padding: 10px 20px;
             width: auto;
@@ -137,7 +135,7 @@
         }
         .pomodoro-widget.collapsed .controls,
         .pomodoro-widget.collapsed .modes {
-            display: none; /* Прячем все кнопки режимов */
+            display: none; 
         }
         .pomodoro-widget.collapsed .toggle-btn {
             top: 50%; transform: translateY(-50%); right: 15px; font-size: 1.2rem;
@@ -178,338 +176,288 @@
         .scrap-item img { width: 100%; height: auto; display: block; }
         .scrap-item:hover { transform: scale(1.05) !important; z-index: 30 !important; }
 
-                /* МАГИЯ ДЛЯ РИСУНКОВ ТУШЬЮ ИЛИ ПЯТЕН */
+        /* МАГИЯ ДЛЯ РИСУНКОВ ТУШЬЮ ИЛИ ПЯТЕН */
         .blend-mode {
-            position: absolute; /* ОБЯЗАТЕЛЬНО absolute, чтобы скроллился с бумагой */
+            position: absolute; 
             mix-blend-mode: multiply; 
             filter: none; 
             opacity: 0.7;
-            z-index: 0; /* Строго под всеми фото */
-            pointer-events: none; /* Чтобы мышка проваливалась сквозь рисунок */
+            z-index: 0; 
+            pointer-events: none; 
         }
     </style>
 </head>
 <body>
 
-     <!-- РИСУНКИ ТУШЬЮ (ФОНОВЫЕ). Они "впитаны" в бумагу и уезжают при скролле -->
-    <div class="blend-mode" style="top: 50px; right: 10%; width: 70px; transform: rotate(-5deg);">
+    <!-- РИСУНКИ ТУШЬЮ (ФОНОВЫЕ) -->
+    <div class="blend-mode" style="top: 200px; right: 10%; width: 180px; transform: rotate(-5deg);">
         <img src="DROW_190.png" alt="график">
     </div>
-    
-    <div class="blend-mode" style="top: 100px; left: 15%; width: 5px; transform: rotate(10deg);">
+    <div class="blend-mode" style="top: 500px; left: 8%; width: 220px; transform: rotate(10deg);">
         <img src="DROW_40.png" alt="Стамбул">
     </div>
-
-     <div class="blend-mode" style="top: 1000px; left: 5%; width: 1px; transform: rotate(4deg);">
+    <div class="blend-mode" style="top: 900px; right: 15%; width: 190px; transform: rotate(-4deg);">
         <img src="DROW_50.png" alt="Пейзаж">
     </div>
-
-     <div class="blend-mode" style="top: 1000px; left: 5%; width: 1px; transform: rotate(4deg);">
+    <div class="blend-mode" style="top: 1300px; left: 12%; width: 210px; transform: rotate(7deg);">
         <img src="DROW_60.png" alt="Корова">
     </div>
-
-     <div class="blend-mode" style="top: 1000px; left: 5%; width: 1px; transform: rotate(4deg);">
+    <div class="blend-mode" style="top: 1700px; right: 8%; width: 230px; transform: rotate(-12deg);">
         <img src="DROW_90.png" alt="Цветы">
     </div>
-
-     <div class="blend-mode" style="top: 1000px; left: 5%; width: 1px; transform: rotate(4deg);">
+    <div class="blend-mode" style="top: 2200px; left: 18%; width: 200px; transform: rotate(5deg);">
         <img src="DROW_110.png" alt="Даня">
     </div>
-
-     <div class="blend-mode" style="top: 1000px; left: 5%; width: 1px; transform: rotate(4deg);">
+    <div class="blend-mode" style="top: 2600px; right: 20%; width: 250px; transform: rotate(-8deg);">
         <img src="DROW_140.png" alt="Исаакиевский">
     </div>
-
-    <div class="blend-mode" style="top: 1000px; left: 5%; width: 1px; transform: rotate(4deg);">
+    <div class="blend-mode" style="top: 3100px; left: 10%; width: 220px; transform: rotate(15deg);">
         <img src="DROW_170.png" alt="Москва">
     </div>
-
-    <div class="blend-mode" style="top: 1000px; left: 5%; width: 1px; transform: rotate(4deg);">
+    <div class="blend-mode" style="top: 3600px; right: 15%; width: 240px; transform: rotate(-5deg);">
         <img src="DROW_180.png" alt="График2">
     </div>
+      <div class="blend-mode" style="top: 150px; right: 5%; width: 150px; transform: rotate(10deg);">
+        <img src="PNG_6.png" alt="Полароиды">
+    </div>
+
+    <div class="blend-mode" style="top: 3950px; right: 45%; width: 100px; transform: rotate(-5deg);">
+        <img src="PNG_3.png" alt="Скальники">
+    </div>
+
     <!-- ЗАГОЛОВКИ -->
     <h1>Наш мир</h1>
     <p class="subtitle">Место, где математический план встречается с творческим хаосом</p>
 
 
-    <!-- ХАОТИЧНЫЕ КАРТОЧКИ (Раскиданы по экрану с помощью top и left) -->
+    <!-- ХАОТИЧНЫЕ КАРТОЧКИ И ЭЛЕМЕНТЫ -->
     
-    <!-- Карточка 1 (Слева сверху) -->
-    <div class="polaroid" style="top: 200px; left: 10%; transform: rotate(-4deg);">
+    <div class="polaroid" style="top: 200px; left: 15%; transform: rotate(-4deg); z-index: 6;">
         <div class="tape" style="transform: translateX(-50%) rotate(-2deg);"></div>
         <img src="pictures_7.png" alt="Стол Дани">
         <div class="caption">Рабочий стол Дани</div>
     </div>
 
-    <!-- Карточка 2 (Справа сверху, чуть ниже) -->
-    <div class="polaroid" style="top: 250px; right: 15%; transform: rotate(5deg);">
+    <div class="polaroid" style="top: 250px; right: 20%; transform: rotate(5deg); z-index: 7;">
         <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
         <img src="pictures_9.png" alt="Стол Эвелины">
         <div class="caption">Рабочий стол Эвелины</div>
     </div>
 
-    <!-- Билет в Стамбул (Между карточками по центру) -->
-    <div class="scrap-item" style="top: 590px; left: 35%; width: 180px; transform: rotate(12deg); z-index: 2;">
-        <img src="PNG_8.png" alt="Билет">
-    </div>
-
-    <!-- Карточка 3 (Слева по центру) -->
-    <div class="polaroid" style="top: 600px; left: 20%; transform: rotate(-2deg); z-index: 6;">
+    <div class="polaroid" style="top: 450px; left: 40%; transform: rotate(-2deg); z-index: 5;">
         <div class="tape" style="transform: translateX(-50%) rotate(-1deg);"></div>
         <img src="pictures_24.png" alt="Стамбул">
         <div class="caption">Невероятные дни в Стамбуле</div>
     </div>
 
-    <!-- Карточка 4 (Видео, по центру справа) -->
-    <div class="polaroid" style="top: 650px; right: 25%; transform: rotate(4deg); z-index: 7;">
+    <div class="scrap-item" style="top: 480px; left: 25%; width: 180px; transform: rotate(12deg); z-index: 8;">
+        <img src="PNG_8.png" alt="Билет">
+    </div>
+
+    <div class="polaroid" style="top: 600px; right: 10%; transform: rotate(4deg); z-index: 6;">
         <div class="tape" style="transform: translateX(-50%) rotate(2deg);"></div>
         <video src="VIDEO_2.mp4" poster="pictures_25.png" controls playsinline style="width: 100%; max-height: 400px; object-fit: cover; background: #000;"></video>
         <div class="caption">Зимние радости</div>
     </div>
 
-    <!-- Засушенный цветок (Наехал на видео снизу) -->
-    <div class="scrap-item" style="top: 900px; right: 35%; width: 120px; transform: rotate(-15deg); z-index: 10;">
-        <img src="PNG_4.png" alt="Красная зацепка">
-    </div>
-
-    <!-- Карточка 5 (Внизу по центру) -->
-    <div class="polaroid" style="top: 1050px; left: 40%; transform: rotate(-6deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(-4deg);"></div>
-        <img src="pictures_8.png" alt="Испачканые руки">
-        <div class="caption">Очумелые ручки!</div>
-    </div>
-
-    <!-- Засушенный цветок (Наехал на видео снизу) -->
-    <div class="scrap-item" style="top: 1150px; right: 50%; width: 120px; transform: rotate(-15deg); z-index: 10;">
-        <img src="PNG_5.png" alt="Статуэтка">
-    </div>
-
-     <!-- Засушенный цветок (Наехал на видео снизу) -->
-    <div class="scrap-item" style="top: 1150px; right: 50%; width: 120px; transform: rotate(-15deg); z-index: 10;">
-        <img src="PNG_1.png" alt="Ссойки">
-    </div>
-
-     <!-- Засушенный цветок (Наехал на видео снизу) -->
-    <div class="scrap-item" style="top: 1150px; right: 50%; width: 120px; transform: rotate(-15deg); z-index: 10;">
-        <img src="PNG_2.png" alt="Пирог">
-    </div>
-
-     <!-- Засушенный цветок (Наехал на видео снизу) -->
-    <div class="scrap-item" style="top: 1150px; right: 50%; width: 120px; transform: rotate(-15deg); z-index: 10;">
-        <img src="PNG_9.png" alt="Голубая зацепка">
-    </div>
-
-    <!-- Засушенный цветок (Наехал на видео снизу) -->
-    <div class="scrap-item" style="top: 1150px; right: 50%; width: 120px; transform: rotate(-15deg); z-index: 10;">
-        <img src="PNG_7.png" alt="Билеты в Пушкинский">
-    </div>
-
-    <!-- Засушенный цветок (Наехал на видео снизу) -->
-    <div class="scrap-item" style="top: 1150px; right: 50%; width: 120px; transform: rotate(-15deg); z-index: 10;">
-        <img src="PNG_13.png" alt="Зелёная зацепка">
-    </div>
-
-    <!-- Засушенный цветок (Наехал на видео снизу) -->
-    <div class="scrap-item" style="top: 1150px; right: 50%; width: 120px; transform: rotate(-15deg); z-index: 10;">
-        <img src="PNG_12.png" alt="Жёлтая зацепка">
-    </div>
-
-     <!-- Карточка 6 (Внизу по центру) -->
-    <div class="polaroid" style="top: 1200px; left: 10%; transform: rotate(-6deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(-4deg);"></div>
-        <img src="pictures_27.png" alt="Даня в музеи">
-        <div class="caption">Если я устану ходить по музею, я никому не скажу, но будут знаки</div>
-    </div>
-
-     <!-- Карточка 7 (Внизу по центру) -->
-    <div class="polaroid" style="top: 1270px; left: 15%; transform: rotate(-6deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(-4deg);"></div>
-        <img src="pictures_30.png" alt="Даня в музеи">
-        <div class="caption"></div>
-    </div>
-
-     <!-- Карточка 8 (Слева сверху) -->
-    <div class="polaroid" style="top: 1210px; right: 10%; transform: rotate(-4deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(-2deg);"></div>
-        <img src="pictures_28.png" alt="Руки в  кафе">
-        <div class="caption"></div>
-    </div>
-    
-     <!-- Карточка 9 (Слева сверху) -->
-    <div class="polaroid" style="top: 1210px; right: 10%; transform: rotate(-4deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(-2deg);"></div>
-        <img src="" alt="">
-        <div class="caption">Спасибо, что всегда рядом</div>
-    </div>
-
-    <!-- Карточка 10 (Внизу по центру) -->
-    <div class="polaroid" style="top: 1600px; left: 60%; transform: rotate(-6deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(-4deg);"></div>
-        <img src="pictures_2.png" alt="Даня на скалодроме">
-        <div class="caption">Покорение цветной стены</div>
-    </div>
-
-     <div class="blend-mode" style="top: 1320px; left: 70%; width: 15px; transform: rotate(1deg);">
-        <img src="PNG_3.png" alt="Скальники">
-    </div>
-
-     <!-- Карточка 11 (Справа сверху, чуть ниже) -->
-    <div class="polaroid" style="top: 2000px; right: 15%; transform: rotate(5deg);">
+    <div class="polaroid" style="top: 750px; left: 10%; transform: rotate(5deg); z-index: 5;">
         <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
         <img src="pictures_4.png" alt="Эвелина в зеркале">
         <div class="caption">Ваша петербургская дама</div>
     </div>
 
-     <!-- Карточка 12 (Видео, по центру справа) -->
-    <div class="polaroid" style="top: 650px; right: 25%; transform: rotate(4deg); z-index: 7;">
-        <div class="tape" style="transform: translateX(-50%) rotate(2deg);"></div>
-        <video src="VIDEO_8.mp4" poster="" controls playsinline style="width: 100%; max-height: 400px; object-fit: cover; background: #000;"></video>
-        <div class="caption">Осенний вальс</div>
+    <div class="scrap-item" style="top: 850px; left: 35%; width: 120px; transform: rotate(-15deg); z-index: 10;">
+        <img src="PNG_4.png" alt="Красная зацепка">
     </div>
 
-     <!-- Карточка 13 (Справа сверху, чуть ниже) -->
-    <div class="polaroid" style="top: 250px; right: 15%; transform: rotate(5deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
-        <img src="pictures_14.png" alt="Следы на снегу">
-        <div class="caption">Тайна ночных следов</div>
+    <div class="polaroid" style="top: 900px; right: 30%; transform: rotate(-6deg); z-index: 7;">
+        <div class="tape" style="transform: translateX(-50%) rotate(-4deg);"></div>
+        <img src="pictures_8.png" alt="Испачканые руки">
+        <div class="caption">Очумелые ручки!</div>
     </div>
 
-     <!-- Карточка 14 (Справа сверху, чуть ниже) -->
-    <div class="polaroid" style="top: 250px; right: 15%; transform: rotate(5deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
-        <img src="pictures_22.png" alt="Мои скальники">
-        <div class="caption">Устранение причин ныть на скалодроме</div>
+    <div class="polaroid" style="top: 1050px; left: 25%; transform: rotate(-6deg); z-index: 6;">
+        <div class="tape" style="transform: translateX(-50%) rotate(-4deg);"></div>
+        <img src="pictures_27.png" alt="Даня в музеи">
+        <div class="caption">Если я устану ходить по музею, я никому не скажу, но будут знаки</div>
     </div>
 
-     <!-- Карточка 15 (Видео, по центру справа) -->
-    <div class="polaroid" style="top: 650px; right: 25%; transform: rotate(4deg); z-index: 7;">
+    <div class="scrap-item" style="top: 1100px; right: 15%; width: 120px; transform: rotate(20deg); z-index: 9;">
+        <img src="PNG_5.png" alt="Статуэтка">
+    </div>
+
+    <div class="polaroid" style="top: 1250px; right: 35%; transform: rotate(4deg); z-index: 8;">
         <div class="tape" style="transform: translateX(-50%) rotate(2deg);"></div>
         <video src="VIDEO_4.mp4" poster="pictures_12.png" controls playsinline style="width: 100%; max-height: 400px; object-fit: cover; background: #000;"></video>
         <div class="caption">60 км и вечер на Волге</div>
     </div>
 
-    <div class="blend-mode" style="top: 100px; left: 15%; width: 5px; transform: rotate(10deg);">
-        <img src="PNG_6.png" alt="Полароиды">
+    <div class="polaroid" style="top: 1400px; left: 10%; transform: rotate(6deg); z-index: 5;">
+        <div class="tape" style="transform: translateX(-50%) rotate(4deg);"></div>
+        <img src="pictures_30.png" alt="Даня в музеи">
+        <div class="caption"></div>
     </div>
 
-     <!-- Карточка 16 (Справа сверху, чуть ниже) -->
-    <div class="polaroid" style="top: 250px; right: 15%; transform: rotate(5deg);">
+    <div class="scrap-item" style="top: 1450px; left: 40%; width: 120px; transform: rotate(-10deg); z-index: 10;">
+        <img src="PNG_1.png" alt="Ссойки">
+    </div>
+
+    <div class="polaroid" style="top: 1550px; right: 10%; transform: rotate(-4deg); z-index: 6;">
+        <div class="tape" style="transform: translateX(-50%) rotate(-2deg);"></div>
+        <img src="pictures_28.png" alt="Руки в кафе">
+        <div class="caption"></div>
+    </div>
+
+    <div class="scrap-item" style="top: 1650px; right: 40%; width: 120px; transform: rotate(15deg); z-index: 8;">
+        <img src="PNG_2.png" alt="Пирог">
+    </div>
+
+    <div class="polaroid" style="top: 1750px; left: 20%; transform: rotate(3deg); z-index: 7;">
+        <div class="tape" style="transform: translateX(-50%) rotate(1deg);"></div>
+        <img src="" alt="">
+        <div class="caption">Спасибо, что всегда рядом</div>
+    </div>
+
+    <div class="polaroid" style="top: 1850px; right: 25%; transform: rotate(-6deg); z-index: 5;">
+        <div class="tape" style="transform: translateX(-50%) rotate(-4deg);"></div>
+        <img src="pictures_2.png" alt="Даня на скалодроме">
+        <div class="caption">Покорение цветной стены</div>
+    </div>
+
+    <div class="scrap-item" style="top: 1950px; left: 15%; width: 120px; transform: rotate(-25deg); z-index: 9;">
+        <img src="PNG_9.png" alt="Голубая зацепка">
+    </div>
+
+    <div class="polaroid" style="top: 2050px; left: 40%; transform: rotate(4deg); z-index: 6;">
+        <div class="tape" style="transform: translateX(-50%) rotate(2deg);"></div>
+        <video src="VIDEO_8.mp4" poster="" controls playsinline style="width: 100%; max-height: 400px; object-fit: cover; background: #000;"></video>
+        <div class="caption">Осенний вальс</div>
+    </div>
+
+    <div class="scrap-item" style="top: 2150px; right: 10%; width: 160px; transform: rotate(5deg); z-index: 10;">
+        <img src="PNG_7.png" alt="Билеты в Пушкинский">
+    </div>
+
+    <div class="polaroid" style="top: 2250px; left: 10%; transform: rotate(-5deg); z-index: 5;">
+        <div class="tape" style="transform: translateX(-50%) rotate(-3deg);"></div>
+        <img src="pictures_14.png" alt="Следы на снегу">
+        <div class="caption">Тайна ночных следов</div>
+    </div>
+
+    <div class="scrap-item" style="top: 2350px; left: 45%; width: 130px; transform: rotate(18deg); z-index: 8;">
+        <img src="PNG_13.png" alt="Зелёная зацепка">
+    </div>
+
+    <div class="polaroid" style="top: 2450px; right: 15%; transform: rotate(6deg); z-index: 6;">
         <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
+        <img src="pictures_22.png" alt="Мои скальники">
+        <div class="caption">Устранение причин ныть на скалодроме</div>
+    </div>
+
+    <div class="scrap-item" style="top: 2550px; left: 20%; width: 120px; transform: rotate(-12deg); z-index: 9;">
+        <img src="PNG_12.png" alt="Жёлтая зацепка">
+    </div>
+
+    <div class="polaroid" style="top: 2650px; right: 35%; transform: rotate(-4deg); z-index: 7;">
+        <div class="tape" style="transform: translateX(-50%) rotate(-2deg);"></div>
         <img src="pictures_1.png" alt="Даня в ммаме">
         <div class="caption"></div>
     </div>
 
-     <!-- Карточка 17 (Справа сверху, чуть ниже) -->
-    <div class="polaroid" style="top: 250px; right: 15%; transform: rotate(5deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
+    <div class="polaroid" style="top: 2750px; left: 15%; transform: rotate(3deg); z-index: 5;">
+        <div class="tape" style="transform: translateX(-50%) rotate(1deg);"></div>
         <img src="pictures_3.png" alt="Селфи с рогами">
         <div class="caption">Рога что надо!</div>
     </div>
 
-     <!-- Карточка 18 (Справа сверху, чуть ниже) -->
-    <div class="polaroid" style="top: 250px; right: 15%; transform: rotate(5deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
+    <div class="polaroid" style="top: 2850px; right: 10%; transform: rotate(-5deg); z-index: 6;">
+        <div class="tape" style="transform: translateX(-50%) rotate(-3deg);"></div>
         <img src="pictures_5.png" alt="Даня на лосе">
-        <div class="caption">Почти принц на </div>
+        <div class="caption">Почти принц на</div>
     </div>
 
-     <!-- Карточка 19 (Справа сверху, чуть ниже) -->
-    <div class="polaroid" style="top: 250px; right: 15%; transform: rotate(5deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
+    <div class="polaroid" style="top: 2950px; left: 40%; transform: rotate(4deg); z-index: 7;">
+        <div class="tape" style="transform: translateX(-50%) rotate(2deg);"></div>
         <img src="pictures_6.png" alt="Я с бабочкой">
         <div class="caption">Это было так волшебно</div>
     </div>
 
-     <!-- Карточка 20 (Справа сверху, чуть ниже) -->
-    <div class="polaroid" style="top: 250px; right: 15%; transform: rotate(5deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
+    <div class="polaroid" style="top: 3100px; left: 5%; transform: rotate(-3deg); z-index: 5;">
+        <div class="tape" style="transform: translateX(-50%) rotate(-1deg);"></div>
         <img src="pictures_10.png" alt="Шахматы">
         <div class="caption">Наша первая игра в шахматы</div>
     </div>
 
-     <!-- Карточка 21 (Справа сверху, чуть ниже) -->
-    <div class="polaroid" style="top: 250px; right: 15%; transform: rotate(5deg);">
+    <div class="polaroid" style="top: 3150px; right: 20%; transform: rotate(5deg); z-index: 6;">
         <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
         <img src="pictures_11.png" alt="Архитектура">
         <div class="caption">Вместе ищем красоту</div>
     </div>
 
-     <!-- Карточка 22 (Справа сверху, чуть ниже) -->
-    <div class="polaroid" style="top: 250px; right: 15%; transform: rotate(5deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
+    <div class="polaroid" style="top: 3300px; left: 35%; transform: rotate(-4deg); z-index: 7;">
+        <div class="tape" style="transform: translateX(-50%) rotate(-2deg);"></div>
         <img src="pictures_13.png" alt="Турецкие сладости">
         <div class="caption">А помнишь тот вечер, когда мы наелись сладостей на недели вперёд?</div>
     </div>
 
-     <!-- Карточка 23 (Справа сверху, чуть ниже) -->
-    <div class="polaroid" style="top: 250px; right: 15%; transform: rotate(5deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
+    <div class="polaroid" style="top: 3450px; right: 10%; transform: rotate(3deg); z-index: 5;">
+        <div class="tape" style="transform: translateX(-50%) rotate(1deg);"></div>
         <img src="pictures_15.png" alt="Дача зимой">
         <div class="caption">Приехали на дачу осенью, а проснулись зимой</div>
     </div>
 
-     <!-- Карточка 24 (Справа сверху, чуть ниже) -->
-    <div class="polaroid" style="top: 250px; right: 15%; transform: rotate(5deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
+    <div class="polaroid" style="top: 3550px; left: 15%; transform: rotate(-5deg); z-index: 6;">
+        <div class="tape" style="transform: translateX(-50%) rotate(-3deg);"></div>
         <img src="pictures_17.png" alt="Даня в снегу">
         <div class="caption">Первое умывание снегом</div>
     </div>
 
-     <!-- Карточка 25 (Справа сверху, чуть ниже) -->
-    <div class="polaroid" style="top: 250px; right: 15%; transform: rotate(5deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
+    <div class="polaroid" style="top: 3700px; right: 30%; transform: rotate(4deg); z-index: 7;">
+        <div class="tape" style="transform: translateX(-50%) rotate(2deg);"></div>
         <img src="pictures_19.png" alt="Пингвин">
         <div class="caption">Давай будем и дальше создавать волшебство вместе</div>
     </div>
 
-    <!-- Карточка 26 (Внизу по центру) -->
-    <div class="polaroid" style="top: 1600px; left: 60%; transform: rotate(-6deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(-4deg);"></div>
+    <div class="polaroid" style="top: 3800px; left: 10%; transform: rotate(-3deg); z-index: 5;">
+        <div class="tape" style="transform: translateX(-50%) rotate(-1deg);"></div>
         <img src="pictures_26.png" alt="Селфи снизу">
         <div class="caption"></div>
     </div>
-    
-    <!-- Карточка 27 (Внизу по центру) -->
-    <div class="polaroid" style="top: 1600px; left: 60%; transform: rotate(-6deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(-4deg);"></div>
+
+    <div class="polaroid" style="top: 3900px; right: 15%; transform: rotate(5deg); z-index: 6;">
+        <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
         <img src="pictures_29.png" alt="Даня за работой">
         <div class="caption">Самый частый вид</div>
     </div>
-    
-    <!-- Карточка 28 (Внизу по центру) -->
-    <div class="polaroid" style="top: 1600px; left: 60%; transform: rotate(-6deg);">
+
+    <div class="polaroid" style="top: 4000px; left: 40%; transform: rotate(-6deg); z-index: 7;">
         <div class="tape" style="transform: translateX(-50%) rotate(-4deg);"></div>
         <img src="pictures_31.png" alt="Флаги">
         <div class="caption">Моя первая фотография не в России</div>
     </div>
-    
-    <!-- Карточка 29 (Внизу по центру) -->
-    <div class="polaroid" style="top: 1600px; left: 60%; transform: rotate(-6deg);">
-        <div class="tape" style="transform: translateX(-50%) rotate(-4deg);"></div>
+
+    <div class="polaroid" style="top: 4100px; right: 25%; transform: rotate(3deg); z-index: 5;">
+        <div class="tape" style="transform: translateX(-50%) rotate(1deg);"></div>
         <img src="pictures_32.png" alt="Мы на Фонтанке">
         <div class="caption">Прогулка по рекам и канилам</div>
     </div>
 
-     <!-- Карточка 30 (Видео, по центру справа) -->
-    <div class="polaroid" style="top: 650px; right: 25%; transform: rotate(4deg); z-index: 7;">
-        <div class="tape" style="transform: translateX(-50%) rotate(2deg);"></div>
+    <div class="polaroid" style="top: 3850px; left: 60%; transform: rotate(-2deg); z-index: 8;">
+        <div class="tape" style="transform: translateX(-50%) rotate(-1deg);"></div>
         <video src="VIDEO_9.mp4" poster="" controls playsinline style="width: 100%; max-height: 400px; object-fit: cover; background: #000;"></video>
         <div class="caption">Стамбул</div>
     </div>
 
-     <!-- Карточка 31 (Видео, по центру справа) -->
-    <div class="polaroid" style="top: 650px; right: 25%; transform: rotate(4deg); z-index: 7;">
+    <div class="polaroid" style="top: 4150px; left: 15%; transform: rotate(4deg); z-index: 6;">
         <div class="tape" style="transform: translateX(-50%) rotate(2deg);"></div>
         <video src="VIDEO_5.mp4" poster="" controls playsinline style="width: 100%; max-height: 400px; object-fit: cover; background: #000;"></video>
         <div class="caption">Музей</div>
     </div>
-  
-    </div>
 
+  
 
     <!-- ВИДЖЕТ ТАЙМЕРА (Сворачиваемый) -->
     <div class="pomodoro-widget" id="timer-widget">
-        <!-- Кнопка свернуть/развернуть -->
         <button class="toggle-btn" onclick="toggleTimer()">−</button>
 
         <div class="clock-face">
@@ -540,13 +488,12 @@
         const widget = document.getElementById('timer-widget');
         const toggleBtn = document.querySelector('.toggle-btn');
 
-        // Функция сворачивания/разворачивания виджета
         function toggleTimer() {
             widget.classList.toggle('collapsed');
             if (widget.classList.contains('collapsed')) {
-                toggleBtn.innerHTML = '+'; // Меняем минус на плюс
+                toggleBtn.innerHTML = '+'; 
             } else {
-                toggleBtn.innerHTML = '−'; // Меняем обратно
+                toggleBtn.innerHTML = '−'; 
             }
         }
 
@@ -590,7 +537,6 @@
             timeLeft = initialTime;
             updateDisplay();
             
-            // Если таймер был свернут, разворачиваем его, чтобы показать, что режим сменился
             if (widget.classList.contains('collapsed')) {
                 toggleTimer();
             }
