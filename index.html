@@ -131,7 +131,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Содержимое таймера */
         .timer-content {
             display: flex;
             flex-direction: column;
@@ -167,7 +166,6 @@
         }
         .modes button:hover { background: none; color: #8C6239; }
 
-        /* Кнопки переключения состояний (Свернуть/Развернуть) */
         .btn-minimize {
             position: absolute; top: 10px; right: 15px;
             background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #888;
@@ -175,12 +173,11 @@
         .btn-minimize:hover { color: #333; }
         
         .btn-maximize {
-            display: none; /* Скрыта на десктопе по умолчанию */
+            display: none; 
             background: none; border: none; font-size: 2rem; cursor: pointer;
             width: 100%; height: 100%;
         }
 
-        /* Состояние "Свернут" на десктопе */
         .pomodoro-widget.collapsed {
             width: 60px; height: 60px; padding: 0; border-radius: 50%; justify-content: center;
         }
@@ -208,7 +205,6 @@
             h1 { font-size: 2rem; margin-top: 20px; }
             p.subtitle { font-size: 1.2rem; margin-bottom: 30px; }
 
-            /* Сбрасываем координаты карточек, выстраиваем в ленту */
             .polaroid, .scrap-item {
                 position: relative !important;
                 top: auto !important; left: auto !important; right: auto !important;
@@ -216,7 +212,6 @@
             }
             .scrap-item { max-width: 150px !important; margin-bottom: 30px; }
 
-            /* Фоновые скетчи распределяем по бокам */
             .blend-mode {
                 position: absolute !important; width: 120px !important;
                 left: -5% !important; right: auto !important;
@@ -231,17 +226,27 @@
             .blend-mode:nth-of-type(7) { top: 4300px !important; }
 
             /* ========================================= */
-            /* ТАЙМЕР НА ТЕЛЕФОНЕ                        */
+            /* ТАЙМЕР НА ТЕЛЕФОНЕ (ИСПРАВЛЕНО)           */
             /* ========================================= */
-            .pomodoro-widget {
-                bottom: 20px !important; right: 20px !important; left: auto !important;
+            
+            /* Свернутое состояние (круглая кнопка висит справа внизу) */
+            .pomodoro-widget.collapsed {
+                width: 60px !important;
+                height: 60px !important;
+                bottom: 20px !important; 
+                right: 20px !important; 
+                left: auto !important;
+                transform: none !important;
             }
 
-            /* Развернутое состояние на телефоне (Широкое меню внизу) */
+            /* Развернутое состояние (Жестко центрируем по экрану) */
             .pomodoro-widget:not(.collapsed) {
-                width: calc(100% - 40px) !important; /* Почти на весь экран */
+                width: 90% !important; 
                 max-width: 350px !important;
-                right: 20px !important;
+                bottom: 20px !important;
+                left: 50% !important;
+                right: auto !important;
+                transform: translateX(-50%) !important; /* Эта команда ровно ставит окно по центру */
                 border-radius: 20px !important;
                 padding: 20px !important;
             }
@@ -348,8 +353,8 @@
 
     <div class="polaroid" style="top: 1750px; left: 20%; transform: rotate(3deg); z-index: 7;">
         <div class="tape" style="transform: rotate(1deg);"></div>
-        <img src="pictures_13.png" alt="Турецкие сладости">
-        <div class="caption">А помнишь тот вечер, когда мы наелись сладостей на недели вперёд?</div>
+        <img src="" alt="">
+        <div class="caption">Спасибо, что всегда рядом</div>
     </div>
 
     <div class="polaroid" style="top: 1850px; right: 25%; transform: rotate(-6deg); z-index: 5;">
@@ -430,20 +435,20 @@
 
     <div class="polaroid" style="top: 3300px; left: 35%; transform: rotate(-4deg); z-index: 7;">
         <div class="tape" style="transform: rotate(-2deg);"></div>
-        <img src="pictures_15.png" alt="Дача зимой">
-        <div class="caption">Приехали на дачу осенью, а проснулись зимой</div>
+        <img src="pictures_13.png" alt="Турецкие сладости">
+        <div class="caption">А помнишь тот вечер, когда мы наелись сладостей на недели вперёд?</div>
     </div>
 
     <div class="polaroid" style="top: 3450px; right: 10%; transform: rotate(3deg); z-index: 5;">
         <div class="tape" style="transform: rotate(1deg);"></div>
-        <img src="pictures_17.png" alt="Даня в снегу">
-        <div class="caption">Первое умывание снегом</div>
+        <img src="pictures_15.png" alt="Дача зимой">
+        <div class="caption">Приехали на дачу осенью, а проснулись зимой</div>
     </div>
 
     <div class="polaroid" style="top: 3550px; left: 15%; transform: rotate(-5deg); z-index: 6;">
         <div class="tape" style="transform: rotate(-3deg);"></div>
-        <img src="pictures_19.png" alt="Пингвин">
-        <div class="caption">Давай будем и дальше создавать волшебство вместе</div>
+        <img src="pictures_17.png" alt="Даня в снегу">
+        <div class="caption">Первое умывание снегом</div>
     </div>
 
     <div class="polaroid" style="top: 3700px; right: 30%; transform: rotate(4deg); z-index: 7;">
@@ -522,7 +527,7 @@
         </div>
     </div>
 
-    <!-- ЛОГИКА ТАЙМЕРА И СВОРАЧИВАНИЯ -->
+    <!-- ЛОГИКА ТАЙМЕРА И СВОРАЧИВАНИЯ И ВИДЕО -->
     <script>
         let timeLeft = 55 * 60;
         let timerId = null;
@@ -531,12 +536,10 @@
         const display = document.getElementById('time-display');
         const widget = document.getElementById('timer-widget');
 
-        // Логика свернуть/развернуть
         function toggleTimer() {
             widget.classList.toggle('collapsed');
         }
 
-        // Обновление цифр на экране
         function updateDisplay() {
             let minutes = Math.floor(timeLeft / 60);
             let seconds = timeLeft % 60;
@@ -545,7 +548,6 @@
                 String(seconds).padStart(2, '0');
         }
 
-        // Старт
         function startTimer() {
             if (timerId === null) {
                 timerId = setInterval(() => {
@@ -561,20 +563,17 @@
             }
         }
 
-        // Пауза
         function pauseTimer() {
             clearInterval(timerId);
             timerId = null;
         }
 
-        // Сброс
         function resetTimer() {
             pauseTimer();
             timeLeft = initialTime;
             updateDisplay();
         }
 
-        // Смена режима
         function setMode(minutes) {
             pauseTimer();
             initialTime = minutes * 60;
@@ -582,8 +581,15 @@
             updateDisplay();
         }
 
-        // Запуск при загрузке
         updateDisplay();
+
+        // Автоматический возврат обложки (постера) после окончания видео
+        const allVideos = document.querySelectorAll('video');
+        allVideos.forEach(video => {
+            video.addEventListener('ended', function() {
+                this.load(); // Возвращает видео к исходному состоянию (постеру)
+            });
+        });
     </script>
 </body>
 </html>
