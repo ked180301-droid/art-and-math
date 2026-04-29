@@ -600,16 +600,16 @@
 <body>
 
     <!-- КНОПКА ВОЗВРАТА -->
-    <button class="reset-board-btn" onclick="resetBoard()">✨ Вернуться к хаосу</button>
+    <button class="reset-board-btn" onclick="resetBoard(); triggerChaosEgg();">✨ Вернуться к хаосу</button>
     <!-- КНОПКА БЛОКНОТА -->
     <button class="notepad-btn" onclick="toggleNotepad()">📝 План на день</button>
 
     <!-- РИСУНКИ ТУШЬЮ (ФОНОВЫЕ) -->
     <div class="blend-mode" style="top: 40px; right: 10%; width: 180px; transform: rotate(-5deg);"><img src="DROW_190.png" loading="lazy" alt="график"></div>
-    <div class="blend-mode" style="top: 500px; left: 8%; width: 550px; transform: rotate(10deg);"><img src="DROW_40.png" loading="lazy" alt="Стамбул"></div>
+    <div class="blend-mode" style="top: 500px; left: 8%; width: 550px; transform: rotate(10deg); pointer-events: auto;"><img src="DROW_40.png" loading="lazy" alt="Стамбул" oncontextmenu="showSecret('📸', 'Эту картинку нельзя сохранить на компьтере, зато можно сохранить в своем сердце!'); return false;"></div>
     <div class="blend-mode" style="top: 1800px; left: 45%; width: 210px; transform: rotate(7deg);"><img src="DROW_60.png" loading="lazy" alt="Корова"></div>
     <div class="blend-mode" style="top: 2000px; right: 18%; width: 300px; transform: rotate(-12deg);"><img src="DROW_90.png" loading="lazy" alt="Цветы" ondblclick="showSecret('От Эвелины 🌸', 'Ты делаешь мой мир ярче каждый день!')" style="pointer-events: auto; cursor: help;"></div> 
-    <div class="blend-mode" style="top: 2200px; left: 11%; width: 260px; transform: rotate(5deg);"><img src="DROW_110.png" loading="lazy" alt="Даня"></div>
+    <div class="blend-mode" style="top: 2200px; left: 11%; width: 260px; transform: rotate(5deg);"><img src="DROW_110.png" loading="lazy" alt="Даня" ondragstart="showSecret('Эй!', 'Этого мальчика нельзя утащить, он только мой! ❤️'); return false;"></div>
     <div class="blend-mode" style="top: 2600px; right: 20%; width: 190px; transform: rotate(-8deg);"><img src="DROW_140.png" loading="lazy" alt="Исаакиевский"></div>
     <div class="blend-mode" style="top: 3100px; left: 10%; width: 350px; transform: rotate(15deg);"><img src="DROW_170.png" loading="lazy" alt="Москва"></div>
     <div class="blend-mode" style="top: 3600px; right: 45%; width: 240px; transform: rotate(-5deg);"><img src="DROW_180.png" loading="lazy" alt="График2"></div>
@@ -624,7 +624,7 @@
 
         
     <!-- ЗАГОЛОВКИ -->
-    <h1>Наш мир</h1>
+    <h1 ondblclick="showSecret('🌍', 'Мне так повезло в этом огромном мире встретить тебя!')">Наш мир</h1>
     <p class="subtitle">Место, где математический план встречается с творческим хаосом</p>
 
     <!-- КОНВЕРТ С ИДЕЯМИ (Кликабельный) -->
@@ -656,7 +656,7 @@
 
     <div class="polaroid" style="top: 450px; left: 40%; transform: rotate(-2deg); z-index: 5;">
         <div class="tape" style="transform: rotate(-1deg);"></div>
-        <img src="pictures_24.png" loading="lazy" alt="Стамбул">
+        <img src="pictures_24.png" loading="lazy" alt="Стамбул" onclick="if(event.shiftKey) { showSecret('✈️', 'Чит-код на телепортацию принят. Собирай чемодан, мы возвращаемся!'); event.stopPropagation(); }">
         <div class="caption">Невероятные дни в Стамбуле</div>
     </div>
 
@@ -670,7 +670,7 @@
         <div class="caption">Зимние радости</div>
     </div>
 
-    <div class="polaroid" style="top: 750px; left: 10%; transform: rotate(5deg); z-index: 5;">
+    <div class="polaroid" id="stare-polaroid" style="top: 750px; left: 10%; transform: rotate(5deg); z-index: 5;">
         <div class="tape" style="transform: rotate(3deg);"></div>
         <img src="pictures_4.png" loading="lazy" alt="Эвелина в зеркале">
         <div class="caption">Ваша петербургская дама</div>
@@ -680,7 +680,7 @@
         <img src="PNG_5.png" loading="lazy" alt="Статуэтка">
     </div>
 
-    <div class="polaroid" style="top: 900px; right: 30%; transform: rotate(-6deg); z-index: 7;">
+    <div class="polaroid" id="tape-polaroid" style="top: 900px; right: 30%; transform: rotate(-6deg); z-index: 7;">
         <div class="tape" style="transform: rotate(-4deg);"></div>
         <img src="pictures_8.png" loading="lazy" alt="Испачканые руки">
         <div class="caption">Очумелые ручки!</div>
@@ -689,7 +689,7 @@
     <div class="polaroid" style="top: 1050px; left: 25%; transform: rotate(-6deg); z-index: 6;">
         <div class="tape" style="transform: rotate(-4deg);"></div>
         <img src="pictures_27.png" loading="lazy" alt="Даня в музеи">
-        <div class="caption">Если я устану ходить по музею, я никому не скажу, но будут знаки</div>
+        <div class="caption" ondragstart="showSecret('📝', 'Слова из песни не выкинешь, а подпись от фото не оторвешь.'); return false;">Если я устану ходить по музею, я никому не скажу, но будут знаки</div>
     </div>
 
     <div class="scrap-item" style="top: 1100px; right: 15%; width: 210px; transform: rotate(20deg); z-index: 9;">
@@ -768,19 +768,19 @@
         <div class="caption"></div>
     </div>
 
-    <div class="polaroid" style="top: 2750px; left: 15%; transform: rotate(3deg); z-index: 5;">
+    <div class="polaroid" id="zoom-polaroid" style="top: 2750px; left: 15%; transform: rotate(3deg); z-index: 5;">
         <div class="tape" style="transform: rotate(1deg);"></div>
         <img src="pictures_3.png" loading="lazy" alt="Селфи с рогами">
         <div class="caption">Рога что надо!</div>
     </div>
 
     <div class="polaroid" style="top: 2850px; right: 10%; transform: rotate(-5deg); z-index: 6;">
-        <div class="tape" style="transform: rotate(-3deg);"></div>
+        <div class="tape" onclick="showSecret('🤫', 'Отклеивать скотч запрещено! Но за находчивость — миллион поцелуев.'); event.stopPropagation(); style="transform: rotate(-3deg);"></div>
         <img src="pictures_5.png" loading="lazy" alt="Даня на лосе">
         <div class="caption">Почти принц на</div>
     </div>
 
-    <div class="polaroid" style="top: 2950px; left: 40%; transform: rotate(4deg); z-index: 7;">
+    <div class="polaroid" id="drop-polaroid" style="top: 2950px; left: 40%; transform: rotate(4deg); z-index: 7;">
         <div class="tape" style="transform: rotate(2deg);"></div>
         <img src="pictures_6.png" loading="lazy" alt="Я с бабочкой">
         <div class="caption">Это было так волшебно</div>
@@ -789,7 +789,7 @@
     <div class="polaroid" style="top: 3100px; left: 5%; transform: rotate(-3deg); z-index: 5;">
         <div class="tape" style="transform: rotate(-1deg);"></div>
         <img src="pictures_10.png" loading="lazy" alt="Шахматы">
-        <div class="caption">Наша первая игра в шахматы</div>
+        <div class="caption" ondblclick="showSecret('❤️', 'Двойной тап засчитан! Ты лайкнул это воспоминание.'); event.stopPropagation();">Наша первая игра в шахматы</div>
     </div>
 
     <div class="polaroid" style="top: 3150px; right: 20%; transform: rotate(5deg); z-index: 6;">
@@ -1269,8 +1269,29 @@
             "Выбрать случайный фильм на вечер",
             "Заказать доставку еды, которую никогда не пробовали",
             "Устроить вечер тишины с книгами",
-            "Собрать пазл или конструктор",
+            "Устроить фотопрогулку по цветам",
             "Сделать друг другу массаж"
+            "Пойти на скалодром и устроить микро-соревнование. Проигравший угощает победителя ужином 🧗‍♂️",
+            "Взять фотоаппарат и отправиться снимать наш район так, будто мы здесь туристы 📸",
+            "Завалиться в случайный музей или галерею и придумывать максимально глупые названия к серьезным картинам 🖼️",
+            "Остаться дома, заказать кучу вредной еды и устроить марафон фильмов, которые мы сто лет откладывали 🍕",
+            "Приготовить вместе сложное блюдо из YouTube. Если всё испортим — просто закажем пиццу 🍝",
+            "Доехать до незнакомой станции метро, выйти и найти там самую уютную кофейню без гугл-карт ☕",
+            "Купить вина, открыть карту и начать планировать наше следующее (даже самое безумное) путешествие 🗺️",
+            "Купить два холста, краски и попытаться нарисовать портреты друг друга (будет смешно, гарантирую) 🎨",
+            "Взять самокаты или велики и уехать на другой конец города без четкого плана 🛴",
+            "Устроить японский вечер: заказать лучшие суши, заварить чай и включить фильмы Миядзаки 🥢",
+            "Спонтанная ночная прогулка по пустому городу. Гулять, пока не найдем круглосуточный кофе 🌙",
+            "Вечер тотального релакса: выключаем телефоны, зажигаем свечи и делаем друг другу массаж 💆‍♂️",
+            "Зайти в большой книжный, выбрать друг другу по книге вслепую и пойти читать их в кафе 📚",
+            "Баттл в видеоигры или настолки. Проигравший делает победителю чай и массаж плеч 🎮",
+            "Устроить вечер «глупых презентаций»: каждый готовит 5 слайдов на любую бредовую тему и серьезно защищает её 📊", 
+            "Бросать монетку на каждом перекрестке: орел — направо, решка — налево. Посмотрим, куда нас это заведет 🪙",
+            "Вывести на экран наши старые фотки из Питера, Стамбула и других поездок и вспоминать локальные шутки 🎞️",
+            "Собрать еду, взять плед и пойти на пикник. Если на улице дождь — пикник переносится на пол в гостиной 🧺",
+            "Устроить бар-хоппинг: в каждом новом месте брать только по одному напитку на двоих 🍻",
+            "Купить 5 видов странных снеков или сыров и устроить дегустацию с закрытыми глазами 🧀",
+            "Включить наш общий плейлист на полную громкость, петь мимо нот и дурачиться, пока не устанем 🎶"
         ];
 
         function showRandomDate() {
@@ -1353,7 +1374,7 @@
         // Запускаем проверку архива при каждом открытии сайта
         window.addEventListener('load', checkMemories);
         
-        // 8. ИНТЕРАКТИВНАЯ КАРТА (СВОРАЧИВАНИЕ И ПОКАЗ ФОТО)
+        // 8. ИНТЕРАКТИВНАЯ КАРТА (СВОРАЧИВАНИЕ И ПОКАЗ ФОТО + ДОБАВЛЕНИЕ МЕТОК)
         const mapOverlay = document.getElementById('map-overlay');
         const pinOverlay = document.getElementById('pin-overlay');
 
@@ -1361,23 +1382,155 @@
             mapOverlay.classList.toggle('hidden');
         }
 
-        // Закрываем карту кликом по темному фону
         function closeMapOutside(e) {
             if (e.target === mapOverlay) toggleMap();
         }
 
-        // Показ фото с конкретной булавки
         function showPinPhoto(imageSrc, locationName, captionText) {
             document.getElementById('pin-image').src = imageSrc;
             document.getElementById('pin-location-text').textContent = "📍 " + locationName;
             document.getElementById('pin-caption-text').textContent = captionText;
-            
             pinOverlay.classList.remove('hidden');
         }
 
         function closePinPhoto() {
             pinOverlay.classList.add('hidden');
         }
+
+        // --- НОВАЯ ЛОГИКА: ДОБАВЛЕНИЕ И ПЕРЕТАСКИВАНИЕ МЕТОК ---
+        const mapContainer = document.getElementById('travel-map-container');
+        const mapHint = document.getElementById('map-mode-hint');
+
+        let addPinMode = false;
+        let draggedPinId = null;
+
+        // Загружаем метки из памяти или берем стандартные
+        let mapPins = JSON.parse(localStorage.getItem('travel_map_pins')) || [
+            { id: 1, top: 60, left: 55, image: 'pictures_24.png', location: 'Стамбул', caption: 'Невероятные дни в Стамбуле' },
+            { id: 2, top: 30, left: 40, image: 'pictures_4.png', location: 'Санкт-Петербург', caption: 'Петербургская дама' },
+            { id: 3, top: 45, left: 45, image: 'pictures_12.png', location: 'Волга', caption: '60 км и вечер на реке' }
+        ];
+
+        function saveMapPins() {
+            localStorage.setItem('travel_map_pins', JSON.stringify(mapPins));
+        }
+
+        // Отрисовка всех меток на карте
+        function renderMapPins() {
+            if (!mapContainer) return;
+            mapContainer.querySelectorAll('.map-pin').forEach(pin => pin.remove());
+
+            mapPins.forEach(pin => {
+                const pinEl = document.createElement('div');
+                pinEl.className = 'map-pin';
+                pinEl.textContent = '📍';
+                pinEl.style.top = pin.top + '%';
+                pinEl.style.left = pin.left + '%';
+
+                // Клик по булавке (показать фото)
+                pinEl.addEventListener('click', (e) => {
+                    if (pinEl.dataset.dragged === 'true') {
+                        pinEl.dataset.dragged = 'false';
+                        return; // Если мы её тащили, то не открываем фото
+                    }
+                    e.stopPropagation();
+                    showPinPhoto(pin.image, pin.location, pin.caption);
+                });
+
+                // Начало перетаскивания
+                pinEl.addEventListener('pointerdown', (e) => startDragPin(e, pin.id, pinEl));
+                mapContainer.appendChild(pinEl);
+            });
+        }
+
+        // Включение режима добавления булавки
+        function enableAddPinMode() {
+            addPinMode = true;
+            if (mapHint) mapHint.textContent = 'Теперь кликните на нужное место на карте';
+        }
+
+        // Клик по карте для добавления новой булавки
+        if (mapContainer) {
+            mapContainer.addEventListener('click', function(e) {
+                if (!addPinMode) return;
+                if (e.target.classList.contains('map-pin')) return;
+
+                const rect = mapContainer.getBoundingClientRect();
+                const left = ((e.clientX - rect.left) / rect.width) * 100;
+                const top = ((e.clientY - rect.top) / rect.height) * 100;
+
+                const location = prompt('Введите название места (например, Казань):');
+                if (!location) {
+                    addPinMode = false;
+                    mapHint.textContent = 'Нажмите на кнопку, чтобы добавить метку';
+                    return;
+                }
+
+                const caption = prompt('Подпись к фото:', 'Наше новое воспоминание') || '';
+                const image = prompt('Имя файла фото (например, pictures_1.png):', 'pictures_1.png') || '';
+
+                mapPins.push({
+                    id: Date.now(),
+                    top: Math.max(2, Math.min(98, top)),
+                    left: Math.max(2, Math.min(98, left)),
+                    image: image,
+                    location: location,
+                    caption: caption
+                });
+
+                saveMapPins();
+                renderMapPins();
+                addPinMode = false;
+                if (mapHint) mapHint.textContent = 'Метка успешно добавлена!';
+            });
+        }
+
+        // --- ФУНКЦИИ ПЕРЕТАСКИВАНИЯ ---
+        function startDragPin(e, pinId, pinEl) {
+            e.preventDefault();
+            e.stopPropagation();
+            draggedPinId = pinId;
+            pinEl.classList.add('dragging');
+            pinEl.dataset.dragged = 'false';
+
+            const moveHandler = (ev) => dragPin(ev, pinEl);
+            const upHandler = () => stopDragPin(pinEl, moveHandler, upHandler);
+
+            window.addEventListener('pointermove', moveHandler);
+            window.addEventListener('pointerup', upHandler);
+        }
+
+        function dragPin(e, pinEl) {
+            if (!draggedPinId) return;
+
+            const rect = mapContainer.getBoundingClientRect();
+            const left = ((e.clientX - rect.left) / rect.width) * 100;
+            const top = ((e.clientY - rect.top) / rect.height) * 100;
+
+            const safeLeft = Math.max(2, Math.min(98, left));
+            const safeTop = Math.max(4, Math.min(98, top));
+
+            pinEl.style.left = safeLeft + '%';
+            pinEl.style.top = safeTop + '%';
+            pinEl.dataset.dragged = 'true'; // Отмечаем, что было движение
+
+            const pin = mapPins.find(p => p.id === draggedPinId);
+            if (pin) {
+                pin.left = safeLeft;
+                pin.top = safeTop;
+            }
+        }
+
+        function stopDragPin(pinEl, moveHandler, upHandler) {
+            pinEl.classList.remove('dragging');
+            window.removeEventListener('pointermove', moveHandler);
+            window.removeEventListener('pointerup', upHandler);
+            saveMapPins(); // Сохраняем новые координаты
+            draggedPinId = null;
+        }
+
+        // Запускаем отрисовку стартовых меток
+        renderMapPins();
         // 9. СЕКРЕТНЫЕ ПАСХАЛКИ (EASTER EGGS)
 
         // --- ПАСХАЛКА 1: Клякса (Двойной клик) ---
@@ -1411,39 +1564,577 @@
             const text = taskInput.value.trim();
             if (text === '') return;
             
+            // Проверка на главное тайное слово "люблю"
             if (text.toLowerCase() === 'люблю') {
                 showSecret("❤️", "Я тоже тебя очень сильно люблю!");
-                createHeartRain(); 
+                if(typeof createHeartRain === 'function') createHeartRain(); 
                 taskInput.value = '';
-                return; 
+                return; // Слово "люблю" в задачи не добавляем
             }
             
+            // --- НАЧАЛО БЛОКА ПАСХАЛОК ДЛЯ ОБЫЧНЫХ ЗАДАЧ ---
+            const lower = text.toLowerCase();
+            const currentHour = new Date().getHours();
+
+            // Время суток
+            if (currentHour >= 23 || currentHour < 4) {
+                showSecret("🦉", "Уже так поздно! Допиши план и ложись спать, я буду охранять твой сон.");
+            }
+            if (currentHour >= 6 && currentHour < 9 && (lower.includes('план') || lower.includes('утро'))) {
+                showSecret("🌅", "Доброе утро, любимый! Пусть этот день будет удачным!.");
+            }
+
+            // Бытовые дела и досуг
+            if (lower.includes('купить') || lower.includes('магазин') || lower.includes('продукты')) {
+                showSecret("🍫", "И захвати мне вкусняшку, пожалуйста! А я отплачу поцелуями.");
+            }
+            if (lower.includes('фильм') || lower.includes('кино') || lower.includes('сериал')) {
+                showSecret("🍿", "Я уже готовлю вкусняшки и выбираю самое уютное место у тебя под боком!");
+            }
+            if (lower.includes('уборка') || lower.includes('мусор') || lower.includes('помыть')) {
+                showSecret("🧼", "Процесс уборки гораздо увлекательнее, если представить, что ты устранаешь следы преступления");
+            }
+
+            // Хобби и работа
+            if (lower.includes('фото') || lower.includes('пленка') || lower.includes('кадры') || lower.includes('обработать')) {
+                showSecret("📸", "Удачного света! Жду новых классных кадров.");
+            }
+            if (lower.includes('музей') || lower.includes('выставка') || lower.includes('билеты')) {
+                showSecret("🖼️", "Отличный план. Главное — заранее проверить расписание работы!");
+            }
+            if (lower.includes('дедлайн') || lower.includes('отчет') || lower.includes('баг')) {
+                showSecret("⏱️", "Спокойно. Ешь слона по кусочкам, ты со всем разберешься.");
+            }
+
+            // Путешествия
+            if (lower.includes('чемодан') || lower.includes('собрать вещи') || lower.includes('аэропорт')) {
+                showSecret("✈️", "Паспорта, билеты, зарядки. Остальное купим на месте, если что.");
+            }
+            // --- КОНЕЦ БЛОКА ПАСХАЛОК ---
+
+            // Добавляем обычную задачу в список
             tasks.push({ id: Date.now(), text: text, completed: false });
             taskInput.value = '';
             saveAndRenderTasks();
         }
-
-        function createHeartRain() {
-            for (let i = 0; i < 30; i++) {
-                const heart = document.createElement('div');
-                heart.innerHTML = '❤️';
-                heart.style.position = 'fixed';
-                heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.top = '-50px';
-                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-                heart.style.zIndex = '99999';
-                heart.style.pointerEvents = 'none';
-                heart.style.transition = 'transform 3s linear, opacity 3s linear';
-                
-                document.body.appendChild(heart);
-                
-                setTimeout(() => {
-                    heart.style.transform = `translateY(100vh) rotate(${Math.random() * 360}deg)`;
-                    heart.style.opacity = '0';
-                }, 50);
-                
-                setTimeout(() => { heart.remove(); }, 3000);
+    
+             // 11. Функция для многократного клика по Хаосу
+        let chaosClicks = 0;
+        function triggerChaosEgg() {
+            chaosClicks++;
+            if (chaosClicks >= 3) {
+                showSecret("🌪️", "Хаос — это наше естественное состояние! Мы в нём прекрасны.");
+                chaosClicks = 0;
             }
+            setTimeout(() => chaosClicks = 0, 2000); // Сбрасываем счетчик, если кликает медленно
+        }
+
+        // 12. Клавиатурный ЧИТ-КОД
+        // Если Даня просто сидя на сайте напечатает на клавиатуре слово "kiss" (или кисс)
+        let secretKeys = '';
+        window.addEventListener('keydown', (e) => {
+            secretKeys += e.key.toLowerCase();
+            if (secretKeys.includes('kiss') || secretKeys.includes('кисс')) {
+                showSecret("💋", "Чмок-чмок-чмок! Миллион поцелуев!");
+                if(typeof createHeartRain === 'function') createHeartRain();
+                secretKeys = ''; // Сбрасываем после активации
+            }
+            if (secretKeys.length > 10) secretKeys = secretKeys.slice(-10); // Храним только последние 10 букв
+        });
+
+        // 13. Для Дани-хакера (Консоль браузера)
+        // Если он нажмет F12 и решит посмотреть код сайта, его встретит это послание:
+        console.log("%cПривет, мой любопытный Даня! Всё тебе покажи!", "color: #8C6239; background: #F7F5F0; font-size: 18px; padding: 10px; border-radius: 10px; border: 2px solid #8C6239;");
+
+        // 14. Секрет долгого нажатия на компас (карту)
+        const mapBtn = document.querySelector('.map-toggle-btn');
+        let compassTimer;
+        if(mapBtn) {
+            mapBtn.addEventListener('pointerdown', () => {
+                compassTimer = setTimeout(() => {
+                    showSecret("🧭", "С тобой хоть на край света!");
+                }, 2000); // 2 секунды удержания
+            });
+            mapBtn.addEventListener('pointerup', () => clearTimeout(compassTimer));
+            mapBtn.addEventListener('pointerleave', () => clearTimeout(compassTimer));
+        }
+        // --- Стук в дверь (3 быстрых клика) -> Полароид ---
+        let knockClicks = 0;
+        let knockTimer;
+        function triggerKnockEgg() {
+            knockClicks++;
+            clearTimeout(knockTimer);
+            
+            if (knockClicks === 3) {
+                // Вызываем полароид!
+                showPinPhoto('добавить полароид', 'Тук-тук!', 'Кто там? Твоя самая любимая девочка пришла сказать, что соскучилась.');
+                knockClicks = 0;
+            } else {
+                knockTimer = setTimeout(() => { knockClicks = 0; }, 1000);
+            }
+        }
+                // 5. "Игра в гляделки" (Зависнуть мышкой над фото на 4 секунды и не двигать)
+        const starePolaroid = document.getElementById('stare-polaroid');
+        let stareTimer;
+        if (starePolaroid) {
+            starePolaroid.addEventListener('mouseenter', () => {
+                stareTimer = setTimeout(() => {
+                    showSecret("👀", "Хватит пялиться, я стесняюсь! (Ладно, шучу, смотри сколько хочешь).");
+                }, 4000);
+            });
+            starePolaroid.addEventListener('mouseleave', () => clearTimeout(stareTimer));
+            starePolaroid.addEventListener('pointerdown', () => clearTimeout(stareTimer)); // если начал тащить - отмена
+        }
+
+        // 7. "Ковырять скотч" (Кликнуть по скотчу 5 раз подряд)
+        const tapePolaroid = document.getElementById('tape-polaroid');
+        let tapeClicks = 0;
+        let tapeTimer;
+        if (tapePolaroid) {
+            tapePolaroid.querySelector('.tape').addEventListener('click', (e) => {
+                tapeClicks++;
+                clearTimeout(tapeTimer);
+                if (tapeClicks === 5) {
+                    showSecret("🛑", "Эй, не отковыривай скотч! У нас тут и так всё держится на честном слове и безграничной любви.");
+                    tapeClicks = 0;
+                } else {
+                    tapeTimer = setTimeout(() => { tapeClicks = 0; }, 1000);
+                }
+                e.stopPropagation();
+            });
+        }
+
+        // 8. Попытка приблизить/рассмотреть (Колесико мыши ИЛИ щипок пальцами над фото)
+        const zoomPolaroid = document.getElementById('zoom-polaroid');
+        if (zoomPolaroid) {
+            zoomPolaroid.addEventListener('wheel', (e) => {
+                if (e.ctrlKey || e.deltaY < 0) { // если крутит вверх или с ctrl (зум)
+                    showSecret("🔍", "Да-да, я знаю, что я тут отлично получилась. Можешь не приближать, пиксели полезут.");
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+
+        // 9. "Уронить воспоминание" (Бросить карточку в самый низ экрана)
+        const dropPolaroid = document.getElementById('drop-polaroid');
+        if (dropPolaroid) {
+            dropPolaroid.addEventListener('pointerup', (e) => {
+                // Если координата Y при отпускании почти у нижнего края экрана
+                if (e.clientY > window.innerHeight - 100) {
+                    showSecret("⚠️", "Аккуратнее! Не роняй наши воспоминания, они хрупкие.");
+                }
+            });
+        }
+                // =========================================
+        // НОВЫЕ 10 ПАСХАЛОК ДЛЯ ЭЛЕМЕНТОВ ИНТЕРФЕЙСА
+        // =========================================
+
+        // 1. Таймер: Нервное щелканье (Кликнуть 5 раз подряд по таймеру)
+        const timerDisplayObj = document.getElementById('timer-display');
+        let timerClicks = 0;
+        let timerClickTimeout;
+        if (timerDisplayObj) {
+            timerDisplayObj.addEventListener('click', () => {
+                timerClicks++;
+                clearTimeout(timerClickTimeout);
+                if (timerClicks === 5) {
+                    showSecret("⏳", "Хватит щелкать таймер! Либо фокус на работу, либо закрывай ноут и иди обниматься.");
+                    timerClicks = 0;
+                } else {
+                    timerClickTimeout = setTimeout(() => { timerClicks = 0; }, 800);
+                }
+            });
+        }
+
+        // 2. Блокнот: Написание поэмы (Ввести больше 40 символов в одну задачу)
+        const taskInputObj = document.getElementById('task-input');
+        if (taskInputObj) {
+            taskInputObj.addEventListener('input', (e) => {
+                if (e.target.value.length === 45) { // Срабатывает ровно на 45-м символе
+                    showSecret("📜", "Ты там поэму пишешь? Задачи должны быть короткими. Для стихов заведем отдельную тетрадь!");
+                }
+            });
+        }
+
+        // 3. Блокнот: Закрыть пустой план (Кликнуть крестик блокнота, когда там 0 задач)
+        const notepadCloseBtns = document.querySelectorAll('.notepad-box .notepad-close');
+        if (notepadCloseBtns.length > 0) {
+            notepadCloseBtns[0].addEventListener('click', () => {
+                // Если блокнот закрывается, а список пуст и ничего не введено
+                if (tasks.length === 0 && taskInputObj.value.trim() === '') {
+                    showSecret("🛏️", "Никаких планов? Отлично, значит сегодня легально валяемся в кровати и ничего не делаем!");
+                }
+            });
+        }
+
+        // 4. Блокнот: Супер-продуктивность (Удалить 3 задачи за 5 секунд)
+        const taskListObj = document.getElementById('task-list');
+        let deleteCount = 0;
+        let deleteTimer;
+        if (taskListObj) {
+            taskListObj.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    deleteCount++;
+                    clearTimeout(deleteTimer);
+                    if (deleteCount === 3) {
+                        showSecret("🥷", "Ого, какая скорость! Настоящий ниндзя продуктивности. Горжусь!");
+                        deleteCount = 0;
+                    } else {
+                        deleteTimer = setTimeout(() => { deleteCount = 0; }, 5000); // Даем 5 секунд на 3 удаления
+                    }
+                }
+            });
+        }
+
+        // 5. Хаос: Сомнения (Навести мышку на "Вернуться к хаосу" на 3 секунды и не кликать)
+        const chaosBtnObj = document.querySelector('.reset-board-btn');
+        let hoverTimer;
+        if (chaosBtnObj) {
+            chaosBtnObj.addEventListener('mouseenter', () => {
+                hoverTimer = setTimeout(() => {
+                    showSecret("🌪️", "Не бойся, нажимай. Хуже уже точно не будет (наверное).");
+                }, 3000);
+            });
+            chaosBtnObj.addEventListener('mouseleave', () => clearTimeout(hoverTimer));
+            chaosBtnObj.addEventListener('click', () => clearTimeout(hoverTimer));
+        }
+
+        // 6. Секретный конверт: Попытка утащить (Drag & Drop)
+        const envelopeObj = document.querySelector('.date-jar img');
+        if (envelopeObj) {
+            envelopeObj.addEventListener('dragstart', (e) => {
+                e.preventDefault();
+                showSecret("💌", "Конверт надежно приклеен к стене. Не отрывай, просто нажми на него!");
+            });
+        }
+
+        // 8. Карта: Клик по пустому месту (не в режиме добавления метки)
+        const mapImgObj = document.getElementById('travel-map-img');
+        if (mapImgObj) {
+            mapImgObj.addEventListener('click', () => {
+                if (typeof addPinMode !== 'undefined' && !addPinMode) {
+                    showSecret("🗺️", "Тут пока нет нашей булавки... Но мы обязательно куда-нибудь сюда съездим!");
+                }
+            });
+        }
+
+        // 9. Браузер: Попытка сломать верстку (Быстрое изменение размера окна 3 раза)
+        let resizeCount = 0;
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            resizeCount++;
+            clearTimeout(resizeTimer);
+            if (resizeCount === 15) { // 15 срабатываний события resize — это 2-3 секунды дерганья окна
+                showSecret("🛠️", "Эй! Я тут старалась, верстала по пикселям, а ты пытаешься всё сломать? Оставь окно в покое!");
+                resizeCount = 0;
+            } else {
+                resizeTimer = setTimeout(() => { resizeCount = 0; }, 1000);
+            }
+        });
+
+        // 10. Блокнот: Перегруз планами (Добавление 8-й задачи в список)
+        const addTaskBtn = document.querySelector('.notepad-input-area button');
+        if (addTaskBtn) {
+            addTaskBtn.addEventListener('click', () => {
+                // Если после клика в массиве стало 8 или больше задач
+                setTimeout(() => {
+                    if (typeof tasks !== 'undefined' && tasks.length === 8) {
+                        showSecret("🤯", "Ого, сколько планов. Не забывай, что половину из этого можно просто не делать.");
+                    }
+                }, 100); // Небольшая задержка, чтобы задача успела добавиться
+            });
+        }
+        // =========================================
+        // НОВЫЕ 15 ПАСХАЛОК ДЛЯ КАРТОЧЕК И ФОНА
+        // =========================================
+
+        // 1. Попытка выкинуть карточку за экран (Бросок влево или вправо)
+        document.querySelectorAll('.polaroid').forEach(p => {
+            p.addEventListener('pointerup', (e) => {
+                if (e.clientX < 20 || e.clientX > window.innerWidth - 20) {
+                    showSecret("🛸", "Эй-эй! Воспоминания за борт не выкидываем, верни на место!");
+                }
+            });
+        });
+
+        // 2. Зависнуть над любым полароидом на 8 секунд
+        document.querySelectorAll('.polaroid').forEach(p => {
+            let pTimer;
+            p.addEventListener('mouseenter', () => {
+                pTimer = setTimeout(() => showSecret("🗿", "Залип на эту фотку? Классно было, правда?)"), 8000);
+            });
+            p.addEventListener('mouseleave', () => clearTimeout(pTimer));
+            p.addEventListener('pointerdown', () => clearTimeout(pTimer)); // Если начал тащить - отменяем
+        });
+
+        // 3. Нервный клик по подписи к любому фото (5 раз)
+        document.querySelectorAll('.polaroid .caption').forEach(c => {
+            let capClicks = 0;
+            let capTimer;
+            c.addEventListener('click', (e) => {
+                capClicks++;
+                clearTimeout(capTimer);
+                if (capClicks === 5) {
+                    showSecret("🔤", "Текст от этого не поменяется, я писала от души! Хватит тыкать.");
+                    capClicks = 0;
+                } else {
+                    capTimer = setTimeout(() => capClicks = 0, 1000);
+                }
+                e.stopPropagation();
+            });
+        });
+
+        // 4. Попытка засунуть фото в Секретный Конверт (Уронить полароид на конверт)
+        const theEnvelope = document.querySelector('.date-jar');
+        document.querySelectorAll('.polaroid').forEach(p => {
+            p.addEventListener('pointerup', (e) => {
+                if (theEnvelope) {
+                    const envRect = theEnvelope.getBoundingClientRect();
+                    // Проверяем, не бросил ли он карточку прямо поверх конверта
+                    if (e.clientX > envRect.left && e.clientX < envRect.right && e.clientY > envRect.top && e.clientY < envRect.bottom) {
+                        showSecret("📮", "Не пытайся засунуть фотографию в конверт, она туда не поместится!");
+                    }
+                }
+            });
+        });
+
+        // 10. Правый клик по кнопке Блокнота
+        const noteBtnEl = document.querySelector('.notepad-btn');
+        if (noteBtnEl) {
+            noteBtnEl.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                showSecret("📓", "Планы планами, а спонтанность никто не отменял. Бросай список, погнали гулять!");
+            });
+        }
+
+        // 11. Попытка утащить кнопку Хаоса
+        const chaosBtnEl = document.querySelector('.reset-board-btn');
+        if (chaosBtnEl) {
+            chaosBtnEl.addEventListener('dragstart', (e) => {
+                e.preventDefault();
+                showSecret("🌪️", "Кнопку хаоса нельзя переместить, истинный хаос не поддается контролю!");
+            });
+        }
+
+        // 14. Двойной клик по рисунку "Москва" (Если он есть на доске)
+        const moscowImgObj = document.querySelector('img[alt="Москва"]');
+        if (moscowImgObj) {
+            moscowImgObj.style.pointerEvents = 'auto'; // Делаем кликабельным
+            moscowImgObj.addEventListener('dblclick', () => {
+                showSecret("🏙️", "Москва слезам не верит. Зато верит в упорный труд и нашу любовь.");
+            });
+        }
+
+        // 15. Навести мышку на рисунок "Цветы" на 3 секунды
+        const flowersImgObj = document.querySelector('img[alt="Цветы"]');
+        if (flowersImgObj) {
+            flowersImgObj.style.pointerEvents = 'auto';
+            let flTimer;
+            flowersImgObj.addEventListener('mouseenter', () => {
+                flTimer = setTimeout(() => showSecret("🌸", "Жаль, что они не пахнут через экран. Зато ты всегда пахнешь вкусно!"), 3000);
+            });
+            flowersImgObj.addEventListener('mouseleave', () => clearTimeout(flTimer));
+        }
+        // =========================================
+        // 20 ПАСХАЛОК К КОНКРЕТНЫМ ЭЛЕМЕНТАМ И ФОТО
+        // =========================================
+
+        // --- Вспомогательная система отслеживания наведения ---
+        let hoveredItem = null;
+        document.body.addEventListener('mouseover', (e) => { hoveredItem = e.target; });
+        document.body.addEventListener('mouseout', () => { hoveredItem = null; });
+
+        // Делаем все фоновые рисунки тушью интерактивными
+        document.querySelectorAll('img[src*="DROW"], img[src*="PNG"]').forEach(img => {
+            img.parentElement.style.pointerEvents = 'auto'; 
+        });
+
+        // 3. Полароид Волги/Природы (pictures_12.png): Shift + Клик
+        const volgaPolaroid = document.querySelector('img[src*="pictures_6.png"]');
+        if (volgaPolaroid) {
+            volgaPolaroid.addEventListener('click', (e) => {
+                if (e.shiftKey) showSecret("⛺", "Телепорт на речку активирован... Шучу. Зато палатка всегда наготове!");
+            });
+        }
+
+        // 8. Правый клик по фото Стамбула
+        if (istPolaroid) {
+            istPolaroid.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                showSecret("🥙", "Хочешь скачать кебаб? Иди лучше на кухню, там наверняка есть что-то вкусное.");
+            });
+        }
+
+        // 10. Рисунок "Корова" (DROW_60.png): Навести и нажать "M"
+        const cowImg = document.querySelector('img[src*="DROW_60.png"]');
+        window.addEventListener('keydown', (e) => {
+            if (hoveredItem === cowImg && String(e.key).toLowerCase() === 'm') {
+                showSecret("🐄", "Мууу! Корова передает привет и говорит, что Даня классный.");
+            }
+        });
+
+        // 11. Рисунок "Москва" (DROW_170.png): Резко потянуть вниз
+        const moscowImg = document.querySelector('img[src*="DROW_170.png"]');
+        if (moscowImg) {
+            let startY = 0;
+            moscowImg.addEventListener('pointerdown', e => startY = e.clientY);
+            moscowImg.addEventListener('pointerup', e => {
+                if (e.clientY - startY > 100) showSecret("🏗️", "Не роняй столицу! Нам тут еще жить и работать.");
+            });
+        }
+
+        // 14. Рисунок "Скальники" (PNG_3.png): Shift + Попытка утащить
+        const climbShoes = document.querySelector('img[src*="PNG_3.png"]');
+        if (climbShoes) {
+            climbShoes.addEventListener('dragstart', (e) => {
+                if (e.shiftKey) { e.preventDefault(); showSecret("🧗", "Когда уже пойдём покорять цветные стены?!"); }
+            });
+        }
+
+        // 19. Кнопка Блокнота: Попытка ее перетащить (Drag)
+        if (noteBtn) {
+            noteBtn.draggable = true; // Делаем ее "таскаемой" для браузера
+            noteBtn.addEventListener('dragstart', (e) => {
+                e.preventDefault();
+                showSecret("🏋️", "Задачи сами себя не сделают. Хватит их двигать, иди работай!");
+            });
+        }
+        // =========================================
+        // 5 ОСОБЫХ ПАСХАЛОК К НОВЫМ ЭЛЕМЕНТАМ
+        // =========================================
+
+        // 1. Зацепки (holds.png): "Проверить активник" (Зажать и потянуть ровно вниз)
+        const holdsImg = document.querySelector('img[src*="PNG_9.png"]'); // <--- Вставьте ваше название файла зацепок
+        if (holdsImg) {
+            let holdsStartY = 0;
+            holdsImg.parentElement.style.pointerEvents = 'auto';
+            holdsImg.addEventListener('pointerdown', (e) => { holdsStartY = e.clientY; });
+            holdsImg.addEventListener('pointerup', (e) => {
+                // Если он потянул мышку вниз более чем на 80 пикселей (нагрузил зацепку)
+                if (e.clientY - holdsStartY > 80) {
+                    showSecret("🧗‍♂️", "Держит намертво! Но не расслабляйся, лезть еще высоко.");
+                }
+                // А если потянул ВВЕРХ (неправильное направление для зацепки)
+                else if (e.clientY - holdsStartY < -50) {
+                    showSecret("⚠️", "Эй, это пассив! Его надо грузить вниз, а не вверх!");
+                }
+            });
+        }
+
+        // 2. Пирог (pie.png): "Откусить кусочек" (Кликнуть 3 раза по краю картинки)
+        const pieImg = document.querySelector('img[src*="PNG_2.png"]'); // <--- Вставьте ваше название файла пирога
+        if (pieImg) {
+            let pieClicks = 0;
+            let pieTimer;
+            pieImg.parentElement.style.pointerEvents = 'auto';
+            pieImg.addEventListener('click', (e) => {
+                const rect = pieImg.getBoundingClientRect();
+                const isEdge = (e.clientX < rect.left + 20 || e.clientX > rect.right - 20 || e.clientY < rect.top + 20 || e.clientY > rect.bottom - 20);
+                
+                // Если кликает по краям пирога
+                if (isEdge) {
+                    pieClicks++;
+                    clearTimeout(pieTimer);
+                    if (pieClicks === 3) {
+                        showSecret("🥧", "Ам! Оставишь мне кусочек или всё сам съешь?");
+                        pieClicks = 0;
+                    } else {
+                        pieTimer = setTimeout(() => { pieClicks = 0; }, 1000);
+                    }
+                }
+            });
+        }
+
+        // 4. Билеты (tickets.png): "Закомпостировать" (Ctrl + Клик левой кнопкой мыши)
+        const ticketsImg = document.querySelector('img[src*="PNG_7.png"]'); // <--- Вставьте ваше название файла билетов
+        if (ticketsImg) {
+            ticketsImg.parentElement.style.pointerEvents = 'auto';
+            ticketsImg.addEventListener('click', (e) => {
+                if (e.ctrlKey || e.metaKey) { // На Маке работает с Cmd, на Windows с Ctrl
+                    showSecret("🎟️", "Билет проверен. Добро пожаловать в мир искусства!");
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // 5. Статуэтка (statue.png): "Покрутить со всех сторон" (Колесико мыши вниз, затем вверх)
+        const statueImg = document.querySelector('img[src*="PNG_5.png"]'); // <--- Вставьте ваше название файла статуэтки
+        if (statueImg) {
+            let scrolledDown = false;
+            let statueTimer;
+            statueImg.parentElement.style.pointerEvents = 'auto';
+            
+            statueImg.addEventListener('wheel', (e) => {
+                e.preventDefault(); // Останавливаем прокрутку страницы
+                
+                if (e.deltaY > 0) {
+                    scrolledDown = true; // Запомнили, что покрутили вниз
+                    clearTimeout(statueTimer);
+                    statueTimer = setTimeout(() => { scrolledDown = false; }, 2000); // Даем 2 секунды, чтобы покрутить обратно
+                } 
+                else if (e.deltaY < 0 && scrolledDown) {
+                    // Если покрутили вверх, и до этого (в течение 2 сек) крутили вниз
+                    showSecret("🗿", "Хм, со всех ракурсов хороша. Прямо как ты.");
+                    scrolledDown = false;
+                }
+            }, { passive: false });
+        }
+        // =========================================
+        // 6 ПАСХАЛОК НА МНОГОКРАТНЫЕ КЛИКИ (КАК С КОЗОЙ)
+        // =========================================
+
+        // 1. Чашка кофе/чая (coffee.png) — 5 быстрых кликов ("Передоз кофеина")
+        const coffeeImg = document.querySelector('img[src*="pictures_32.png"]'); // <-- Замените на файл с чашкой
+        if (coffeeImg) {
+            coffeeImg.parentElement.style.pointerEvents = 'auto';
+            let coffeeClicks = 0, coffeeTimer;
+            coffeeImg.addEventListener('click', (e) => {
+                coffeeClicks++;
+                clearTimeout(coffeeTimer);
+                if (coffeeClicks === 5) {
+                    showSecret("☕", "Передоз кофеина! Хватит пить кофе, лучше приходи ко мне за эндорфинами.");
+                    coffeeClicks = 0;
+                } else {
+                    coffeeTimer = setTimeout(() => { coffeeClicks = 0; }, 800); // 800мс на следующий клик
+                }
+                e.stopPropagation();
+            });
+        }
+
+        // 3. Фотоаппарат/Камера (camera.png) — ровно 3 клика (как обратный отсчет 3..2..1)
+        const cameraImg = document.querySelector('img[src*="pictures_26.png"]'); // <-- Замените на файл с камерой
+        if (cameraImg) {
+            cameraImg.parentElement.style.pointerEvents = 'auto';
+            let camClicks = 0, camTimer;
+            cameraImg.addEventListener('click', (e) => {
+                camClicks++;
+                clearTimeout(camTimer);
+                if (camClicks === 3) {
+                    showSecret("📸", "3... 2... 1... Щелк! Птичка вылетела! Ты на всех фото получаешься идеально.");
+                    camClicks = 0;
+                } else {
+                    camTimer = setTimeout(() => { camClicks = 0; }, 1000);
+                }
+                e.stopPropagation();
+            });
+        }
+
+        // 6. Бокалы/Вино/Пиво (wine.png) — 2 клика ("Чокнуться")
+        const wineImg = document.querySelector('img[src*="pictures_28.png"]'); // <-- Замените на файл с напитком
+        if (wineImg) {
+            wineImg.parentElement.style.pointerEvents = 'auto';
+            let wineClicks = 0, wineTimer;
+            wineImg.addEventListener('click', (e) => {
+                wineClicks++;
+                clearTimeout(wineTimer);
+                if (wineClicks === 2) {
+                    showSecret("🥂", "Чин-чин! За нас, за наши сумасшедшие идеи и за то, чтобы мы всегда смотрели в одном направлении.");
+                    wineClicks = 0;
+                } else {
+                    wineTimer = setTimeout(() => { wineClicks = 0; }, 600);
+                }
+                e.stopPropagation();
+            });
         }
     </script>
 </body>
