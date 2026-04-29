@@ -172,7 +172,7 @@
                 display: block;
             }
 
-                        /* Настраиваем карточки, чтобы они послушно встали в 2 колонки */
+             /* Настраиваем карточки, чтобы они послушно встали в 2 колонки */
             .polaroid, .scrap-item {
                 position: static !important; /* УБИРАЕМ АБСОЛЮТНОЕ ПОЗИЦИОНИРОВАНИЕ */
                 width: 100% !important; /* Занимают всю ширину своей колонки */
@@ -196,6 +196,13 @@
                 bottom: auto !important;
             }
 
+            /* ЖЕСТКОЕ ОГРАНИЧЕНИЕ РАЗМЕРОВ ИЗОБРАЖЕНИЙ И ВИДЕО */
+            .polaroid img, .polaroid video {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                object-fit: cover !important;
+            }
             /* Легкий наклон в разные стороны для красоты */
             .polaroid:nth-of-type(odd) { transform: rotate(-2deg) !important; }
             .polaroid:nth-of-type(even) { transform: rotate(2deg) !important; }
