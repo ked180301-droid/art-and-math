@@ -182,7 +182,6 @@
             }
 
             /* КАРТОЧКИ (отвязываем от десктопных координат, заставляем слушаться сетку) */
-                       /* Жесткая сетка для всех карточек и скрап-элементов */
             .polaroid, .scrap-item {
                 position: static !important; 
                 width: 100% !important; 
@@ -194,7 +193,8 @@
                 page-break-inside: avoid;
                 transform: none !important; 
             }
-           /* Внутренние картинки и видео обязаны подчиняться карточке */
+            
+            /* ЖЕЛЕЗНЫЙ ОШЕЙНИК ДЛЯ КАРТИНОК И ВИДЕО */
             .polaroid img, .polaroid video, .scrap-item img {
                 width: 100% !important;
                 max-width: 100% !important;
@@ -202,25 +202,6 @@
                 display: block !important;
                 object-fit: cover !important;
             }
-                
-                /* Запрещаем карточке разрываться пополам между двумя колонками */
-                display: inline-block !important; 
-                break-inside: avoid;
-                page-break-inside: avoid;
-                
-                /* Сброс старых трансформаций */
-                transform: none !important; 
-            }
-
-            /* ЖЕЛЕЗНЫЙ ОШЕЙНИК ДЛЯ КАРТИНОК И ВИДЕО (чтобы не раздувались на весь экран) */
-            .polaroid img, .polaroid video {
-                width: 100% !important;
-                max-width: 100% !important;
-                height: auto !important;
-                display: block !important;
-                object-fit: cover;
-            }
-
             /* ШАХМАТНЫЙ ПОРЯДОК И НАКЛОНЫ */
             /* Четные элементы в HTML-коде */
             .polaroid:nth-of-type(even) { transform: translateY(20px) rotate(2deg) !important; }
