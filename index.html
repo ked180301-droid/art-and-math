@@ -145,22 +145,51 @@
         .pomodoro-widget.collapsed .timer-content, .pomodoro-widget.collapsed .btn-minimize { display: none; }
         .pomodoro-widget.collapsed .btn-maximize { display: flex; justify-content: center; align-items: center; }
 
-        /* ========================================= */
+               /* ========================================= */
         /* АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ (МОБИЛЬНАЯ ЛЕНТА) */
         /* ========================================= */
         @media screen and (max-width: 768px) {
-            body { min-height: auto; padding: 70px 10px 120px 10px; display: flex; flex-direction: column; align-items: center; }
-            h1 { font-size: 2rem; margin-top: 20px; }
-            p.subtitle { font-size: 1.2rem; margin-bottom: 30px; }
+            body { 
+                min-height: auto; 
+                padding: 70px 15px 120px 15px; 
+                display: flex; 
+                flex-wrap: wrap; /* Позволяет элементам переноситься на новые строки */
+                justify-content: space-between; /* Распределяет по краям (создает 2 колонки) */
+                align-items: flex-start; 
+            }
+            h1 { font-size: 2rem; margin-top: 20px; width: 100%; text-align: center; }
+            p.subtitle { font-size: 1.2rem; margin-bottom: 40px; width: 100%; text-align: center; }
             
             .reset-board-btn { top: 10px; left: 10px; font-size: 1rem; padding: 5px 10px; }
 
-            .polaroid, .scrap-item {
-                position: relative !important; top: auto !important; left: auto !important; right: auto !important;
-                margin-bottom: 40px; max-width: 90%;
+            .polaroid {
+                position: relative !important; 
+                top: auto !important; left: auto !important; right: auto !important;
+                width: 46%; /* Занимают чуть меньше половины экрана (2 колонки) */
+                max-width: none;
+                margin-bottom: 30px !important;
+                margin-top: 0 !important;
             }
-            .scrap-item { max-width: 150px !important; margin-bottom: 30px; }
+            
+            /* ШАХМАТНЫЙ ПОРЯДОК И ХАОС */
+            /* Нечетные карточки сдвигаем вниз и чуть наклоняем влево */
+            .polaroid:nth-of-type(odd) {
+                transform: translateY(40px) rotate(-3deg) !important;
+            }
+            /* Четные карточки остаются выше и чуть наклоняются вправо */
+            .polaroid:nth-of-type(even) {
+                transform: translateY(0px) rotate(3deg) !important;
+            }
 
+            .scrap-item {
+                position: relative !important; 
+                top: auto !important; left: auto !important; right: auto !important;
+                width: 40%; 
+                max-width: 120px !important; 
+                margin-bottom: 30px !important;
+            }
+
+            /* Фоновые рисунки тушью */
             .blend-mode { position: absolute !important; width: 120px !important; left: -5% !important; right: auto !important; }
             .blend-mode:nth-of-type(even) { left: auto !important; right: -5% !important; }
             .blend-mode:nth-of-type(1) { top: 5% !important; }
@@ -173,6 +202,7 @@
             .blend-mode:nth-of-type(8) { top: 88% !important; }
             .blend-mode:nth-of-type(9) { top: 96% !important; }
 
+            /* Таймер */
             .pomodoro-widget.collapsed {
                 width: 75px !important; height: 75px !important; bottom: 25px !important; left: 50% !important; 
                 right: auto !important; transform: translateX(-50%) !important; box-shadow: 0 5px 20px rgba(0,0,0,0.25) !important;
@@ -184,7 +214,33 @@
                 right: auto !important; transform: translateX(-50%) !important; border-radius: 25px !important;
                 padding: 20px !important; box-shadow: 0 10px 40px rgba(0,0,0,0.3) !important;
             }
+         } 
+        /* ========================================= */
+        /* КРАСИВОЕ ВСПЛЫВАЮЩЕЕ ОКНО ТАЙМЕРА         */
+        /* ========================================= */
+        .custom-alert {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(247, 245, 240, 0.85); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10000; opacity: 1; transition: opacity 0.3s ease;
         }
+        .custom-alert.hidden { opacity: 0; pointer-events: none; }
+        .alert-box {
+            background: #fff; padding: 40px; border-radius: 20px;
+            text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            max-width: 80%; width: 350px; border: 1px solid #eaeaea;
+            transform: scale(1); transition: transform 0.3s ease;
+        }
+        .custom-alert.hidden .alert-box { transform: scale(0.8); }
+        .alert-box h2 { margin-top: 0; font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; }
+        .alert-box p { font-family: 'Caveat', cursive; font-size: 1.5rem; color: #555; margin-bottom: 25px; }
+        .alert-box button {
+            background: #fff; border: 1px solid #ccc; padding: 8px 25px;
+            border-radius: 20px; font-family: 'Caveat', cursive; font-size: 1.3rem;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .alert-box button:hover { background: #333; color: #fff; border-color: #333; }
+        
     </style>
 </head>
 <body>
@@ -448,14 +504,27 @@
                 <button onclick="pauseTimer()">Пауза</button>
                 <button onclick="resetTimer()">Сброс</button>
             </div>
-            <div class="modes">
-                <button onclick="setMode(55)">Режим: Даня (50м)</button>
-                <button onclick="setMode(5)">Перерыв на поцелуй (5м)</button>
-                <button onclick="setMode(30)">Режим: Эвелина (30м)</button>
-                <button onclick="setMode(90)">Глубокая концентрация (90м)</button>
+                       <div class="modes">
+                <button onclick="setMode(55, 'Даня, ты отлично поработал! Время размяться и обнять Эвелину ❤️')">Режим: Даня (55м)</button>
+                <button onclick="setMode(5, 'Перерыв окончен! Возвращаемся к великим делам ✨')">Перерыв на поцелуй (5м)</button>
+                <button onclick="setMode(30, 'Эвелина, ты умница! Сделай глоток чая и отдохни 🌸')">Режим: Эвелина (30м)</button>
+                <button onclick="setMode(90, 'Глубокая концентрация завершена! Ваш мозг заслужил награду 🏆')">Глубокая концентрация (90м)</button>
             </div>
         </div>
     </div>
+
+    <!-- КРАСИВОЕ УВЕДОМЛЕНИЕ ТАЙМЕРА -->
+    <div id="custom-alert" class="custom-alert hidden">
+        <div class="alert-box">
+            <h2>Дзинь-дзинь! 🕰️</h2>
+            <p id="alert-message">Время вышло!</p>
+            <button onclick="closeAlert()">Хорошо ❤️</button>
+        </div>
+    </div>
+
+    <!-- ЗВУК ТАЙМЕРА -->
+    <!-- Скачай любой приятный звук в формате mp3, назови его alarm.mp3 и положи в папку к фотографиям -->
+    <audio id="timer-sound" src="alarm.mp3" preload="auto"></audio>
 
     <!-- ========================================= -->
     <!-- ВСЕ СКРИПТЫ (ЕДИНЫЙ БЛОК)                 -->
@@ -469,10 +538,11 @@
             }
         }
 
-        // 2. ЛОГИКА ТАЙМЕРА
+               // 2. ЛОГИКА ТАЙМЕРА И УВЕДОМЛЕНИЙ
         let timeLeft = 55 * 60;
         let timerId = null;
         let initialTime = 55 * 60;
+        let currentModeMessage = "Время вышло! Пора отдохнуть :)"; // Сообщение по умолчанию
 
         const display = document.getElementById('time-display');
         const widget = document.getElementById('timer-widget');
@@ -492,7 +562,7 @@
                         timeLeft--; updateDisplay();
                     } else {
                         clearInterval(timerId); timerId = null;
-                        alert("Время вышло! Пора поцеловаться или посмотреть кино :)");
+                        showCustomAlert(currentModeMessage);
                     }
                 }, 1000);
             }
@@ -500,7 +570,34 @@
 
         function pauseTimer() { clearInterval(timerId); timerId = null; }
         function resetTimer() { pauseTimer(); timeLeft = initialTime; updateDisplay(); }
-        function setMode(minutes) { pauseTimer(); initialTime = minutes * 60; timeLeft = initialTime; updateDisplay(); }
+        
+        function setMode(minutes, message) { 
+            pauseTimer(); 
+            initialTime = minutes * 60; 
+            timeLeft = initialTime; 
+            currentModeMessage = message; 
+            updateDisplay(); 
+        }
+
+        function showCustomAlert(message) {
+            document.getElementById('alert-message').textContent = message;
+            document.getElementById('custom-alert').classList.remove('hidden');
+            
+            // Воспроизводим звук
+            let sound = document.getElementById('timer-sound');
+            if(sound) {
+                // play() может быть заблокирован браузером без действия пользователя, но так как мы нажимали "Старт", всё сработает
+                sound.play().catch(e => console.log("Нет файла alarm.mp3 или браузер заблокировал звук"));
+            }
+        }
+
+        function closeAlert() {
+            document.getElementById('custom-alert').classList.add('hidden');
+            // Если звук еще играет, останавливаем его
+            let sound = document.getElementById('timer-sound');
+            if(sound) { sound.pause(); sound.currentTime = 0; }
+        }
+
         updateDisplay();
 
         // 3. АВТОВОЗВРАТ ВИДЕО К ОБЛОЖКЕ
@@ -532,6 +629,9 @@
             el.addEventListener('touchstart', startDrag, {passive: false});
 
             function startDrag(e) {
+                // ОТКЛЮЧАЕМ ПЕРЕТАСКИВАНИЕ НА ТЕЛЕФОНАХ (меньше 768 пикселей)
+                if (window.innerWidth <= 768) return; 
+
                 if (e.target.tagName.toLowerCase() === 'video' || e.target.tagName.toLowerCase() === 'button') return;
                 
                 // Чтобы не тащить саму страницу на телефоне
