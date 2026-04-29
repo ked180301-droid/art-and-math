@@ -168,20 +168,28 @@
             p.subtitle { font-size: 1.2rem; margin-bottom: 40px; width: 100%; text-align: center; }
             .reset-board-btn { top: 10px; left: 10px; font-size: 1rem; padding: 5px 10px; }
 
-            /* Настраиваем карточки, чтобы они плотно прилегали друг к другу */
+                        /* Настраиваем карточки, чтобы они послушно встали в 2 колонки */
             .polaroid, .scrap-item {
-                position: relative !important; 
-                top: auto !important; left: auto !important; right: auto !important;
-                width: 100% !important; /* Внутри своей колонки карточка занимает 100% ширины */
-                max-width: none !important;
+                position: static !important; /* УБИРАЕМ АБСОЛЮТНОЕ ПОЗИЦИОНИРОВАНИЕ */
+                width: 100% !important; /* Занимают всю ширину своей колонки */
+                max-width: 100% !important; /* Не дают карточкам раздуваться */
                 margin-bottom: 30px !important;
                 margin-top: 0 !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
                 box-sizing: border-box !important;
                 
                 /* Самое важное правило, чтобы карточку не разорвало пополам между колонками */
                 display: inline-block !important; 
                 break-inside: avoid;
                 page-break-inside: avoid;
+                
+                /* Сбрасываем старые координаты, чтобы карточки не улетали */
+                transform: none !important; 
+                left: auto !important; 
+                top: auto !important; 
+                right: auto !important; 
+                bottom: auto !important;
             }
 
             /* Легкий наклон в разные стороны для красоты */
@@ -270,7 +278,6 @@
         <img src="PNG_3.png" loading="lazy" alt="Скальники">
     </div>
 
-    .blend-mode-mobile { display: none; }
         <!-- РИСУНКИ ТУШЬЮ (ДЛЯ ТЕЛЕФОНА) -->
     <div class="blend-mode-mobile" style="top: 50px; left: 5%; width: 100px;"><img src="DROW_190.png" loading="lazy" alt="график"></div>
     <div class="blend-mode-mobile" style="top: 300px; left: 5%; width: 130px;"><img src="DROW_40.png" loading="lazy" alt="Стамбул"></div>
