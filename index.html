@@ -70,12 +70,13 @@
         /* ========================================= */
         .polaroid {
             background: #fff;
-            padding: 15px 15px 40px 15px;
+            padding: 15px 15px 55px 15px; /* УВЕЛИЧИЛИ НИЖНЕЕ ПОЛЕ (с 40px до 55px) */
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             position: absolute; 
             transition: transform 0.3s ease;
             max-width: 250px;
             z-index: 5;
+            box-sizing: border-box; /* Чтобы padding не ломал общую ширину */
         }
         .polaroid:hover {
             transform: scale(1.05) !important;
@@ -85,7 +86,12 @@
 
         .caption {
             font-family: 'Caveat', cursive; font-size: 1.4rem; text-align: center;
-            position: absolute; bottom: 10px; left: 0; right: 0; color: #444;
+            position: absolute; 
+            bottom: 12px; /* Чуть приподняли (было 10px) */
+            left: 0; right: 0; color: #444;
+            padding: 0 10px; /* Чтобы текст не прилипал к краям карточки */
+            line-height: 1.1; /* Сделали строки чуть плотнее друг к другу */
+            word-wrap: break-word; /* Разрешили переносить слишком длинные слова */
         }
 
         .tape {
