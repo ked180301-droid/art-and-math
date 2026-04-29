@@ -145,58 +145,57 @@
         .pomodoro-widget.collapsed .timer-content, .pomodoro-widget.collapsed .btn-minimize { display: none; }
         .pomodoro-widget.collapsed .btn-maximize { display: flex; justify-content: center; align-items: center; }
 
-        /* ========================================= */
+               /* ========================================= */
         /* АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ (МОБИЛЬНАЯ ЛЕНТА) */
         /* ========================================= */
         @media screen and (max-width: 768px) {
             body { 
                 min-height: auto !important; 
                 padding: 70px 10px 120px 10px; 
+                display: flex; 
+                flex-wrap: wrap; 
+                justify-content: space-between; 
+                align-items: flex-start;
             }
             h1 { font-size: 2rem; margin-top: 20px; width: 100%; text-align: center; }
             p.subtitle { font-size: 1.2rem; margin-bottom: 40px; width: 100%; text-align: center; }
             .reset-board-btn { top: 10px; left: 10px; font-size: 1rem; padding: 5px 10px; }
 
-            /* ИДЕАЛЬНАЯ СЕТКА БЕЗ ПУСТОТ */
-            /* Мы создаем виртуальный контейнер прямо в body для всех карточек */
+            /* Строгий порядок как в HTML (без случайного перемешивания) */
             .polaroid, .scrap-item {
                 position: relative !important; 
                 top: auto !important; left: auto !important; right: auto !important;
-                width: 100% !important; /* Внутри колонки карточка занимает всю ширину */
+                width: 47% !important; /* Строго 2 элемента в ряд */
                 max-width: none !important;
-                margin-bottom: 25px !important;
+                margin-bottom: 30px !important;
                 margin-top: 0 !important;
                 box-sizing: border-box !important;
-                display: inline-block; /* Важно для CSS columns */
+                display: block !important;
             }
 
-            /* Назначаем body работать как газетные колонки */
-            body {
-                column-count: 2; /* Ровно 2 колонки */
-                column-gap: 15px; /* Расстояние между колонками */
-            }
-            /* Заголовки и таймер не должны дробиться по колонкам */
-            h1, p.subtitle, .reset-board-btn, .pomodoro-widget, .blend-mode {
-                column-span: all;
-            }
-
-            /* ХАОТИЧНЫЙ НАКЛОН И ПЕРЕМЕШИВАНИЕ (ПСЕВДО-СЛУЧАЙНОСТЬ) */
-            /* Четные элементы (по порядку в коде) */
-            .polaroid:nth-child(even) { transform: rotate(3deg) !important; order: 2; }
-            .scrap-item:nth-child(even) { transform: rotate(-5deg) scale(0.9) !important; order: 1; }
+            /* Легкий наклон в разные стороны для красоты */
+            .polaroid:nth-of-type(odd) { transform: translateY(20px) rotate(-2deg) !important; }
+            .polaroid:nth-of-type(even) { transform: translateY(0px) rotate(2deg) !important; }
             
-            /* Нечетные элементы */
-            .polaroid:nth-child(odd) { transform: rotate(-2deg) !important; order: 1; }
-            .scrap-item:nth-child(odd) { transform: rotate(8deg) scale(0.8) !important; order: 3; }
-            
-            /* Билетики (.scrap-item) делаем чуть поменьше, чтобы не перекрывали фото */
-            .scrap-item { 
-                width: 80% !important; 
-                margin-left: 10% !important; 
-                margin-bottom: 15px !important;
+            /* Билетики делаем визуально поменьше внутри их колонки */
+            .scrap-item img { width: 70%; margin: 0 auto; display: block; }
+            .scrap-item:nth-of-type(odd) { transform: translateY(20px) rotate(5deg) !important; }
+            .scrap-item:nth-of-type(even) { transform: translateY(0px) rotate(-5deg) !important; }
+
+            /* ПРЯЧЕМ ДЕСКТОПНЫЕ РИСУНКИ (Они и создавали пустоту в 4000px внизу!) */
+            .blend-mode { display: none !important; }
+
+            /* ПОКАЗЫВАЕМ ВАШИ МОБИЛЬНЫЕ РИСУНКИ */
+            .blend-mode-mobile {
+                display: block !important;
+                position: absolute !important; /* Теперь они будут пролистываться! */
+                mix-blend-mode: multiply;
+                opacity: 0.6;
+                z-index: 0;
+                pointer-events: none;
             }
 
-            /* ... (сюда же добавляем стили для таймера, они не менялись) ... */
+            /* Таймер (стили не менялись) */
             .pomodoro-widget.collapsed {
                 width: 75px !important; height: 75px !important; bottom: 25px !important; left: 50% !important; 
                 right: auto !important; transform: translateX(-50%) !important; box-shadow: 0 5px 20px rgba(0,0,0,0.25) !important;
@@ -208,23 +207,7 @@
                 right: auto !important; transform: translateX(-50%) !important; border-radius: 25px !important;
                 padding: 20px !important; box-shadow: 0 10px 40px rgba(0,0,0,0.3) !important;
             }
-                        /* ФОНОВЫЕ РИСУНКИ ТУШЬЮ (КЛЯКСЫ) */
-            /* Мы отвязываем их от абсолютных координат и просто раскидываем по экрану */
-            .blend-mode { 
-                position: fixed !important; /* Привязываем к экрану телефона */
-                width: 150px !important; 
-                z-index: 0 !important; 
-                opacity: 0.4 !important; /* Делаем чуть бледнее, чтобы текст легко читался */
-                pointer-events: none !important;
-            }
-            /* Раскидываем 4 главных рисунка по углам экрана */
-            .blend-mode:nth-of-type(1) { top: 15% !important; left: -10% !important; }
-            .blend-mode:nth-of-type(2) { top: 40% !important; right: -5% !important; }
-            .blend-mode:nth-of-type(3) { top: 65% !important; left: -5% !important; }
-            .blend-mode:nth-of-type(4) { bottom: 10% !important; right: -10% !important; }
-            /* Остальные прячем, чтобы не было "грязи" на маленьком экране */
-            .blend-mode:nth-of-type(n+5) { display: none !important; }
-            }
+        }
         /* ========================================= */
         /* КРАСИВОЕ ВСПЛЫВАЮЩЕЕ ОКНО ТАЙМЕРА         */
         /* ========================================= */
@@ -277,6 +260,13 @@
         <img src="PNG_3.png" loading="lazy" alt="Скальники">
     </div>
 
+    .blend-mode-mobile { display: none; }
+        <!-- РИСУНКИ ТУШЬЮ (ДЛЯ ТЕЛЕФОНА) -->
+    <div class="blend-mode-mobile" style="top: 50px; left: 5%; width: 120px;"><img src="DROW_190.png" loading="lazy" alt="график"></div>
+    <div class="blend-mode-mobile" style="top: 300px; right: 5%; width: 140px;"><img src="DROW_40.png" loading="lazy" alt="Стамбул"></div>
+    <div class="blend-mode-mobile" style="top: 1500px; left: 10%; width: 130px;"><img src="PNG_3.png" loading="lazy" alt="Скальники"></div>
+    <div class="blend-mode-mobile" style="top: 450px; left: 5%; width: 120px;"><img src="DROW_140.png" loading="lazy" alt="Исаакиевский"></div>
+    
     <!-- ЗАГОЛОВКИ -->
     <h1>Наш мир</h1>
     <p class="subtitle">Место, где математический план встречается с творческим хаосом</p>
