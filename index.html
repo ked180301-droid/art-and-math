@@ -171,6 +171,39 @@
             p.subtitle { font-size: 1.2rem; margin-bottom: 40px; width: 100%; text-align: center; display: block !important; }
             .reset-board-btn { top: 10px; left: 10px; font-size: 1rem; padding: 5px 10px; }
 
+                /* Выстраиваем кнопки в столбик слева сверху */
+    .reset-board-btn { top: 10px; left: 10px; font-size: 0.9rem; padding: 5px 10px; }
+    
+    /* Блокнот и Карта становятся просто иконками под главной кнопкой */
+    .notepad-btn { 
+        top: 50px; 
+        left: 10px; 
+        width: 40px; 
+        height: 40px; 
+        padding: 0; 
+        border-radius: 50%; /* Круглая кнопка */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2rem;
+        color: transparent; /* Прячем текст */
+    }
+    .notepad-btn::before {
+        content: "📝"; /* Оставляем только иконку */
+        color: initial;
+    }
+
+    .map-toggle-btn { 
+        top: 100px; 
+        left: 10px; 
+        width: 40px; 
+        height: 40px; 
+        padding: 0; 
+        border-radius: 50%; /* Круглая кнопка */
+        justify-content: center;
+    }
+    .map-toggle-btn span { display: none; } /* Прячем слово "Карта" */
+
             /* ИДЕАЛЬНАЯ ГАЗЕТНАЯ СЕТКА (решает проблему пустот между карточками) */
 
             .cards-container {
@@ -525,21 +558,23 @@
         <img src="PNG_3.png" loading="lazy" alt="Скальники">
     </div>
 
-        <!-- КОНВЕРТ С ИДЕЯМИ (Кликабельный) -->
+        
+    <!-- ЗАГОЛОВКИ -->
+    <h1>Наш мир</h1>
+    <p class="subtitle">Место, где математический план встречается с творческим хаосом</p>
+
+    <!-- КОНВЕРТ С ИДЕЯМИ (Кликабельный) -->
     <div class="date-jar" onclick="showRandomDate()" style="top: 300px; left: 35%;">
         <img src="PNG_5.png" alt="Идеи для свиданий">
         <div class="jar-label">Секретный конверт</div>
     </div>
 
-        <!-- РИСУНКИ ТУШЬЮ (ДЛЯ ТЕЛЕФОНА) -->
-    <div class="blend-mode-mobile" style="top: 50px; left: 5%; width: 100px;"><img src="DROW_190.png" loading="lazy" alt="график"></div>
-    <div class="blend-mode-mobile" style="top: 300px; left: 5%; width: 130px;"><img src="DROW_40.png" loading="lazy" alt="Стамбул"></div>
-    <div class="blend-mode-mobile" style="top: 1500px; left: 5%; width: 80px;"><img src="PNG_3.png" loading="lazy" alt="Скальники"></div>
-    <div class="blend-mode-mobile" style="top: 800px; left: 5%; width: 120px;"><img src="DROW_140.png" loading="lazy" alt="Исаакиевский"></div>
-    
-    <!-- ЗАГОЛОВКИ -->
-    <h1>Наш мир</h1>
-    <p class="subtitle">Место, где математический план встречается с творческим хаосом</p>
+    <!-- РИСУНКИ ТУШЬЮ (ДЛЯ ТЕЛЕФОНА) -->
+    <div class="blend-mode-mobile" style="top: 100px; left: 5%; width: 50px;"><img src="DROW_190.png" loading="lazy" alt="график"></div>
+    <div class="blend-mode-mobile" style="top: 600px; left: 5%; width: 100px;"><img src="DROW_40.png" loading="lazy" alt="Стамбул"></div>
+    <div class="blend-mode-mobile" style="top: 1100px; left: 5%; width: 40px;"><img src="PNG_3.png" loading="lazy" alt="Скальники"></div>
+    <div class="blend-mode-mobile" style="top: 1600px; left: 5%; width: 80px;"><img src="DROW_140.png" loading="lazy" alt="Исаакиевский"></div>
+    <div class="blend-mode-mobile" style="top: 2100px; left: 5%; width: 80px;"><img src="DROW_90.png" loading="lazy" alt="Цветы" ondblclick="showSecret('От Эвелины 🌸', 'Ты делаешь мой мир ярче каждый день!')" style="pointer-events: auto; cursor: help;"></div>
 
     <!-- ХАОТИЧНЫЕ КАРТОЧКИ И ЭЛЕМЕНТЫ -->
         <div class="cards-container">
