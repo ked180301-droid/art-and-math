@@ -162,33 +162,25 @@
             
             .reset-board-btn { top: 10px; left: 10px; font-size: 1rem; padding: 5px 10px; }
 
-            .polaroid {
+                       /* Одинаковые правила для всех элементов, чтобы они встали ровно в 2 колонки */
+            .polaroid, .scrap-item {
                 position: relative !important; 
                 top: auto !important; left: auto !important; right: auto !important;
-                width: 46%; /* Занимают чуть меньше половины экрана (2 колонки) */
-                max-width: none;
-                margin-bottom: 30px !important;
+                width: 46% !important; /* Занимают одинаковую ширину */
+                max-width: none !important;
+                margin-bottom: 40px !important;
                 margin-top: 0 !important;
             }
             
-            /* ШАХМАТНЫЙ ПОРЯДОК И ХАОС */
-            /* Нечетные карточки сдвигаем вниз и чуть наклоняем влево */
-            .polaroid:nth-of-type(odd) {
+            /* ШАХМАТНЫЙ ПОРЯДОК ДЛЯ ВСЕХ ЭЛЕМЕНТОВ */
+            /* Нечетные по счету (левая колонка) съезжают вниз */
+            .polaroid:nth-child(odd), .scrap-item:nth-child(odd) {
                 transform: translateY(40px) rotate(-3deg) !important;
             }
-            /* Четные карточки остаются выше и чуть наклоняются вправо */
-            .polaroid:nth-of-type(even) {
+            /* Четные по счету (правая колонка) остаются выше */
+            .polaroid:nth-child(even), .scrap-item:nth-child(even) {
                 transform: translateY(0px) rotate(3deg) !important;
             }
-
-            .scrap-item {
-                position: relative !important; 
-                top: auto !important; left: auto !important; right: auto !important;
-                width: 40%; 
-                max-width: 120px !important; 
-                margin-bottom: 30px !important;
-            }
-
             /* Фоновые рисунки тушью */
             .blend-mode { position: absolute !important; width: 120px !important; left: -5% !important; right: auto !important; }
             .blend-mode:nth-of-type(even) { left: auto !important; right: -5% !important; }
@@ -246,20 +238,20 @@
 <body>
 
     <!-- КНОПКА ВОЗВРАТА -->
-    <button class="reset-board-btn" onclick="resetBoard()">✨ Вернуть как было</button>
+    <button class="reset-board-btn" onclick="resetBoard()">✨ Вернуться к хаосу</button>
 
     <!-- РИСУНКИ ТУШЬЮ (ФОНОВЫЕ) -->
-    <div class="blend-mode" style="top: 200px; right: 10%; width: 180px; transform: rotate(-5deg);"><img src="DROW_190.png" loading="lazy" alt="график"></div>
-    <div class="blend-mode" style="top: 500px; left: 8%; width: 220px; transform: rotate(10deg);"><img src="DROW_40.png" loading="lazy" alt="Стамбул"></div>
-    <div class="blend-mode" style="top: 900px; right: 15%; width: 190px; transform: rotate(-4deg);"><img src="DROW_50.png" loading="lazy" alt="Пейзаж"></div>
-    <div class="blend-mode" style="top: 1300px; left: 12%; width: 210px; transform: rotate(7deg);"><img src="DROW_60.png" loading="lazy" alt="Корова"></div>
+    <div class="blend-mode" style="top: 40px; right: 10%; width: 180px; transform: rotate(-5deg);"><img src="DROW_190.png" loading="lazy" alt="график"></div>
+    <div class="blend-mode" style="top: 500px; left: 8%; width: 320px; transform: rotate(10deg);"><img src="DROW_40.png" loading="lazy" alt="Стамбул"></div>
+    <div class="blend-mode" style="top: 900px; right: 15%; width: 90px; transform: rotate(-4deg);"><img src="DROW_50.png" loading="lazy" alt="Пейзаж"></div>
+    <div class="blend-mode" style="top: 1500px; left: 25%; width: 210px; transform: rotate(7deg);"><img src="DROW_60.png" loading="lazy" alt="Корова"></div>
     <div class="blend-mode" style="top: 1700px; right: 8%; width: 230px; transform: rotate(-12deg);"><img src="DROW_90.png" loading="lazy" alt="Цветы"></div>
-    <div class="blend-mode" style="top: 2200px; left: 18%; width: 200px; transform: rotate(5deg);"><img src="DROW_110.png" loading="lazy" alt="Даня"></div>
-    <div class="blend-mode" style="top: 2600px; right: 20%; width: 250px; transform: rotate(-8deg);"><img src="DROW_140.png" loading="lazy" alt="Исаакиевский"></div>
+    <div class="blend-mode" style="top: 2200px; left: 18%; width: 260px; transform: rotate(5deg);"><img src="DROW_110.png" loading="lazy" alt="Даня"></div>
+    <div class="blend-mode" style="top: 2600px; right: 20%; width: 190px; transform: rotate(-8deg);"><img src="DROW_140.png" loading="lazy" alt="Исаакиевский"></div>
     <div class="blend-mode" style="top: 3100px; left: 10%; width: 220px; transform: rotate(15deg);"><img src="DROW_170.png" loading="lazy" alt="Москва"></div>
-    <div class="blend-mode" style="top: 3600px; right: 15%; width: 240px; transform: rotate(-5deg);"><img src="DROW_180.png" loading="lazy" alt="График2"></div>
+    <div class="blend-mode" style="top: 3600px; right: 45%; width: 240px; transform: rotate(-5deg);"><img src="DROW_180.png" loading="lazy" alt="График2"></div>
 
-<div class="blend-mode" style="top: 800px; left: 5%; width: 100px; transform: rotate(10deg);">
+<div class="blend-mode" style="top: 800px; left: 3%; width: 60px; transform: rotate(10deg);">
         <img src="PNG_6.png" loading="lazy" alt="Полароиды">
     </div>
 
@@ -290,7 +282,7 @@
         <div class="caption">Невероятные дни в Стамбуле</div>
     </div>
 
-    <div class="scrap-item" style="top: 480px; left: 25%; width: 180px; transform: rotate(12deg); z-index: 8;">
+    <div class="scrap-item" style="top: 480px; left: 50%; width: 200px; transform: rotate(12deg); z-index: 8;">
         <img src="PNG_8.png" loading="lazy" alt="Билет">
     </div>
 
@@ -306,7 +298,7 @@
         <div class="caption">Ваша петербургская дама</div>
     </div>
 
-    <div class="scrap-item" style="top: 850px; left: 35%; width: 120px; transform: rotate(-15deg); z-index: 10;">
+    <div class="scrap-item" style="top: 850px; left: 35%; width: 180px; transform: rotate(-15deg); z-index: 10;">
         <img src="PNG_4.png" loading="lazy" alt="Красная зацепка">
     </div>
 
@@ -322,7 +314,7 @@
         <div class="caption">Если я устану ходить по музею, я никому не скажу, но будут знаки</div>
     </div>
 
-    <div class="scrap-item" style="top: 1100px; right: 15%; width: 120px; transform: rotate(20deg); z-index: 9;">
+    <div class="scrap-item" style="top: 1100px; right: 15%; width: 210px; transform: rotate(20deg); z-index: 9;">
         <img src="PNG_5.png" loading="lazy" alt="Статуэтка">
     </div>
 
@@ -338,8 +330,8 @@
         <div class="caption"></div>
     </div>
 
-    <div class="scrap-item" style="top: 1450px; left: 40%; width: 120px; transform: rotate(-10deg); z-index: 10;">
-        <img src="PNG_1.png" loading="lazy" alt="Ссойки">
+    <div class="scrap-item" style="top: 1450px; left: 40%; width: 200px; transform: rotate(-10deg); z-index: 10;">
+        <img src="PNG_1.png" loading="lazy" alt="Слойки">
     </div>
 
     <div class="polaroid" style="top: 1550px; right: 10%; transform: rotate(-4deg); z-index: 6;">
@@ -348,14 +340,8 @@
         <div class="caption"></div>
     </div>
 
-    <div class="scrap-item" style="top: 1650px; right: 40%; width: 120px; transform: rotate(15deg); z-index: 8;">
+    <div class="scrap-item" style="top: 1650px; right: 40%; width: 190px; transform: rotate(15deg); z-index: 8;">
         <img src="PNG_2.png" loading="lazy" alt="Пирог">
-    </div>
-
-    <div class="polaroid" style="top: 1750px; left: 20%; transform: rotate(3deg); z-index: 7;">
-        <div class="tape" style="transform: rotate(1deg);"></div>
-        <img src="" loading="lazy" alt="">
-        <div class="caption">Спасибо, что всегда рядом</div>
     </div>
 
     <div class="polaroid" style="top: 1850px; right: 25%; transform: rotate(-6deg); z-index: 5;">
@@ -364,7 +350,7 @@
         <div class="caption">Покорение цветной стены</div>
     </div>
 
-    <div class="scrap-item" style="top: 1950px; left: 15%; width: 120px; transform: rotate(-25deg); z-index: 9;">
+    <div class="scrap-item" style="top: 1950px; left: 15%; width: 230px; transform: rotate(-25deg); z-index: 9;">
         <img src="PNG_9.png" loading="lazy" alt="Голубая зацепка">
     </div>
 
@@ -374,7 +360,7 @@
         <div class="caption">Осенний вальс</div>
     </div>
 
-    <div class="scrap-item" style="top: 2150px; right: 10%; width: 160px; transform: rotate(5deg); z-index: 10;">
+    <div class="scrap-item" style="top: 2150px; right: 10%; width: 240px; transform: rotate(5deg); z-index: 10;">
         <img src="PNG_7.png" loading="lazy" alt="Билеты в Пушкинский">
     </div>
 
@@ -384,7 +370,7 @@
         <div class="caption">Тайна ночных следов</div>
     </div>
 
-    <div class="scrap-item" style="top: 2350px; left: 45%; width: 130px; transform: rotate(18deg); z-index: 8;">
+    <div class="scrap-item" style="top: 2350px; left: 45%; width: 170px; transform: rotate(18deg); z-index: 8;">
         <img src="PNG_13.png" loading="lazy" alt="Зелёная зацепка">
     </div>
 
@@ -394,7 +380,7 @@
         <div class="caption">Устранение причин ныть на скалодроме</div>
     </div>
 
-    <div class="scrap-item" style="top: 2550px; left: 20%; width: 120px; transform: rotate(-12deg); z-index: 9;">
+    <div class="scrap-item" style="top: 2550px; left: 20%; width: 140px; transform: rotate(-12deg); z-index: 9;">
         <img src="PNG_12.png" loading="lazy" alt="Жёлтая зацепка">
     </div>
 
@@ -516,7 +502,7 @@
     <!-- КРАСИВОЕ УВЕДОМЛЕНИЕ ТАЙМЕРА -->
     <div id="custom-alert" class="custom-alert hidden">
         <div class="alert-box">
-            <h2>Дзинь-дзинь! 🕰️</h2>
+            <h2>Тик-так! 🕰️</h2>
             <p id="alert-message">Время вышло!</p>
             <button onclick="closeAlert()">Хорошо ❤️</button>
         </div>
@@ -600,10 +586,21 @@
 
         updateDisplay();
 
-        // 3. АВТОВОЗВРАТ ВИДЕО К ОБЛОЖКЕ
+               // 3. АВТОВОЗВРАТ ВИДЕО И ПЕРВЫЙ КАДР ВМЕСТО ПОСТЕРА
         const allVideos = document.querySelectorAll('video');
         allVideos.forEach(video => {
+            // Возврат к началу после окончания
             video.addEventListener('ended', function() { this.load(); });
+            
+            // Если постера нет (или он пустой), заставляем браузер показать первый кадр
+            if (!video.getAttribute('poster') || video.getAttribute('poster') === "") {
+                // Добавляем к ссылке указатель на первую миллисекунду
+                if (!video.src.includes('#t=')) {
+                    video.src = video.src + '#t=0.001';
+                }
+                // Разрешаем браузеру подгрузить этот первый кадр (иначе он покажет пустоту)
+                video.preload = "metadata";
+            }
         });
 
         // 4. ЛОГИКА ПЕРЕТАСКИВАНИЯ И СОХРАНЕНИЯ
