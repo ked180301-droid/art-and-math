@@ -166,20 +166,36 @@
             .reset-board-btn { top: 10px; left: 10px; font-size: 1rem; padding: 5px 10px; }
 
             /* ИДЕАЛЬНАЯ ГАЗЕТНАЯ СЕТКА (решает проблему пустот между карточками) */
+
             .cards-container {
-                column-count: 2; /* 2 строгие колонки */
-                column-gap: 15px; /* Зазор между колонками */
+                column-count: 2; 
+                column-gap: 15px; 
                 width: 100%;
                 display: block;
+                overflow: hidden; /* Обрезает всё, что пытается сломать сетку */
             }
 
             /* КАРТОЧКИ (отвязываем от десктопных координат, заставляем слушаться сетку) */
+                       /* Жесткая сетка для всех карточек и скрап-элементов */
             .polaroid, .scrap-item {
-                position: static !important; /* Больше никаких top/left из десктопа! */
-                width: 100% !important; /* Карточка строго по ширине своей колонки */
-                max-width: 100% !important; 
+                position: static !important; 
+                width: 100% !important; 
+                max-width: 48vw !important; /* ЗАПРЕЩАЕМ ВЫРАСТАТЬ БОЛЬШЕ КОЛОНКИ */
                 margin: 0 0 30px 0 !important;
                 box-sizing: border-box !important;
+                display: inline-block !important; 
+                break-inside: avoid;
+                page-break-inside: avoid;
+                transform: none !important; 
+            }
+           /* Внутренние картинки и видео обязаны подчиняться карточке */
+            .polaroid img, .polaroid video, .scrap-item img {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                display: block !important;
+                object-fit: cover !important;
+            }
                 
                 /* Запрещаем карточке разрываться пополам между двумя колонками */
                 display: inline-block !important; 
