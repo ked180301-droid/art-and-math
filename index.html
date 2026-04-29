@@ -145,50 +145,61 @@
         .pomodoro-widget.collapsed .timer-content, .pomodoro-widget.collapsed .btn-minimize { display: none; }
         .pomodoro-widget.collapsed .btn-maximize { display: flex; justify-content: center; align-items: center; }
 
-               /* ========================================= */
+             /* ========================================= */
         /* АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ (МОБИЛЬНАЯ ЛЕНТА) */
         /* ========================================= */
         @media screen and (max-width: 768px) {
             body { 
                 min-height: auto !important; 
                 padding: 70px 10px 120px 10px; 
-                display: flex; 
-                flex-wrap: wrap; 
-                justify-content: space-between; 
-                align-items: flex-start;
+                display: block; /* УБИРАЕМ flex-wrap, который делал пустоты */
+                
+                /* ВКЛЮЧАЕМ ИДЕАЛЬНУЮ СЕТКУ БЕЗ ДЫР (CSS COLUMNS) */
+                column-count: 2; /* Ровно 2 колонки */
+                column-gap: 15px; /* Расстояние между колонками */
             }
+            
+            /* Заголовки, таймер и кнопка не должны дробиться по колонкам */
+            h1, p.subtitle, .reset-board-btn, .pomodoro-widget {
+                column-span: all;
+            }
+            
             h1 { font-size: 2rem; margin-top: 20px; width: 100%; text-align: center; }
             p.subtitle { font-size: 1.2rem; margin-bottom: 40px; width: 100%; text-align: center; }
             .reset-board-btn { top: 10px; left: 10px; font-size: 1rem; padding: 5px 10px; }
 
-            /* Строгий порядок как в HTML (без случайного перемешивания) */
+            /* Настраиваем карточки, чтобы они плотно прилегали друг к другу */
             .polaroid, .scrap-item {
                 position: relative !important; 
                 top: auto !important; left: auto !important; right: auto !important;
-                width: 47% !important; /* Строго 2 элемента в ряд */
+                width: 100% !important; /* Внутри своей колонки карточка занимает 100% ширины */
                 max-width: none !important;
                 margin-bottom: 30px !important;
                 margin-top: 0 !important;
                 box-sizing: border-box !important;
-                display: block !important;
+                
+                /* Самое важное правило, чтобы карточку не разорвало пополам между колонками */
+                display: inline-block !important; 
+                break-inside: avoid;
+                page-break-inside: avoid;
             }
 
             /* Легкий наклон в разные стороны для красоты */
-            .polaroid:nth-of-type(odd) { transform: translateY(20px) rotate(-2deg) !important; }
-            .polaroid:nth-of-type(even) { transform: translateY(0px) rotate(2deg) !important; }
+            .polaroid:nth-of-type(odd) { transform: rotate(-2deg) !important; }
+            .polaroid:nth-of-type(even) { transform: rotate(2deg) !important; }
             
             /* Билетики делаем визуально поменьше внутри их колонки */
-            .scrap-item img { width: 70%; margin: 0 auto; display: block; }
-            .scrap-item:nth-of-type(odd) { transform: translateY(20px) rotate(5deg) !important; }
-            .scrap-item:nth-of-type(even) { transform: translateY(0px) rotate(-5deg) !important; }
+            .scrap-item img { width: 75%; margin: 0 auto; display: block; }
+            .scrap-item:nth-of-type(odd) { transform: rotate(4deg) !important; }
+            .scrap-item:nth-of-type(even) { transform: rotate(-4deg) !important; }
 
             /* ПРЯЧЕМ ДЕСКТОПНЫЕ РИСУНКИ (Они и создавали пустоту в 4000px внизу!) */
             .blend-mode { display: none !important; }
 
-            /* ПОКАЗЫВАЕМ ВАШИ МОБИЛЬНЫЕ РИСУНКИ */
+            /* ПОКАЗЫВАЕМ ВАШИ МОБИЛЬНЫЕ РИСУНКИ (ФОН) */
             .blend-mode-mobile {
                 display: block !important;
-                position: absolute !important; /* Теперь они будут пролистываться! */
+                position: absolute !important; /* Рисунки будут пролистываться вместе с лентой */
                 mix-blend-mode: multiply;
                 opacity: 0.6;
                 z-index: 0;
@@ -243,13 +254,12 @@
 
     <!-- РИСУНКИ ТУШЬЮ (ФОНОВЫЕ) -->
     <div class="blend-mode" style="top: 40px; right: 10%; width: 180px; transform: rotate(-5deg);"><img src="DROW_190.png" loading="lazy" alt="график"></div>
-    <div class="blend-mode" style="top: 500px; left: 8%; width: 420px; transform: rotate(10deg);"><img src="DROW_40.png" loading="lazy" alt="Стамбул"></div>
-    <div class="blend-mode" style="top: 3800px; left: 10%; width: 40px; transform: rotate(-4deg);"><img src="DROW_50.png" loading="lazy" alt="Пейзаж"></div>
-    <div class="blend-mode" style="top: 1710px; left: 38%; width: 210px; transform: rotate(7deg);"><img src="DROW_60.png" loading="lazy" alt="Корова"></div>
-    <div class="blend-mode" style="top: 1850px; right: 30%; width: 300px; transform: rotate(-12deg);"><img src="DROW_90.png" loading="lazy" alt="Цветы"></div>
+    <div class="blend-mode" style="top: 500px; left: 8%; width: 550px; transform: rotate(10deg);"><img src="DROW_40.png" loading="lazy" alt="Стамбул"></div>
+    <div class="blend-mode" style="top: 1800px; left: 45%; width: 210px; transform: rotate(7deg);"><img src="DROW_60.png" loading="lazy" alt="Корова"></div>
+    <div class="blend-mode" style="top: 2000px; right: 18%; width: 300px; transform: rotate(-12deg);"><img src="DROW_90.png" loading="lazy" alt="Цветы"></div>
     <div class="blend-mode" style="top: 2200px; left: 11%; width: 260px; transform: rotate(5deg);"><img src="DROW_110.png" loading="lazy" alt="Даня"></div>
     <div class="blend-mode" style="top: 2600px; right: 20%; width: 190px; transform: rotate(-8deg);"><img src="DROW_140.png" loading="lazy" alt="Исаакиевский"></div>
-    <div class="blend-mode" style="top: 3100px; left: 10%; width: 270px; transform: rotate(15deg);"><img src="DROW_170.png" loading="lazy" alt="Москва"></div>
+    <div class="blend-mode" style="top: 3100px; left: 10%; width: 350px; transform: rotate(15deg);"><img src="DROW_170.png" loading="lazy" alt="Москва"></div>
     <div class="blend-mode" style="top: 3600px; right: 45%; width: 240px; transform: rotate(-5deg);"><img src="DROW_180.png" loading="lazy" alt="График2"></div>
 
 <div class="blend-mode" style="top: 800px; left: 3%; width: 60px; transform: rotate(10deg);">
@@ -262,10 +272,10 @@
 
     .blend-mode-mobile { display: none; }
         <!-- РИСУНКИ ТУШЬЮ (ДЛЯ ТЕЛЕФОНА) -->
-    <div class="blend-mode-mobile" style="top: 50px; left: 5%; width: 120px;"><img src="DROW_190.png" loading="lazy" alt="график"></div>
-    <div class="blend-mode-mobile" style="top: 300px; right: 5%; width: 140px;"><img src="DROW_40.png" loading="lazy" alt="Стамбул"></div>
-    <div class="blend-mode-mobile" style="top: 1500px; left: 10%; width: 130px;"><img src="PNG_3.png" loading="lazy" alt="Скальники"></div>
-    <div class="blend-mode-mobile" style="top: 450px; left: 5%; width: 120px;"><img src="DROW_140.png" loading="lazy" alt="Исаакиевский"></div>
+    <div class="blend-mode-mobile" style="top: 50px; left: 5%; width: 100px;"><img src="DROW_190.png" loading="lazy" alt="график"></div>
+    <div class="blend-mode-mobile" style="top: 300px; left: 5%; width: 130px;"><img src="DROW_40.png" loading="lazy" alt="Стамбул"></div>
+    <div class="blend-mode-mobile" style="top: 1500px; left: 5%; width: 80px;"><img src="PNG_3.png" loading="lazy" alt="Скальники"></div>
+    <div class="blend-mode-mobile" style="top: 800px; left: 5%; width: 120px;"><img src="DROW_140.png" loading="lazy" alt="Исаакиевский"></div>
     
     <!-- ЗАГОЛОВКИ -->
     <h1>Наш мир</h1>
@@ -611,7 +621,7 @@
             }
         });
 
-        // 4. ЛОГИКА ПЕРЕТАСКИВАНИЯ И СОХРАНЕНИЯ
+                // 4. ЛОГИКА ПЕРЕТАСКИВАНИЯ С ДОЛГИМ НАЖАТИЕМ ДЛЯ ТЕЛЕФОНА
         const draggables = document.querySelectorAll('.polaroid, .scrap-item');
         let savedPositions = JSON.parse(localStorage.getItem('moodboard_positions')) || {};
 
@@ -620,31 +630,69 @@
             el.id = id;
             el.style.cursor = 'grab';
 
+            // Если карточку уже передвигали, вырываем её из сетки и ставим на сохраненное место
             if (savedPositions[id]) {
+                el.style.setProperty('position', 'absolute', 'important');
                 el.style.setProperty('left', savedPositions[id].left, 'important');
                 el.style.setProperty('top', savedPositions[id].top, 'important');
                 el.style.setProperty('right', 'auto', 'important'); 
                 el.style.setProperty('margin', '0', 'important'); 
+                el.style.setProperty('z-index', '50', 'important'); 
             }
 
             let isDragging = false;
             let startX, startY, initialLeft, initialTop;
+            let longPressTimer;
 
-            el.addEventListener('mousedown', startDrag);
-            el.addEventListener('touchstart', startDrag, {passive: false});
+            // ДЛЯ КОМПЬЮТЕРА: моментальное перетаскивание по клику мыши
+            el.addEventListener('mousedown', function(e) {
+                if (window.innerWidth > 768) startDrag(e);
+            });
 
-            function startDrag(e) {
-                // ОТКЛЮЧАЕМ ПЕРЕТАСКИВАНИЕ НА ТЕЛЕФОНАХ (меньше 768 пикселей)
-                if (window.innerWidth <= 768) return; 
-
+            // ДЛЯ ТЕЛЕФОНА: перетаскивание по долгому нажатию (400 мс)
+            el.addEventListener('touchstart', function(e) {
                 if (e.target.tagName.toLowerCase() === 'video' || e.target.tagName.toLowerCase() === 'button') return;
                 
-                // Чтобы не тащить саму страницу на телефоне
-                if(e.cancelable) e.preventDefault(); 
-                
+                if (window.innerWidth <= 768) {
+                    // Запускаем таймер долгого нажатия
+                    longPressTimer = setTimeout(() => {
+                        // Эффект "отрыва" карточки от экрана (немного увеличиваем)
+                        el.style.setProperty('transform', 'scale(1.05)', 'important');
+                        el.style.setProperty('box-shadow', '0 15px 30px rgba(0,0,0,0.3)', 'important');
+                        el.style.setProperty('z-index', '1000', 'important');
+                        
+                        // Если карточка еще сидит в сетке колонок, делаем её независимой (абсолютной)
+                        if (getComputedStyle(el).position !== 'absolute') {
+                            const rect = el.getBoundingClientRect();
+                            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                            const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+                            
+                            // Фиксируем её на том же месте, но отвязываем от колонок
+                            el.style.setProperty('position', 'absolute', 'important');
+                            el.style.setProperty('top', (rect.top + scrollTop) + 'px', 'important');
+                            el.style.setProperty('left', (rect.left + scrollLeft) + 'px', 'important');
+                            el.style.setProperty('margin', '0', 'important');
+                        }
+                        
+                        // Легкая вибрация, если телефон поддерживает (дает ощущение "отрыва")
+                        if (navigator.vibrate) navigator.vibrate(50);
+                        
+                        startDrag(e);
+                    }, 400); // 400 миллисекунд — идеальное время удержания
+                } else {
+                    startDrag(e);
+                }
+            }, {passive: false});
+
+            // Если человек сдвинул палец (начал свайпать) или убрал раньше времени — отменяем таймер
+            el.addEventListener('touchmove', () => clearTimeout(longPressTimer), {passive: true});
+            el.addEventListener('touchend', () => clearTimeout(longPressTimer));
+
+            // Сама логика захвата
+            function startDrag(e) {
                 isDragging = true;
                 el.style.cursor = 'grabbing';
-                el.style.zIndex = 1000;
+                el.style.setProperty('z-index', '1000', 'important');
 
                 const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
                 const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
@@ -660,9 +708,10 @@
                 document.addEventListener('touchend', stopDrag);
             }
 
+            // Движение за пальцем/мышкой
             function drag(e) {
                 if (!isDragging) return;
-                if(e.cancelable) e.preventDefault();
+                if(e.cancelable) e.preventDefault(); // Блокируем скролл страницы пока тащим карточку
 
                 const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
                 const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
@@ -678,12 +727,18 @@
                 el.style.setProperty('right', 'auto', 'important');
             }
 
+            // Отпускаем карточку
             function stopDrag() {
                 if (!isDragging) return;
                 isDragging = false;
                 el.style.cursor = 'grab';
-                el.style.zIndex = 50;
-
+                el.style.setProperty('z-index', '50', 'important');
+                
+                // Убираем эффект увеличения, возвращаем обычный размер
+                el.style.removeProperty('transform');
+                el.style.removeProperty('box-shadow');
+                
+                // Запоминаем новые координаты
                 savedPositions[id] = { left: el.style.left, top: el.style.top };
                 localStorage.setItem('moodboard_positions', JSON.stringify(savedPositions));
 
