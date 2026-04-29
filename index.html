@@ -171,38 +171,77 @@
             p.subtitle { font-size: 1.2rem; margin-bottom: 40px; width: 100%; text-align: center; display: block !important; }
             .reset-board-btn { top: 10px; left: 10px; font-size: 1rem; padding: 5px 10px; }
 
-                /* Выстраиваем кнопки в столбик слева сверху */
-    .reset-board-btn { top: 10px; left: 10px; font-size: 0.9rem; padding: 5px 10px; }
+                   /* ========================================= */
+    /* 1. КНОПКИ УПРАВЛЕНИЯ (СТРОГО В СТОЛБИК СПРАВА) */
+    /* ========================================= */
+    /* Кнопка сброса хаоса */
+    .reset-board-btn { 
+        top: 15px; 
+        left: auto; 
+        right: 15px; 
+        font-size: 0.85rem; 
+        padding: 8px 12px;
+        z-index: 9999;
+    }
     
-    /* Блокнот и Карта становятся просто иконками под главной кнопкой */
+    /* Кнопка Блокнота */
     .notepad-btn { 
-        top: 50px; 
-        left: 10px; 
-        width: 40px; 
-        height: 40px; 
+        top: 65px; /* Опускаем ниже первой кнопки */
+        left: auto; 
+        right: 15px; /* Привязываем к правому краю */
+        width: 45px; 
+        height: 45px; 
         padding: 0; 
-        border-radius: 50%; /* Круглая кнопка */
+        border-radius: 50%; /* Делаем круглой */
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 1.2rem;
+        font-size: 1.5rem;
         color: transparent; /* Прячем текст */
+        z-index: 9999;
     }
     .notepad-btn::before {
         content: "📝"; /* Оставляем только иконку */
         color: initial;
     }
 
+    /* Кнопка Карты */
     .map-toggle-btn { 
-        top: 100px; 
-        left: 10px; 
-        width: 40px; 
-        height: 40px; 
+        top: 125px; /* Опускаем ниже блокнота */
+        left: auto; 
+        right: 15px; /* Привязываем к правому краю */
+        width: 45px; 
+        height: 45px; 
         padding: 0; 
-        border-radius: 50%; /* Круглая кнопка */
+        border-radius: 50%; /* Делаем круглой */
+        display: flex;
         justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        z-index: 9999;
     }
     .map-toggle-btn span { display: none; } /* Прячем слово "Карта" */
+
+    /* ========================================= */
+    /* 2. ШИРИНА ВСПЛЫВАЮЩИХ ОКОН                */
+    /* ========================================= */
+    /* Чтобы окна (блокнот, карта, карточки дат) не вылезали за края экрана */
+    .notepad-box, 
+    .map-box, 
+    .memory-box, 
+    .pin-box, 
+    #secret-alert > div { /* Захватываем все всплывающие окна */
+        width: 90vw !important; /* Строго 90% от ширины экрана */
+        max-width: 350px !important; /* Не больше 350px на телефонах */
+        padding: 20px 15px !important; /* Уменьшаем внутренние отступы */
+        box-sizing: border-box; /* Чтобы отступы не увеличивали ширину */
+    }
+
+    /* Подправляем крестик закрытия, чтобы он не улетал за экран */
+    .notepad-close {
+        top: 10px;
+        right: 15px;
+    }
 
             /* ИДЕАЛЬНАЯ ГАЗЕТНАЯ СЕТКА (решает проблему пустот между карточками) */
 
@@ -360,10 +399,12 @@
         /* Поле ввода */
         .notepad-input-area { display: flex; gap: 10px; margin-bottom: 25px; }
         .notepad-input-area input {
-            flex-grow: 1; padding: 10px; border: none; border-bottom: 2px solid #ccc;
-            background: transparent; font-family: 'Caveat', cursive; font-size: 1.5rem;
-            outline: none; color: #333;
-        }
+        flex-grow: 1; padding: 10px; border: none; border-bottom: 2px solid #ccc;
+        background: transparent; 
+        font-family: sans-serif; /* Меняем на ровный печатный шрифт */
+        font-size: 1.1rem; /* Делаем мельче */
+        outline: none; color: #333;
+    }
         .notepad-input-area input:focus { border-bottom-color: #8C6239; }
         .notepad-input-area button {
             background: #fff; border: 1px solid #ccc; padding: 5px 15px;
@@ -375,10 +416,12 @@
         /* Список задач */
         .task-list { list-style: none; padding: 0; margin: 0; }
         .task-item {
-            display: flex; justify-content: space-between; align-items: center;
-            font-family: 'Caveat', cursive; font-size: 1.6rem; padding: 8px 0;
-            border-bottom: 1px dashed #d5d0c4; cursor: pointer; transition: 0.2s;
-        }
+        display: flex; justify-content: space-between; align-items: center;
+        font-family: sans-serif; /* Меняем на ровный печатный шрифт */
+        font-size: 1.1rem; /* Делаем мельче */
+        padding: 8px 0;
+        border-bottom: 1px dashed #d5d0c4; cursor: pointer; transition: 0.2s;
+    }
         .task-item.completed span { text-decoration: line-through; color: #aaa; }
         .task-item:hover { background: rgba(255,255,255,0.5); }
         .delete-btn {
@@ -1245,17 +1288,24 @@
             // Копируйте этот блок { ... } и добавляйте сколько угодно важных дат!
         ];
 
-        function checkMemories() {
+                function checkMemories() {
             const today = new Date();
-            const currentMonth = today.getMonth() + 1; // getMonth() отдает 0-11, прибавляем 1
+            const currentMonth = today.getMonth() + 1; 
             const currentDay = today.getDate();
             const currentYear = today.getFullYear();
+            
+            // Создаем уникальную строку с сегодняшней датой, например "2026-4-29"
+            const dateString = `${currentYear}-${currentMonth}-${currentDay}`;
+            
+            // Проверяем, не показывали ли мы уже сегодня воспоминание?
+            if (localStorage.getItem('lastMemoryDate') === dateString) {
+                return; // Если да - просто останавливаем функцию, ничего не показываем
+            }
 
             // Ищем, есть ли в архиве фото с сегодняшними днем и месяцем
             const memory = memoryArchive.find(m => m.month === currentMonth && m.day === currentDay);
 
             if (memory) {
-                // Если фото найдено, считаем, сколько лет прошло
                 const yearsAgo = currentYear - memory.year;
                 
                 let timeText = "";
@@ -1264,15 +1314,17 @@
                 else if (yearsAgo > 1 && yearsAgo < 5) timeText = `В этот день ${yearsAgo} года назад...`;
                 else timeText = `В этот день ${yearsAgo} лет назад...`;
 
-                // Подставляем данные в красивое окно
                 document.getElementById('memory-years').textContent = timeText;
                 document.getElementById('memory-image').src = memory.image;
                 document.getElementById('memory-caption').textContent = memory.caption;
                 
-                // Показываем окно с небольшой задержкой (для эффекта сюрприза)
                 setTimeout(() => {
                     document.getElementById('memory-overlay').classList.remove('hidden');
-                }, 1000); // 1 секунда после загрузки сайта
+                    
+                    // Запоминаем в браузере, что сегодня мы уже показали сюрприз
+                    localStorage.setItem('lastMemoryDate', dateString);
+                    
+                }, 1000); 
             }
         }
 
