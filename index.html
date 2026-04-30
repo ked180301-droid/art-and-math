@@ -1768,7 +1768,7 @@ function triggerChaosEgg() {
 
         const pieImg = document.querySelector('img[src*="PNG_2.png"]'); 
         if (pieImg) {
-            c.addEventListener('pointerdown', (e) => e.preventDefault());
+            pieImg.addEventListener('pointerdown', (e) => e.preventDefault());
             let pieClicks = 0, pieTimer;
             pieImg.addEventListener('click', (e) => {
                 if (globalDragMoved) return;
