@@ -1536,7 +1536,8 @@ function triggerChaosEgg() {
         });
         p.addEventListener('mouseleave', () => clearTimeout(pTimer));
         p.addEventListener('pointerdown', () => clearTimeout(pTimer)); // ← Эта строка отлично защищает от драга!
-
+        });
+            
         document.querySelectorAll('.cards-container > .polaroid .caption').forEach(c => {
             let capClicks = 0, capTimer;
             c.addEventListener('click', (e) => {
