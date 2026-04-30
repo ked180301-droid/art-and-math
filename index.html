@@ -1180,15 +1180,85 @@
                 document.removeEventListener('touchend', stopDrag);
             }
         });
+// =========================================
+        // 5. ЛОГИКА БЛОКНОТА-ПЛАНИРОВЩИКА
+        // =========================================
+        const notepadOverlay = document.getElementById('notepad-overlay');
+        const taskInput = document.getElementById('task-input');
+        const taskList = document.getElementById('task-list');
 
+        let tasks = JSON.parse(localStorage.getItem('moodboard_tasks')) || [];
+        renderTasks();
+
+        function toggleNotepad() {
+            notepadOverlay.classList.toggle('hidden');
+            if (!notepadOverlay.classList.contains('hidden')) {
+                taskInput.focus(); 
+            }
+        }
+
+        function closeNotepadOutside(e) {
+            if (e.target === notepadOverlay) toggleNotepad();
+        }
+
+        function handleTaskKeyPress(e) {
+            if (e.key === 'Enter') addTask();
+        }
+
+        function toggleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                saveAndRenderTasks();
+            }
+        }
+
+        function saveAndRenderTasks() {
+            localStorage.setItem('moodboard_tasks', JSON.stringify(tasks));
+            renderTasks();
+        }
+
+        function renderTasks() {
+            if (!taskList) return; // Защита от ошибки, если элемента нет
+            taskList.innerHTML = '';
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.className = `task-item ${task.completed ? 'completed' : ''}`;
+                li.onclick = () => toggleTask(task.id);
+                
+                li.innerHTML = `
+                    <span>${task.text}</span>
+                    <button class="delete-btn" onclick="deleteTask(event, ${task.id})">✖</button>
+                `;
+                taskList.appendChild(li);
+            });
+        }
+
+        let deleteCount = 0;
+        let deleteTimer;
+        function deleteTask(e, id) {
+            e.stopPropagation(); 
+            tasks = tasks.filter(t => t.id !== id);
+            saveAndRenderTasks();
+
+            deleteCount++;
+            clearTimeout(deleteTimer);
+            if (deleteCount === 3) {
+                showSecret("🥷", "Ого, какая скорость! Настоящий ниндзя продуктивности. Горжусь!");
+                deleteCount = 0;
+            } else {
+                deleteTimer = setTimeout(() => { deleteCount = 0; }, 5000); 
+            }
+        }
+        
         function addTask() {
-    const text = taskInput.value.trim();
-    if (text === '') return;
+        const text = taskInput.value.trim();
+        if (text === '') return;
     
-    const lower = text.toLowerCase();
-    const currentHour = new Date().getHours();
+       const lower = text.toLowerCase();
+       const currentHour = new Date().getHours();
 
-    if (lower === 'люблю') {
+       if (lower === 'люблю') {
         showSecret("❤️", "Я тоже тебя очень сильно люблю!");
         if (typeof createHeartRain === 'function') createHeartRain();
         taskInput.value = '';
