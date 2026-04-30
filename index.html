@@ -171,57 +171,6 @@
             p.subtitle { font-size: 1.2rem; margin-bottom: 40px; width: 100%; text-align: center; display: block !important; }
             .reset-board-btn { top: 10px; left: 10px; font-size: 1rem; padding: 5px 10px; }
 
-                   /* ========================================= */
-    /* 1. КНОПКИ УПРАВЛЕНИЯ (СТРОГО В СТОЛБИК СПРАВА) */
-    /* ========================================= */
-    /* Кнопка сброса хаоса */
-    .reset-board-btn { 
-        top: 15px; 
-        left: auto; 
-        right: 15px; 
-        font-size: 0.85rem; 
-        padding: 8px 12px;
-        z-index: 9999;
-    }
-    
-    /* Кнопка Блокнота */
-    .notepad-btn { 
-        top: 65px; /* Опускаем ниже первой кнопки */
-        left: auto; 
-        right: 15px; /* Привязываем к правому краю */
-        width: 45px; 
-        height: 45px; 
-        padding: 0; 
-        border-radius: 50%; /* Делаем круглой */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 1.5rem;
-        color: transparent; /* Прячем текст */
-        z-index: 9999;
-    }
-    .notepad-btn::before {
-        content: "📝"; /* Оставляем только иконку */
-        color: initial;
-    }
-
-    /* Кнопка Карты */
-    .map-toggle-btn { 
-        top: 125px; /* Опускаем ниже блокнота */
-        left: auto; 
-        right: 15px; /* Привязываем к правому краю */
-        width: 45px; 
-        height: 45px; 
-        padding: 0; 
-        border-radius: 50%; /* Делаем круглой */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 1.5rem;
-        z-index: 9999;
-    }
-    .map-toggle-btn span { display: none; } /* Прячем слово "Карта" */
-
     /* ========================================= */
     /* 2. ШИРИНА ВСПЛЫВАЮЩИХ ОКОН                */
     /* ========================================= */
@@ -434,7 +383,6 @@
 
         /* Адаптация кнопки для телефона */
         @media screen and (max-width: 768px) {
-            .notepad-btn { left: auto; right: 10px; font-size: 1rem; padding: 5px 10px; }
             .notepad-box { padding: 30px 20px; }
             .delete-btn { opacity: 1; /* На телефоне крестик виден всегда */ }
         }
@@ -586,8 +534,6 @@
         .pin-box .notepad-close { top: -30px; right: -10px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10006; }
 
         @media screen and (max-width: 768px) {
-            .map-toggle-btn { top: 15px; left: auto; right: 10px; font-size: 1rem; padding: 5px 10px; } /* Спрячем в угол на телефоне */
-            .map-toggle-btn span { display: none; } /* Оставляем только иконку 🌍 */
             .map-box { padding: 20px 10px; }
             .map-title { font-size: 1.8rem; }
             .map-pin { font-size: 1.5rem; }
@@ -597,55 +543,105 @@
             .map-add-btn { font-size: 1rem; padding: 7px 12px; }
             #map-mode-hint { font-size: 0.85rem; }
         }
-            /* Контейнер для кнопок в правом верхнем углу */
-.controls-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    gap: 15px; /* Расстояние между кнопками */
-    z-index: 1000;
+        /* =========================================
+   СТИЛИ ВЫПАДАЮЩЕГО МЕНЮ (ДЛЯ МОБИЛОК)
+   ========================================= */
+
+/* Прячем кнопку "гамбургера" на компьютерах */
+.menu-toggle-btn {
+    display: none;
 }
 
-/* Убираем у самих кнопок fixed, так как теперь fixed их родитель */
-.reset-btn, .map-toggle-btn, .timer-toggle-btn {
-    position: relative !important; /* Сбрасываем старые координаты */
-    top: auto !important;
-    right: auto !important;
-    margin: 0 !important;
-}
-
-/* --- МОБИЛЬНАЯ АДАПТАЦИЯ --- */
+/* МОБИЛЬНАЯ ВЕРСИЯ (экраны меньше 768px) */
 @media (max-width: 768px) {
-    .controls-container {
-        top: 10px; /* Чуть ближе к краю на мобилке */
-        right: 10px;
-        left: 10px; /* Растягиваем на всю ширину */
-        justify-content: space-between; /* Распределяем кнопки по всей ширине */
-        gap: 5px;
+    /* Контейнер всего меню в правом верхнем углу */
+    .mobile-menu-container {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        z-index: 9000; /* Поверх всего */
     }
-    
-    /* Делаем кнопки чуть компактнее, если нужно */
-    .controls-container button {
-        flex: 1; /* Кнопки займут равное пространство */
-        font-size: 14px; /* Чуть меньше шрифт */
-        padding: 8px 5px;
-        text-align: center;
-        white-space: nowrap;
+
+    /* Кнопка "гамбургера" */
+    .menu-toggle-btn {
+        display: block;
+        background: #8C6239;
+        color: #F7F5F0;
+        border: 2px solid #5A3E22;
+        border-radius: 8px;
+        width: 45px;
+        height: 45px;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    /* Сама выпадающая плашка с кнопками */
+    .menu-dropdown {
+        display: none; /* Скрыто по умолчанию */
+        position: absolute;
+        top: 55px; /* Сдвиг вниз от гамбургера */
+        right: 0;
+        background: #F7F5F0;
+        border: 2px solid #8C6239;
+        border-radius: 12px;
+        padding: 10px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        flex-direction: column;
+        gap: 10px;
+        min-width: 160px;
+    }
+
+    /* Класс для показа меню (переключается через JS) */
+    .menu-dropdown.show {
+        display: flex;
+        animation: fadeInDown 0.2s ease forwards;
+    }
+
+    /* Сбрасываем старое фиксированное позиционирование твоих кнопок, 
+       чтобы они ровно легли ВНУТРЬ выпадающего меню */
+    .menu-dropdown button {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        left: auto !important;
+        bottom: auto !important;
+        margin: 0 !important;
+        width: 100%; /* Растягиваем на всю ширину меню */
+        font-size: 16px;
+        padding: 10px;
+        box-shadow: none; /* Убираем лишние тени внутри меню */
+    }
+
+    /* Анимация плавного появления */
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 }
     </style>
 </head>
 <body>
 
-    <div class="controls-container">
-    <!-- КНОПКА ВОЗВРАТА -->
-    <button class="reset-board-btn" onclick="resetBoard(); triggerChaosEgg();">✨ Вернуться к хаосу</button>
-    <!-- КНОПКА БЛОКНОТА -->
-    <button class="notepad-btn" onclick="toggleNotepad()">📝 План на день</button>
-         <!-- КНОПКА-КОМПАС ДЛЯ КАРТЫ -->
-    <div class="map-toggle-btn" onclick="toggleMap()">🌍<span>Карта</span></div>
+
+    <!-- Обертка для меню (работает только на мобилках) -->
+    <div class="mobile-menu-container">
+        <!-- Кнопка, которая открывает меню (иконка гамбургера) -->
+        <button class="menu-toggle-btn" onclick="toggleMobileMenu()">☰</button>
+        
+        <!-- Выпадающий список кнопок -->
+        <div class="menu-dropdown" id="mobile-dropdown">
+            <!-- Вставь сюда СВОИ СТАРЫЕ кнопки (классы и onclick оставь свои) -->
+            <button class="reset-btn" onclick="resetBoard()">Вернуть хаос</button>
+            <button class="notepad-toggle-btn" onclick="toggleNotepad()">План на день</button>
+            <button class="map-toggle-btn" onclick="toggleMap()">Компас</button>
         </div>
+    </div>
+
 
     <!-- РИСУНКИ ТУШЬЮ (ФОНОВЫЕ) -->
     <div class="blend-mode" style="top: 40px; right: 10%; width: 180px; transform: rotate(-5deg);"><img src="DROW_190.png" loading="lazy" alt="график"></div>
@@ -972,10 +968,6 @@
                 <div class="caption" id="memory-caption">Здесь будет подпись</div>
             </div>
         </div>
-    </div>
-    <!-- КНОПКА-КОМПАС ДЛЯ КАРТЫ -->
-    <div class="map-toggle-btn" onclick="toggleMap()">
-        🌍<span>Карта</span>
     </div>
 
     <!-- ========================================= -->
@@ -1852,6 +1844,26 @@ function triggerChaosEgg() {
                     else { timer = setTimeout(() => { clicks = 0; }, item.time); }
                     e.stopPropagation();
                 });
+            }
+        });
+                // =========================================
+        // ЛОГИКА МОБИЛЬНОГО МЕНЮ (ГАМБУРГЕР)
+        // =========================================
+        function toggleMobileMenu() {
+            const dropdown = document.getElementById('mobile-dropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
+        }
+
+        // Закрываем меню, если кликнули мимо него
+        window.addEventListener('click', function(e) {
+            const container = document.querySelector('.mobile-menu-container');
+            const dropdown = document.getElementById('mobile-dropdown');
+            
+            // Если клик был НЕ по контейнеру меню и меню сейчас открыто — закрываем
+            if (container && dropdown && !container.contains(e.target) && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
             }
         });
     </script>
