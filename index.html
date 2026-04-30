@@ -1299,65 +1299,6 @@
             document.getElementById('date-alert').classList.add('hidden');
         }
 
-        // 7. МАШИНА ВРЕМЕНИ (АРХИВ ВОСПОМИНАНИЙ)
-        const memoryArchive = [
-            {
-                month: 4, day: 29, year: 2024, 
-                image: "pictures_24.png",     
-                caption: "Невероятные дни в Стамбуле"
-            },
-            {
-                month: 12, day: 31, year: 2023,
-                image: "pictures_15.png",
-                caption: "Приехали на дачу осенью, а проснулись зимой"
-            },
-            {
-                month: 8, day: 15, year: 2025,
-                image: "pictures_2.png",
-                caption: "Покорение цветной стены"
-            }
-        ];
-
-        function checkMemories() {
-            const today = new Date();
-            const currentMonth = today.getMonth() + 1; 
-            const currentDay = today.getDate();
-            const currentYear = today.getFullYear();
-            
-            const dateString = `${currentYear}-${currentMonth}-${currentDay}`;
-            
-            if (localStorage.getItem('lastMemoryDate') === dateString) {
-                return; 
-            }
-            
-            const memory = memoryArchive.find(m => m.month === currentMonth && m.day === currentDay);
-
-            if (memory) {
-                const yearsAgo = currentYear - memory.year;
-                
-                let timeText = "";
-                if (yearsAgo === 0) timeText = "В этот день в этом году...";
-                else if (yearsAgo === 1) timeText = "В этот день год назад...";
-                else if (yearsAgo > 1 && yearsAgo < 5) timeText = `В этот день ${yearsAgo} года назад...`;
-                else timeText = `В этот день ${yearsAgo} лет назад...`;
-
-                document.getElementById('memory-years').textContent = timeText;
-                document.getElementById('memory-image').src = memory.image;
-                document.getElementById('memory-caption').textContent = memory.caption;
-                
-                setTimeout(() => {
-                    document.getElementById('memory-overlay').classList.remove('hidden');
-                    localStorage.setItem('lastMemoryDate', dateString);
-                }, 1000); 
-            }
-        }
-
-        function closeMemory() {
-            document.getElementById('memory-overlay').classList.add('hidden');
-        }
-
-        window.addEventListener('load', checkMemories);
-        
         // 8. ИНТЕРАКТИВНАЯ КАРТА 
         const mapOverlay = document.getElementById('map-overlay');
         const pinOverlay = document.getElementById('pin-overlay');
