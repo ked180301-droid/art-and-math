@@ -938,24 +938,28 @@
         🌍<span>Карта</span>
     </div>
 
-    <!-- ========================================= -->
+        <!-- ========================================= -->
     <!-- ВСПЛЫВАЮЩАЯ ИНТЕРАКТИВНАЯ КАРТА           -->
     <!-- ========================================= -->
     <div id="map-overlay" class="custom-alert hidden" onclick="closeMapOutside(event)">
-        <div class="map-box" id="map-box">
+        <div class="map-box" id="map-box" onclick="event.stopPropagation()">
             <button class="notepad-close" onclick="toggleMap()">×</button>
             <h2 class="map-title">Карта наших приключений 🗺️</h2>
             
             <div class="map-toolbar">
-    <button class="map-add-btn" onclick="enableAddPinMode()">+ Добавить метку</button>
-    <span id="map-mode-hint">Нажмите на кнопку, потом на карту</span>
-</div>
+                <button class="map-add-btn" onclick="enableAddPinMode()">+ Добавить метку</button>
+                <span id="map-mode-hint">Нажмите на кнопку, потом на карту</span>
+            </div>
 
-<div class="travel-map-container" id="travel-map-container">
-    <img src="map (2).png" alt="Карта путешествий" class="travel-map-img" id="travel-map-img">
-</div>
+            <div class="travel-map-container" id="travel-map-container">
+                <img src="map (2).png" alt="Карта путешествий" class="travel-map-img" id="travel-map-img">
+            </div>
+        </div> <!-- ЗАКРЫВАЕМ map-box -->
+    </div> <!-- ЗАКРЫВАЕМ map-overlay (РАНЬШЕ ЭТОГО НЕ БЫЛО!) -->
 
+    <!-- ========================================= -->
     <!-- ВСПЛЫВАЮЩИЙ ПОЛАРОИД С ФОТОГРАФИЕЙ ИЗ ТОЧКИ -->
+    <!-- ========================================= -->
     <div id="pin-overlay" class="custom-alert hidden" onclick="closePinPhoto()">
         <div class="pin-box" onclick="event.stopPropagation()">
             <button class="notepad-close" onclick="closePinPhoto()">×</button>
@@ -967,7 +971,8 @@
                 <div class="caption" id="pin-caption-text">Подпись</div>
             </div>
         </div>
-    </div>
+    </div> <!-- Здесь всё было закрыто правильно -->
+
     <!-- ========================================= -->
     <!-- СЕКРЕТНЫЕ ПАСХАЛКИ (EASTER EGGS)         -->
     <!-- ========================================= -->
@@ -978,7 +983,6 @@
             <h2 id="secret-text">Здесь будет текст пасхалки!</h2>
         </div>
     </div>
-
     <!-- ЗВУК ТАЙМЕРА -->
     <!-- Скачай любой приятный звук в формате mp3, назови его alarm.mp3 и положи в папку к фотографиям -->
     <audio id="timer-sound" src="muzik.mp3" preload="auto"></audio>
