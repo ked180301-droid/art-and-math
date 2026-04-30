@@ -1659,20 +1659,6 @@ function triggerChaosEgg() {
                 });
             }
         });
-        
-        function createHeartRain() {
-    for (let i = 0; i < 30; i++) {
-        const heart = document.createElement('div');
-        heart.innerHTML = '❤️';
-        heart.style.cssText = `position:fixed;left:${Math.random()*100}vw;top:-50px;font-size:${Math.random()*20+10}px;z-index:99999;pointer-events:none;transition:transform 3s linear,opacity 3s linear`;
-        document.body.appendChild(heart);
-        setTimeout(() => {
-            heart.style.transform = `translateY(100vh) rotate(${Math.random()*360}deg)`;
-            heart.style.opacity = '0';
-        }, 50 + i * 30);
-        setTimeout(() => heart.remove(), 3500);
-    }
-}
     </script>
 </body>
 </html>
