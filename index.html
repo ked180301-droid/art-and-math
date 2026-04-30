@@ -1181,119 +1181,48 @@
             }
         });
 
-        // =========================================
-        // 5. ЛОГИКА БЛОКНОТА-ПЛАНИРОВЩИКА
-        // =========================================
-        const notepadOverlay = document.getElementById('notepad-overlay');
-        const taskInput = document.getElementById('task-input');
-        const taskList = document.getElementById('task-list');
-
-        let tasks = JSON.parse(localStorage.getItem('moodboard_tasks')) || [];
-        renderTasks();
-
-        function toggleNotepad() {
-            notepadOverlay.classList.toggle('hidden');
-            if (!notepadOverlay.classList.contains('hidden')) {
-                taskInput.focus(); 
-            }
-        }
-
-        function closeNotepadOutside(e) {
-            if (e.target === notepadOverlay) toggleNotepad();
-        }
-
-        function handleTaskKeyPress(e) {
-            if (e.key === 'Enter') addTask();
-        }
-
-        function toggleTask(id) {
-            const task = tasks.find(t => t.id === id);
-            if (task) {
-                task.completed = !task.completed;
-                saveAndRenderTasks();
-            }
-        }
-
-        function saveAndRenderTasks() {
-            localStorage.setItem('moodboard_tasks', JSON.stringify(tasks));
-            renderTasks();
-        }
-
-        function renderTasks() {
-            taskList.innerHTML = '';
-            tasks.forEach(task => {
-                const li = document.createElement('li');
-                li.className = `task-item ${task.completed ? 'completed' : ''}`;
-                li.onclick = () => toggleTask(task.id);
-                
-                li.innerHTML = `
-                    <span>${task.text}</span>
-                    <button class="delete-btn" onclick="deleteTask(event, ${task.id})">✖</button>
-                `;
-                taskList.appendChild(li);
-            });
-        }
-
-        let deleteCount = 0;
-        let deleteTimer;
-        function deleteTask(e, id) {
-            e.stopPropagation(); // Чтобы клик не зачеркивал задачу
-            tasks = tasks.filter(t => t.id !== id);
-            saveAndRenderTasks();
-
-            // Пасхалка: 3 быстрых удаления
-            deleteCount++;
-            clearTimeout(deleteTimer);
-            if (deleteCount === 3) {
-                showSecret("🥷", "Ого, какая скорость! Настоящий ниндзя продуктивности. Горжусь!");
-                deleteCount = 0;
-            } else {
-                deleteTimer = setTimeout(() => { deleteCount = 0; }, 5000); 
-            }
-        }
-
         function addTask() {
-            const text = taskInput.value.trim();
-            if (text === '') return;
-            
-            const lower = text.toLowerCase();
-            const currentHour = new Date().getHours();
+    const text = taskInput.value.trim();
+    if (text === '') return;
+    
+    const lower = text.toLowerCase();
+    const currentHour = new Date().getHours();
 
-            // Пасхалки на добавление задач (цепь else if)
-            if (lower === 'люблю') {
-                showSecret("❤️", "Я тоже тебя очень сильно люблю!");
-                if(typeof createHeartRain === 'function') createHeartRain(); 
-                taskInput.value = '';
-                return; 
-            } else if (currentHour >= 23 || currentHour < 4) {
-                showSecret("🦉", "Уже так поздно! Допиши план и ложись спать, я буду охранять твой сон.");
-            } else if (currentHour >= 6 && currentHour < 9 && (lower.includes('план') || lower.includes('утро'))) {
-                showSecret("🌅", "Доброе утро, любимый! Пусть этот день будет удачным!");
-            } else if (lower.includes('купить') || lower.includes('магазин') || lower.includes('продукты')) {
-                showSecret("🍫", "И захвати мне вкусняшку, пожалуйста! А я отплачу поцелуями.");
-            } else if (lower.includes('фильм') || lower.includes('кино') || lower.includes('сериал')) {
-                showSecret("🍿", "Я уже готовлю вкусняшки и выбираю самое уютное место у тебя под боком!");
-            } else if (lower.includes('уборка') || lower.includes('мусор') || lower.includes('помыть')) {
-                showSecret("🧼", "Процесс уборки гораздо увлекательнее, если представить, что ты устраняешь следы преступления");
-            } else if (lower.includes('фото') || lower.includes('пленка') || lower.includes('кадры') || lower.includes('обработать')) {
-                showSecret("📸", "Удачного света! Жду новых классных кадров.");
-            } else if (lower.includes('музей') || lower.includes('выставка') || lower.includes('билеты')) {
-                showSecret("🖼️", "Отличный план. Главное — заранее проверить расписание работы!");
-            } else if (lower.includes('дедлайн') || lower.includes('отчет') || lower.includes('баг')) {
-                showSecret("⏱️", "Спокойно. Ешь слона по кусочкам, ты со всем разберешься.");
-            } else if (lower.includes('чемодан') || lower.includes('собрать вещи') || lower.includes('аэропорт')) {
-                showSecret("✈️", "Паспорта, билеты, зарядки. Остальное купим на месте, если что.");
-            }
+    if (lower === 'люблю') {
+        showSecret("❤️", "Я тоже тебя очень сильно люблю!");
+        if (typeof createHeartRain === 'function') createHeartRain();
+        taskInput.value = '';
+        return;
+    } else if (lower.includes('купить') || lower.includes('магазин') || lower.includes('продукты')) {
+        showSecret("🍫", "И захвати мне вкусняшку, пожалуйста! А я отплачу поцелуями.");
+    } else if (lower.includes('фильм') || lower.includes('кино') || lower.includes('сериал')) {
+        showSecret("🍿", "Я уже готовлю вкусняшки и выбираю самое уютное место у тебя под боком!");
+    } else if (lower.includes('уборка') || lower.includes('мусор') || lower.includes('помыть')) {
+        showSecret("🧼", "Процесс уборки гораздо увлекательнее, если представить, что ты устраняешь следы преступления");
+    } else if (lower.includes('фото') || lower.includes('пленка') || lower.includes('кадры') || lower.includes('обработать')) {
+        showSecret("📸", "Удачного света! Жду новых классных кадров.");
+    } else if (lower.includes('музей') || lower.includes('выставка') || lower.includes('билеты')) {
+        showSecret("🖼️", "Отличный план. Главное — заранее проверить расписание работы!");
+    } else if (lower.includes('дедлайн') || lower.includes('отчет') || lower.includes('баг')) {
+        showSecret("⏱️", "Спокойно. Ешь слона по кусочкам, ты со всем разберешься.");
+    } else if (lower.includes('чемодан') || lower.includes('собрать вещи') || lower.includes('аэропорт')) {
+        showSecret("✈️", "Паспорта, билеты, зарядки. Остальное купим на месте, если что.");
+    } else if (currentHour >= 6 && currentHour < 9 && (lower.includes('план') || lower.includes('утро'))) {
+        showSecret("🌅", "Доброе утро, любимый! Пусть этот день будет удачным!");
+    } else if (currentHour >= 23 || currentHour < 4) {
+        // ↑ Теперь срабатывает только если ни одно ключевое слово не совпало
+        showSecret("🦉", "Уже так поздно! Допиши план и ложись спать, я буду охранять твой сон.");
+    }
 
-            tasks.push({ id: Date.now(), text: text, completed: false });
-            taskInput.value = '';
-            saveAndRenderTasks();
+    tasks.push({ id: Date.now(), text: text, completed: false });
+    taskInput.value = '';
+    saveAndRenderTasks();
 
-            if (tasks.length === 8) {
-                showSecret("🤯", "Ого, сколько планов. Не забывай, что половину из этого можно просто не делать.");
-            }
-        }
-
+    if (tasks.length >= 8) {
+    setTimeout(() => {
+        showSecret("🤯", "Ого, сколько планов. Не забывай, что половину из этого можно просто не делать.");
+    }, 3000); // показать через 3 секунды, после закрытия предыдущей пасхалки
+}
         // =========================================
         // 6. РАНДОМАЙЗЕР СВИДАНИЙ
         // =========================================
@@ -1483,18 +1412,23 @@
             else { goatTimer = setTimeout(() => { goatClicks = 0; }, 1000); }
         }
 
-        let chaosClicks = 0;
-        function triggerChaosEgg() {
-            chaosClicks++;
-            if (chaosClicks >= 3) { showSecret("🌪️", "Хаос — это наше естественное состояние! Мы в нём прекрасны."); chaosClicks = 0; }
-            setTimeout(() => chaosClicks = 0, 2000); 
-        }
+        let chaosClicks = 0, chaosTimer; // добавь chaosTimer
+
+function triggerChaosEgg() {
+    chaosClicks++; clearTimeout(chaosTimer);
+    if (chaosClicks >= 3) {
+        showSecret("🌪️", "Хаос — это наше естественное состояние! Мы в нём прекрасны.");
+        chaosClicks = 0;
+    } else {
+        chaosTimer = setTimeout(() => { chaosClicks = 0; }, 2000);
+    }
+}
 
         let knockClicks = 0, knockTimer;
         function triggerKnockEgg() {
             knockClicks++; clearTimeout(knockTimer);
             if (knockClicks === 3) {
-                if (typeof showPinPhoto === 'function') showPinPhoto('добавить полароид', 'Тук-тук!', 'Кто там? Твоя самая любимая девочка пришла сказать, что соскучилась.');
+                if (typeof showPinPhoto === 'function') showPinPhoto('pictures_15.png', 'Тук-тук!', 'Кто там? Твоя самая любимая девочка пришла сказать, что соскучилась.');
                 knockClicks = 0;
             } else { knockTimer = setTimeout(() => { knockClicks = 0; }, 1000); }
         }
@@ -1571,9 +1505,14 @@
         // Ресайз
         let resizeCount = 0, resizeTimer;
         window.addEventListener('resize', () => {
-            resizeCount++; clearTimeout(resizeTimer);
-            if (resizeCount === 15) { showSecret("🛠️", "Эй! Я тут старалась, верстала по пикселям, а ты пытаешься всё сломать? Оставь окно в покое!"); resizeCount = 0; } 
-            else { resizeTimer = setTimeout(() => { resizeCount = 0; }, 1000); }
+            resizeCount++; 
+            clearTimeout(resizeTimer);
+            if (resizeCount === 60) { // Увеличили порог до 60 (примерно 1 секунда непрерывного ресайза)
+                showSecret("🛠️", "Эй! Я тут старалась, верстала по пикселям, а ты пытаешься всё сломать? Оставь окно в покое!"); 
+                resizeCount = 0; 
+            } else { 
+                resizeTimer = setTimeout(() => { resizeCount = 0; }, 1000); 
+            }
         });
 
         // Карточки и фон
@@ -1590,11 +1529,13 @@
                 }
             });
 
-            let pTimer;
-            p.addEventListener('mouseenter', () => { if (!globalDragMoved) pTimer = setTimeout(() => showSecret("🗿", "Залип на эту фотку? Классно было, правда?)"), 8000); });
-            p.addEventListener('mouseleave', () => clearTimeout(pTimer));
-            p.addEventListener('pointerdown', () => clearTimeout(pTimer)); 
+                    let pTimer;
+        p.addEventListener('mouseenter', () => { 
+            // Просто запускаем таймер
+            pTimer = setTimeout(() => showSecret("🗿", "Залип на эту фотку? Классно было, правда?)"), 8000); 
         });
+        p.addEventListener('mouseleave', () => clearTimeout(pTimer));
+        p.addEventListener('pointerdown', () => clearTimeout(pTimer)); // ← Эта строка отлично защищает от драга!
 
         document.querySelectorAll('.cards-container > .polaroid .caption').forEach(c => {
             let capClicks = 0, capTimer;
@@ -1717,6 +1658,20 @@
                 });
             }
         });
+        
+        function createHeartRain() {
+    for (let i = 0; i < 30; i++) {
+        const heart = document.createElement('div');
+        heart.innerHTML = '❤️';
+        heart.style.cssText = `position:fixed;left:${Math.random()*100}vw;top:-50px;font-size:${Math.random()*20+10}px;z-index:99999;pointer-events:none;transition:transform 3s linear,opacity 3s linear`;
+        document.body.appendChild(heart);
+        setTimeout(() => {
+            heart.style.transform = `translateY(100vh) rotate(${Math.random()*360}deg)`;
+            heart.style.opacity = '0';
+        }, 50 + i * 30);
+        setTimeout(() => heart.remove(), 3500);
+    }
+}
     </script>
 </body>
 </html>
