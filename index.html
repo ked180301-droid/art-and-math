@@ -980,7 +980,7 @@
     <!-- Скачай любой приятный звук в формате mp3, назови его alarm.mp3 и положи в папку к фотографиям -->
     <audio id="timer-sound" src="alarm.mp3" preload="auto"></audio>
 
-    <!-- ========================================= -->
+       <!-- ========================================= -->
     <!-- ВСЕ СКРИПТЫ (ЕДИНЫЙ БЛОК)                 -->
     <!-- ========================================= -->
     <script>
@@ -992,11 +992,11 @@
             }
         }
 
-               // 2. ЛОГИКА ТАЙМЕРА И УВЕДОМЛЕНИЙ
+        // 2. ЛОГИКА ТАЙМЕРА И УВЕДОМЛЕНИЙ
         let timeLeft = 55 * 60;
         let timerId = null;
         let initialTime = 55 * 60;
-        let currentModeMessage = "Время вышло! Пора отдохнуть :)"; // Сообщение по умолчанию
+        let currentModeMessage = "Время вышло! Пора отдохнуть :)"; 
 
         const display = document.getElementById('time-display');
         const widget = document.getElementById('timer-widget');
@@ -1037,41 +1037,34 @@
             document.getElementById('alert-message').textContent = message;
             document.getElementById('custom-alert').classList.remove('hidden');
             
-            // Воспроизводим звук
             let sound = document.getElementById('timer-sound');
             if(sound) {
-                // play() может быть заблокирован браузером без действия пользователя, но так как мы нажимали "Старт", всё сработает
                 sound.play().catch(e => console.log("Нет файла alarm.mp3 или браузер заблокировал звук"));
             }
         }
 
         function closeAlert() {
             document.getElementById('custom-alert').classList.add('hidden');
-            // Если звук еще играет, останавливаем его
             let sound = document.getElementById('timer-sound');
             if(sound) { sound.pause(); sound.currentTime = 0; }
         }
 
         updateDisplay();
 
-               // 3. АВТОВОЗВРАТ ВИДЕО И ПЕРВЫЙ КАДР ВМЕСТО ПОСТЕРА
+        // 3. АВТОВОЗВРАТ ВИДЕО И ПЕРВЫЙ КАДР ВМЕСТО ПОСТЕРА
         const allVideos = document.querySelectorAll('video');
         allVideos.forEach(video => {
-            // Возврат к началу после окончания
             video.addEventListener('ended', function() { this.load(); });
             
-            // Если постера нет (или он пустой), заставляем браузер показать первый кадр
             if (!video.getAttribute('poster') || video.getAttribute('poster') === "") {
-                // Добавляем к ссылке указатель на первую миллисекунду
                 if (!video.src.includes('#t=')) {
                     video.src = video.src + '#t=0.001';
                 }
-                // Разрешаем браузеру подгрузить этот первый кадр (иначе он покажет пустоту)
                 video.preload = "metadata";
             }
         });
 
-                // 4. ЛОГИКА ПЕРЕТАСКИВАНИЯ С ДОЛГИМ НАЖАТИЕМ ДЛЯ ТЕЛЕФОНА
+        // 4. ЛОГИКА ПЕРЕТАСКИВАНИЯ 
         const draggables = document.querySelectorAll('.polaroid, .scrap-item');
         let savedPositions = JSON.parse(localStorage.getItem('moodboard_positions')) || {};
 
@@ -1080,7 +1073,9 @@
             el.id = id;
             el.style.cursor = 'grab';
 
-            // Если карточку уже передвигали, вырываем её из сетки и ставим на сохраненное место
+            // Сохраняем исходный наклон / transform карточки
+            const originalTransform = el.style.transform || '';
+
             if (savedPositions[id]) {
                 el.style.setProperty('position', 'absolute', 'important');
                 el.style.setProperty('left', savedPositions[id].left, 'important');
@@ -1088,57 +1083,48 @@
                 el.style.setProperty('right', 'auto', 'important'); 
                 el.style.setProperty('margin', '0', 'important'); 
                 el.style.setProperty('z-index', '50', 'important'); 
+                el.style.setProperty('transform', originalTransform, 'important');
             }
 
             let isDragging = false;
             let startX, startY, initialLeft, initialTop;
             let longPressTimer;
 
-            // ДЛЯ КОМПЬЮТЕРА: моментальное перетаскивание по клику мыши
             el.addEventListener('mousedown', function(e) {
                 if (window.innerWidth > 768) startDrag(e);
             });
 
-            // ДЛЯ ТЕЛЕФОНА: перетаскивание по долгому нажатию (400 мс)
             el.addEventListener('touchstart', function(e) {
                 if (e.target.tagName.toLowerCase() === 'video' || e.target.tagName.toLowerCase() === 'button') return;
                 
                 if (window.innerWidth <= 768) {
-                    // Запускаем таймер долгого нажатия
                     longPressTimer = setTimeout(() => {
-                        // Эффект "отрыва" карточки от экрана (немного увеличиваем)
-                        el.style.setProperty('transform', 'scale(1.05)', 'important');
+                        el.style.setProperty('transform', `${originalTransform} scale(1.05)`.trim(), 'important');
                         el.style.setProperty('box-shadow', '0 15px 30px rgba(0,0,0,0.3)', 'important');
                         el.style.setProperty('z-index', '1000', 'important');
                         
-                        // Если карточка еще сидит в сетке колонок, делаем её независимой (абсолютной)
                         if (getComputedStyle(el).position !== 'absolute') {
                             const rect = el.getBoundingClientRect();
                             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                             const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
                             
-                            // Фиксируем её на том же месте, но отвязываем от колонок
                             el.style.setProperty('position', 'absolute', 'important');
                             el.style.setProperty('top', (rect.top + scrollTop) + 'px', 'important');
                             el.style.setProperty('left', (rect.left + scrollLeft) + 'px', 'important');
                             el.style.setProperty('margin', '0', 'important');
                         }
                         
-                        // Легкая вибрация, если телефон поддерживает (дает ощущение "отрыва")
                         if (navigator.vibrate) navigator.vibrate(50);
-                        
                         startDrag(e);
-                    }, 400); // 400 миллисекунд — идеальное время удержания
+                    }, 400);
                 } else {
                     startDrag(e);
                 }
             }, {passive: false});
 
-            // Если человек сдвинул палец (начал свайпать) или убрал раньше времени — отменяем таймер
             el.addEventListener('touchmove', () => clearTimeout(longPressTimer), {passive: true});
             el.addEventListener('touchend', () => clearTimeout(longPressTimer));
 
-            // Сама логика захвата
             function startDrag(e) {
                 isDragging = true;
                 el.style.cursor = 'grabbing';
@@ -1158,10 +1144,9 @@
                 document.addEventListener('touchend', stopDrag);
             }
 
-            // Движение за пальцем/мышкой
             function drag(e) {
                 if (!isDragging) return;
-                if(e.cancelable) e.preventDefault(); // Блокируем скролл страницы пока тащим карточку
+                if(e.cancelable) e.preventDefault(); 
 
                 const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
                 const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
@@ -1177,18 +1162,16 @@
                 el.style.setProperty('right', 'auto', 'important');
             }
 
-            // Отпускаем карточку
             function stopDrag() {
                 if (!isDragging) return;
                 isDragging = false;
                 el.style.cursor = 'grab';
                 el.style.setProperty('z-index', '50', 'important');
                 
-                // Убираем эффект увеличения, возвращаем обычный размер
-                el.style.removeProperty('transform');
+                // ВОЗВРАТ ИСХОДНОГО НАКЛОНА 
+                el.style.setProperty('transform', originalTransform, 'important');
                 el.style.removeProperty('box-shadow');
                 
-                // Запоминаем новые координаты
                 savedPositions[id] = { left: el.style.left, top: el.style.top };
                 localStorage.setItem('moodboard_positions', JSON.stringify(savedPositions));
 
@@ -1199,23 +1182,21 @@
             }
         });
 
-                // 5. ЛОГИКА БЛОКНОТА-ПЛАНИРОВЩИКА
+        // 5. ЛОГИКА БЛОКНОТА-ПЛАНИРОВЩИКА
         const notepadOverlay = document.getElementById('notepad-overlay');
         const taskInput = document.getElementById('task-input');
         const taskList = document.getElementById('task-list');
 
-        // Загружаем задачи при старте
         let tasks = JSON.parse(localStorage.getItem('moodboard_tasks')) || [];
         renderTasks();
 
         function toggleNotepad() {
             notepadOverlay.classList.toggle('hidden');
             if (!notepadOverlay.classList.contains('hidden')) {
-                taskInput.focus(); // Ставим курсор в поле ввода при открытии
+                taskInput.focus(); 
             }
         }
 
-        // Закрытие при клике мимо блокнота
         function closeNotepadOutside(e) {
             if (e.target === notepadOverlay) toggleNotepad();
         }
@@ -1233,7 +1214,7 @@
         }
 
         function deleteTask(e, id) {
-            e.stopPropagation(); // Чтобы клик не зачеркивал задачу
+            e.stopPropagation(); 
             tasks = tasks.filter(t => t.id !== id);
             saveAndRenderTasks();
         }
@@ -1257,8 +1238,8 @@
                 taskList.appendChild(li);
             });
         }
-                // 6. РАНДОМАЙЗЕР СВИДАНИЙ (БАНКА ИДЕЙ)
-        // Добавляйте сюда свои идеи! (В кавычках, через запятую)
+
+        // 6. РАНДОМАЙЗЕР СВИДАНИЙ (БАНКА ИДЕЙ)
         const dateIdeas = [
             "Устроить спонтанный пикник у воды",
             "Испечь те самые слойки вместе",
@@ -1284,7 +1265,7 @@
             "Спонтанная ночная прогулка по пустому городу. Гулять, пока не найдем круглосуточный кофе 🌙",
             "Вечер тотального релакса: выключаем телефоны, зажигаем свечи и делаем друг другу массаж 💆‍♂️",
             "Зайти в большой книжный, выбрать друг другу по книге вслепую и пойти читать их в кафе 📚",
-            "Баттл в видеоигры или настолки. Проигравший делает победителю чай и массаж плеч 🎮",
+            "Баттл в видеоигры или настолки. Проигравший делает победилю чай и массаж плеч 🎮",
             "Устроить вечер «глупых презентаций»: каждый готовит 5 слайдов на любую бредовую тему и серьезно защищает её 📊", 
             "Бросать монетку на каждом перекрестке: орел — направо, решка — налево. Посмотрим, куда нас это заведет 🪙",
             "Вывести на экран наши старые фотки из Питера, Стамбула и других поездок и вспоминать локальные шутки 🎞️",
@@ -1293,7 +1274,6 @@
             "Купить 5 видов странных снеков или сыров и устроить дегустацию с закрытыми глазами 🧀",
             "Включить наш общий плейлист на полную громкость, петь мимо нот и дурачиться, пока не устанем 🎶"
         ];
-
         function showRandomDate() {
             const randomIndex = Math.floor(Math.random() * dateIdeas.length);
             const idea = dateIdeas[randomIndex];
@@ -1305,13 +1285,12 @@
         function closeDate() {
             document.getElementById('date-alert').classList.add('hidden');
         }
-                // 7. МАШИНА ВРЕМЕНИ (АРХИВ ВОСПОМИНАНИЙ)
-        
-        // ВАШ АРХИВ ФОТОГРАФИЙ С ДАТАМИ
+
+        // 7. МАШИНА ВРЕМЕНИ (АРХИВ ВОСПОМИНАНИЙ)
         const memoryArchive = [
             {
-                month: 4, day: 29, year: 2024, // Месяц (1-12), День (1-31), Год события
-                image: "pictures_24.png",      // Название картинки из папки
+                month: 4, day: 29, year: 2024, 
+                image: "pictures_24.png",     
                 caption: "Невероятные дни в Стамбуле"
             },
             {
@@ -1324,24 +1303,20 @@
                 image: "pictures_2.png",
                 caption: "Покорение цветной стены"
             }
-            // Копируйте этот блок { ... } и добавляйте сколько угодно важных дат!
         ];
 
-                function checkMemories() {
+        function checkMemories() {
             const today = new Date();
             const currentMonth = today.getMonth() + 1; 
             const currentDay = today.getDate();
             const currentYear = today.getFullYear();
             
-            // Создаем уникальную строку с сегодняшней датой, например "2026-4-29"
             const dateString = `${currentYear}-${currentMonth}-${currentDay}`;
             
-            // Проверяем, не показывали ли мы уже сегодня воспоминание?
             if (localStorage.getItem('lastMemoryDate') === dateString) {
-                return; // Если да - просто останавливаем функцию, ничего не показываем
+                return; 
             }
-
-            // Ищем, есть ли в архиве фото с сегодняшними днем и месяцем
+            
             const memory = memoryArchive.find(m => m.month === currentMonth && m.day === currentDay);
 
             if (memory) {
@@ -1359,10 +1334,7 @@
                 
                 setTimeout(() => {
                     document.getElementById('memory-overlay').classList.remove('hidden');
-                    
-                    // Запоминаем в браузере, что сегодня мы уже показали сюрприз
                     localStorage.setItem('lastMemoryDate', dateString);
-                    
                 }, 1000); 
             }
         }
@@ -1371,10 +1343,9 @@
             document.getElementById('memory-overlay').classList.add('hidden');
         }
 
-        // Запускаем проверку архива при каждом открытии сайта
         window.addEventListener('load', checkMemories);
         
-        // 8. ИНТЕРАКТИВНАЯ КАРТА (СВОРАЧИВАНИЕ И ПОКАЗ ФОТО + ДОБАВЛЕНИЕ МЕТОК)
+        // 8. ИНТЕРАКТИВНАЯ КАРТА 
         const mapOverlay = document.getElementById('map-overlay');
         const pinOverlay = document.getElementById('pin-overlay');
 
@@ -1397,14 +1368,12 @@
             pinOverlay.classList.add('hidden');
         }
 
-        // --- НОВАЯ ЛОГИКА: ДОБАВЛЕНИЕ И ПЕРЕТАСКИВАНИЕ МЕТОК ---
         const mapContainer = document.getElementById('travel-map-container');
         const mapHint = document.getElementById('map-mode-hint');
 
         let addPinMode = false;
         let draggedPinId = null;
 
-        // Загружаем метки из памяти или берем стандартные
         let mapPins = JSON.parse(localStorage.getItem('travel_map_pins')) || [
             { id: 1, top: 60, left: 55, image: 'pictures_24.png', location: 'Стамбул', caption: 'Невероятные дни в Стамбуле' },
             { id: 2, top: 30, left: 40, image: 'pictures_4.png', location: 'Санкт-Петербург', caption: 'Петербургская дама' },
@@ -1415,7 +1384,6 @@
             localStorage.setItem('travel_map_pins', JSON.stringify(mapPins));
         }
 
-        // Отрисовка всех меток на карте
         function renderMapPins() {
             if (!mapContainer) return;
             mapContainer.querySelectorAll('.map-pin').forEach(pin => pin.remove());
@@ -1427,29 +1395,25 @@
                 pinEl.style.top = pin.top + '%';
                 pinEl.style.left = pin.left + '%';
 
-                // Клик по булавке (показать фото)
                 pinEl.addEventListener('click', (e) => {
                     if (pinEl.dataset.dragged === 'true') {
                         pinEl.dataset.dragged = 'false';
-                        return; // Если мы её тащили, то не открываем фото
+                        return; 
                     }
                     e.stopPropagation();
                     showPinPhoto(pin.image, pin.location, pin.caption);
                 });
 
-                // Начало перетаскивания
                 pinEl.addEventListener('pointerdown', (e) => startDragPin(e, pin.id, pinEl));
                 mapContainer.appendChild(pinEl);
             });
         }
 
-        // Включение режима добавления булавки
         function enableAddPinMode() {
             addPinMode = true;
             if (mapHint) mapHint.textContent = 'Теперь кликните на нужное место на карте';
         }
 
-        // Клик по карте для добавления новой булавки
         if (mapContainer) {
             mapContainer.addEventListener('click', function(e) {
                 if (!addPinMode) return;
@@ -1485,7 +1449,6 @@
             });
         }
 
-        // --- ФУНКЦИИ ПЕРЕТАСКИВАНИЯ ---
         function startDragPin(e, pinId, pinEl) {
             e.preventDefault();
             e.stopPropagation();
@@ -1512,7 +1475,7 @@
 
             pinEl.style.left = safeLeft + '%';
             pinEl.style.top = safeTop + '%';
-            pinEl.dataset.dragged = 'true'; // Отмечаем, что было движение
+            pinEl.dataset.dragged = 'true'; 
 
             const pin = mapPins.find(p => p.id === draggedPinId);
             if (pin) {
@@ -1525,17 +1488,16 @@
             pinEl.classList.remove('dragging');
             window.removeEventListener('pointermove', moveHandler);
             window.removeEventListener('pointerup', upHandler);
-            saveMapPins(); // Сохраняем новые координаты
+            saveMapPins(); 
             draggedPinId = null;
         }
 
-        // Запускаем отрисовку стартовых меток
         renderMapPins();
-              // =========================================
+
+        // =========================================
         // 9. СЕКРЕТНЫЕ ПАСХАЛКИ (EASTER EGGS)
         // =========================================
 
-        // --- ПАСХАЛКА 1: Вывод секретов ---
         function showSecret(subtitle, text) {
             document.getElementById('secret-subtitle').textContent = subtitle;
             document.getElementById('secret-text').textContent = text;
@@ -1546,7 +1508,6 @@
             document.getElementById('secret-alert').classList.add('hidden');
         }
 
-        // --- ПАСХАЛКА 2: Коза-говорун (3 быстрых клика) ---
         let goatClicks = 0;
         let goatTimer;
         function triggerGoatEgg() {
@@ -1561,7 +1522,6 @@
             }
         }
 
-        // --- ПАСХАЛКА 3: Тайное слово в блокноте ---
         function addTask() {
             const text = taskInput.value.trim();
             if (text === '') return;
@@ -1612,7 +1572,6 @@
             saveAndRenderTasks();
         }
     
-        // 11. Функция для многократного клика по Хаосу
         let chaosClicks = 0;
         function triggerChaosEgg() {
             chaosClicks++;
@@ -1623,7 +1582,6 @@
             setTimeout(() => chaosClicks = 0, 2000); 
         }
 
-        // 12. Клавиатурный ЧИТ-КОД
         let secretKeys = '';
         window.addEventListener('keydown', (e) => {
             secretKeys += e.key.toLowerCase();
@@ -1635,10 +1593,8 @@
             if (secretKeys.length > 10) secretKeys = secretKeys.slice(-10); 
         });
 
-        // 13. Для Дани-хакера (Консоль браузера)
         console.log("%cПривет, мой любопытный Даня! Всё тебе покажи!", "color: #8C6239; background: #F7F5F0; font-size: 18px; padding: 10px; border-radius: 10px; border: 2px solid #8C6239;");
 
-        // 14. Секрет долгого нажатия на компас (карту)
         const mapBtn = document.querySelector('.map-toggle-btn');
         let compassTimer;
         if(mapBtn) {
@@ -1651,7 +1607,6 @@
             mapBtn.addEventListener('pointerleave', () => clearTimeout(compassTimer));
         }
 
-        // --- Стук в дверь (3 быстрых клика) -> Полароид ---
         let knockClicks = 0;
         let knockTimer;
         function triggerKnockEgg() {
@@ -1667,7 +1622,6 @@
             }
         }
 
-        // 5. "Игра в гляделки"
         const starePolaroid = document.getElementById('stare-polaroid');
         let stareTimer;
         if (starePolaroid) {
@@ -1680,7 +1634,6 @@
             starePolaroid.addEventListener('pointerdown', () => clearTimeout(stareTimer));
         }
 
-        // 7. "Ковырять скотч" (ИСПРАВЛЕНО)
         const tapePolaroid = document.getElementById('tape-polaroid');
         let tapeClicks = 0;
         let tapeTimer;
@@ -1701,7 +1654,6 @@
             }
         }
 
-        // 8. Попытка приблизить
         const zoomPolaroid = document.getElementById('zoom-polaroid');
         if (zoomPolaroid) {
             zoomPolaroid.addEventListener('wheel', (e) => {
@@ -1712,7 +1664,6 @@
             }, { passive: false });
         }
 
-        // 9. "Уронить воспоминание"
         const dropPolaroid = document.getElementById('drop-polaroid');
         if (dropPolaroid) {
             dropPolaroid.addEventListener('pointerup', (e) => {
@@ -1725,7 +1676,6 @@
         // =========================================
         // ПАСХАЛКИ ДЛЯ ЭЛЕМЕНТОВ ИНТЕРФЕЙСА
         // =========================================
-
         const timerDisplayObj = document.getElementById('timer-display');
         let timerClicks = 0;
         let timerClickTimeout;
@@ -1835,7 +1785,7 @@
         // ПАСХАЛКИ ДЛЯ КАРТОЧЕК И ФОНА
         // =========================================
 
-        document.querySelectorAll('.polaroid').forEach(p => {
+        document.querySelectorAll('.cards-container > .polaroid').forEach(p => {
             p.addEventListener('pointerup', (e) => {
                 if (e.clientX < 20 || e.clientX > window.innerWidth - 20) {
                     showSecret("🛸", "Эй-эй! Воспоминания за борт не выкидываем, верни на место!");
@@ -1843,7 +1793,7 @@
             });
         });
 
-        document.querySelectorAll('.polaroid').forEach(p => {
+        document.querySelectorAll('.cards-container > .polaroid').forEach(p => {
             let pTimer;
             p.addEventListener('mouseenter', () => {
                 pTimer = setTimeout(() => showSecret("🗿", "Залип на эту фотку? Классно было, правда?)"), 8000);
@@ -1852,7 +1802,7 @@
             p.addEventListener('pointerdown', () => clearTimeout(pTimer)); 
         });
 
-        document.querySelectorAll('.polaroid .caption').forEach(c => {
+        document.querySelectorAll('.cards-container > .polaroid .caption').forEach(c => {
             let capClicks = 0;
             let capTimer;
             c.addEventListener('click', (e) => {
@@ -1869,7 +1819,7 @@
         });
 
         const theEnvelope = document.querySelector('.date-jar');
-        document.querySelectorAll('.polaroid').forEach(p => {
+        document.querySelectorAll('.cards-container > .polaroid').forEach(p => {
             p.addEventListener('pointerup', (e) => {
                 if (theEnvelope) {
                     const envRect = theEnvelope.getBoundingClientRect();
@@ -1933,7 +1883,6 @@
             });
         }
 
-        // ИСПРАВЛЕНО: Добавлен поиск фото Стамбула
         const istPolaroid = document.querySelector('img[src*="pictures_24.png"]');
         if (istPolaroid) {
             istPolaroid.addEventListener('contextmenu', (e) => {
@@ -1967,7 +1916,6 @@
             });
         }
 
-        // ИСПРАВЛЕНО: Добавлен поиск кнопки
         const noteBtn = document.querySelector('.notepad-btn');
         if (noteBtn) {
             noteBtn.draggable = true; 
