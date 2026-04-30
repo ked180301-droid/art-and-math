@@ -1170,7 +1170,49 @@
                 
                 el.style.setProperty('transform', originalTransform, 'important');
                 el.style.removeProperty('box-shadow');
+
+                            function stopDrag() {
+                if (!isDragging) return;
+                isDragging = false;
+                el.style.cursor = 'grab';
+                el.style.setProperty('z-index', '50', 'important');
                 
+                el.style.setProperty('transform', originalTransform, 'important');
+                el.style.removeProperty('box-shadow');
+                
+                // === НОВАЯ ЛОГИКА ПАСХАЛОК ПРИ БРОСАНИИ КАРТОЧКИ ===
+                const elRect = el.getBoundingClientRect();
+                
+                // 1. Выкидывание за борт
+                if (elRect.left < 20 || elRect.right > window.innerWidth - 20) {
+                    showSecret("🛸", "Эй-эй! Воспоминания за борт не выкидываем, верни на место!");
+                }
+                
+                // 2. Попытка засунуть в конверт
+                const theEnvelope = document.querySelector('.date-jar');
+                if (theEnvelope) {
+                    const envRect = theEnvelope.getBoundingClientRect();
+                    // Проверяем, пересекается ли центр карточки с конвертом
+                    const elCenterX = elRect.left + elRect.width / 2;
+                    const elCenterY = elRect.top + elRect.height / 2;
+                    
+                    if (elCenterX > envRect.left && elCenterX < envRect.right && 
+                        elCenterY > envRect.top && elCenterY < envRect.bottom) {
+                        showSecret("📮", "Не пытайся засунуть фотографию в конверт, она туда не поместится!");
+                    }
+                }
+                
+                // 3. Бросание с высоты (пасхалка drop-polaroid)
+                if (el.id === 'drop-polaroid' && elRect.top > window.innerHeight - 100) {
+                    showSecret("⚠️", "Аккуратнее! Не роняй наши воспоминания, они хрупкие.");
+                }
+
+                // 4. Падение Москвы
+                if (el.querySelector('img[src*="DROW_170.png"]') && (elRect.top - initialTop > 100)) {
+                    showSecret("🏗️", "Не роняй столицу! Нам тут еще жить и работать.");
+                }
+                // ===================================================
+
                 savedPositions[id] = { left: el.style.left, top: el.style.top };
                 localStorage.setItem('moodboard_positions', JSON.stringify(savedPositions));
 
@@ -1190,10 +1232,23 @@
         let tasks = JSON.parse(localStorage.getItem('moodboard_tasks')) || [];
         renderTasks();
 
+        let emptyNotepadEggShown = false; // Флаг, чтобы кровать не вылезала каждый раз
+
         function toggleNotepad() {
             notepadOverlay.classList.toggle('hidden');
+            
             if (!notepadOverlay.classList.contains('hidden')) {
+                // Если блокнот открылся
                 taskInput.focus(); 
+            } else {
+                // Если блокнот только что закрылся — проверяем задачи!
+                if (!emptyNotepadEggShown && tasks.length === 0 && taskInput && taskInput.value.trim() === '') {
+                    // Небольшая задержка, чтобы блокнот успел плавно исчезнуть перед появлением пасхалки
+                    setTimeout(() => {
+                        showSecret("🛏️", "Никаких планов? Отлично, значит сегодня легально валяемся в кровати и ничего не делаем!");
+                    }, 300);
+                    emptyNotepadEggShown = true; 
+                }
             }
         }
 
@@ -1553,6 +1608,7 @@ function triggerChaosEgg() {
         // Таймер: клики
         const timerDisplayObj = document.getElementById('timer-display');
         if (timerDisplayObj) {
+            timerDisplayObj.addEventListener('pointerdown', (e) => e.preventDefault());
             let timerClicks = 0, timerClickTimeout;
             timerDisplayObj.addEventListener('click', () => {
                 timerClicks++; clearTimeout(timerClickTimeout);
@@ -1569,10 +1625,33 @@ function triggerChaosEgg() {
             });
         }
 
-        // Конверт: отрывание
-        const envelopeObj = document.querySelector('.date-jar img');
-        if (envelopeObj) envelopeObj.addEventListener('dragstart', (e) => { e.preventDefault(); showSecret("💌", "Конверт надежно приклеен к стене. Не отрывай, просто нажми на него!"); });
+        // Конверт: попытка перетащить
+        const envelopeObj = document.querySelector('.date-jar');
+        if (envelopeObj) {
+            let envDragMoved = false;
+            let envStartX = 0, envStartY = 0;
 
+            // Запоминаем, где мышка нажала на конверт
+            envelopeObj.addEventListener('pointerdown', (e) => {
+                envDragMoved = false;
+                envStartX = e.clientX;
+                envStartY = e.clientY;
+            });
+
+            // Если мышка сдвинулась с зажатой кнопкой на конверте - значит, пытаются тащить!
+            envelopeObj.addEventListener('pointermove', (e) => {
+                if (e.buttons > 0) { // Проверяем, зажата ли кнопка мыши
+                    if (!envDragMoved && (Math.abs(e.clientX - envStartX) > 10 || Math.abs(e.clientY - envStartY) > 10)) {
+                        envDragMoved = true;
+                        showSecret("💌", "Конверт надежно приклеен к стене. Не отрывай, просто нажми на него!");
+                    }
+                }
+            });
+
+            // Отключаем стандартный браузерный "призрак" картинки при перетаскивании
+            const envelopeImg = envelopeObj.querySelector('img');
+            if (envelopeImg) envelopeImg.addEventListener('dragstart', e => e.preventDefault());
+        }
         // Ресайз
         let resizeCount = 0, resizeTimer;
         window.addEventListener('resize', () => {
@@ -1588,17 +1667,6 @@ function triggerChaosEgg() {
 
         // Карточки и фон
         document.querySelectorAll('.cards-container > .polaroid').forEach(p => {
-            p.addEventListener('pointerup', (e) => {
-                if (!globalDragMoved) return; 
-                if (e.clientX < 20 || e.clientX > window.innerWidth - 20) showSecret("🛸", "Эй-эй! Воспоминания за борт не выкидываем, верни на место!");
-                const theEnvelope = document.querySelector('.date-jar');
-                if (theEnvelope) {
-                    const envRect = theEnvelope.getBoundingClientRect();
-                    if (e.clientX > envRect.left && e.clientX < envRect.right && e.clientY > envRect.top && e.clientY < envRect.bottom) {
-                        showSecret("📮", "Не пытайся засунуть фотографию в конверт, она туда не поместится!");
-                    }
-                }
-            });
 
                     let pTimer;
         p.addEventListener('mouseenter', () => { 
@@ -1610,6 +1678,7 @@ function triggerChaosEgg() {
         });
             
         document.querySelectorAll('.cards-container > .polaroid .caption').forEach(c => {
+            c.addEventListener('pointerdown', (e) => e.preventDefault());
             let capClicks = 0, capTimer;
             c.addEventListener('click', (e) => {
                 if (globalDragMoved) return; 
@@ -1637,6 +1706,7 @@ function triggerChaosEgg() {
         if (tapePolaroid) {
             const tapeEl = tapePolaroid.querySelector('.tape');
             if (tapeEl) {
+                tapeEl.addEventListener('pointerdown', (e) => e.preventDefault());
                 let tapeClicks = 0, tapeTimer;
                 tapeEl.addEventListener('click', (e) => {
                     if (globalDragMoved) return;
@@ -1650,9 +1720,6 @@ function triggerChaosEgg() {
 
         const zoomPolaroid = document.getElementById('zoom-polaroid');
         if (zoomPolaroid) zoomPolaroid.addEventListener('wheel', (e) => { if (e.ctrlKey || e.deltaY < 0) { showSecret("🔍", "Да-да, я знаю, что я тут отлично получилась. Можешь не приближать, пиксели полезут."); e.preventDefault(); } }, { passive: false });
-
-        const dropPolaroid = document.getElementById('drop-polaroid');
-        if (dropPolaroid) dropPolaroid.addEventListener('pointerup', (e) => { if (globalDragMoved && e.clientY > window.innerHeight - 100) showSecret("⚠️", "Аккуратнее! Не роняй наши воспоминания, они хрупкие."); });
 
         const volgaPolaroid = document.querySelector('img[src*="pictures_6.png"]');
         if (volgaPolaroid) volgaPolaroid.addEventListener('click', (e) => { if (!globalDragMoved && e.shiftKey) showSecret("⛺", "Телепорт на речку активирован... Шучу. Зато палатка всегда наготове!"); });
@@ -1669,23 +1736,30 @@ function triggerChaosEgg() {
 
         const moscowImg = document.querySelector('img[src*="DROW_170.png"]');
         if (moscowImg) {
-            moscowImg.addEventListener('pointerup', (e) => { if (globalDragMoved && (e.clientY - globalDragStart.y > 100)) showSecret("🏗️", "Не роняй столицу! Нам тут еще жить и работать."); });
+            moscowImg.addEventListener('pointerdown', (e) => e.preventDefault());
             moscowImg.addEventListener('dblclick', () => { showSecret("🏙️", "Москва слезам не верит. Зато верит в упорный труд и нашу любовь."); });
         }
 
         const climbShoes = document.querySelector('img[src*="PNG_3.png"]');
         if (climbShoes) climbShoes.addEventListener('pointerdown', (e) => { if (e.shiftKey) showSecret("🧗", "Когда уже пойдём покорять цветные стены?!"); });
 
-        const holdsImg = document.querySelector('img[src*="PNG_9.png"]'); 
-        if (holdsImg) holdsImg.addEventListener('pointerup', (e) => {
-            if (!globalDragMoved) return;
-            const dy = e.clientY - globalDragStart.y;
-            if (dy > 80) showSecret("🧗‍♂️", "Держит намертво! Но не расслабляйся, лезть еще высоко.");
-            else if (dy < -50) showSecret("⚠️", "Эй, это пассив! Его надо грузить вниз, а не вверх!");
-        });
+                const holdsImg = document.querySelector('img[src*="PNG_9.png"]'); 
+        if (holdsImg) {
+            let holdsStartX, holdsStartY;
+            holdsImg.addEventListener('pointerdown', (e) => {
+                holdsStartX = e.clientX;
+                holdsStartY = e.clientY;
+            });
+            holdsImg.addEventListener('pointerup', (e) => {
+                const dy = e.clientY - holdsStartY;
+                if (dy > 80) showSecret("🧗‍♂️", "Держит намертво! Но не расслабляйся, лезть еще высоко.");
+                else if (dy < -50) showSecret("⚠️", "Эй, это пассив! Его надо грузить вниз, а не вверх!");
+            });
+        }
 
         const pieImg = document.querySelector('img[src*="PNG_2.png"]'); 
         if (pieImg) {
+            c.addEventListener('pointerdown', (e) => e.preventDefault());
             let pieClicks = 0, pieTimer;
             pieImg.addEventListener('click', (e) => {
                 if (globalDragMoved) return;
@@ -1720,6 +1794,7 @@ function triggerChaosEgg() {
         multiClickMap.forEach(item => {
             const el = document.querySelector(item.sel);
             if (el) {
+                el.addEventListener('pointerdown', (e) => e.preventDefault());
                 let clicks = 0, timer;
                 el.addEventListener('click', (e) => {
                     if (globalDragMoved) return;
