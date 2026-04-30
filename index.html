@@ -234,7 +234,9 @@
         width: 90vw !important; /* Строго 90% от ширины экрана */
         max-width: 350px !important; /* Не больше 350px на телефонах */
         padding: 20px 15px !important; /* Уменьшаем внутренние отступы */
-        box-sizing: border-box; /* Чтобы отступы не увеличивали ширину */
+        box-sizing: border-box;
+        position: fixed;
+    z-index: 99999 !important; /* <--- ДОБАВИТЬ ЭТО *//* Чтобы отступы не увеличивали ширину */
     }
 
     /* Подправляем крестик закрытия, чтобы он не улетал за экран */
@@ -595,14 +597,55 @@
             .map-add-btn { font-size: 1rem; padding: 7px 12px; }
             #map-mode-hint { font-size: 0.85rem; }
         }
+            /* Контейнер для кнопок в правом верхнем углу */
+.controls-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 15px; /* Расстояние между кнопками */
+    z-index: 1000;
+}
+
+/* Убираем у самих кнопок fixed, так как теперь fixed их родитель */
+.reset-btn, .map-toggle-btn, .timer-toggle-btn {
+    position: relative !important; /* Сбрасываем старые координаты */
+    top: auto !important;
+    right: auto !important;
+    margin: 0 !important;
+}
+
+/* --- МОБИЛЬНАЯ АДАПТАЦИЯ --- */
+@media (max-width: 768px) {
+    .controls-container {
+        top: 10px; /* Чуть ближе к краю на мобилке */
+        right: 10px;
+        left: 10px; /* Растягиваем на всю ширину */
+        justify-content: space-between; /* Распределяем кнопки по всей ширине */
+        gap: 5px;
+    }
+    
+    /* Делаем кнопки чуть компактнее, если нужно */
+    .controls-container button {
+        flex: 1; /* Кнопки займут равное пространство */
+        font-size: 14px; /* Чуть меньше шрифт */
+        padding: 8px 5px;
+        text-align: center;
+        white-space: nowrap;
+    }
+}
     </style>
 </head>
 <body>
 
+    <div class="controls-container">
     <!-- КНОПКА ВОЗВРАТА -->
     <button class="reset-board-btn" onclick="resetBoard(); triggerChaosEgg();">✨ Вернуться к хаосу</button>
     <!-- КНОПКА БЛОКНОТА -->
     <button class="notepad-btn" onclick="toggleNotepad()">📝 План на день</button>
+         <!-- КНОПКА-КОМПАС ДЛЯ КАРТЫ -->
+    <div class="map-toggle-btn" onclick="toggleMap()">🌍<span>Карта</span></div>
+        </div>
 
     <!-- РИСУНКИ ТУШЬЮ (ФОНОВЫЕ) -->
     <div class="blend-mode" style="top: 40px; right: 10%; width: 180px; transform: rotate(-5deg);"><img src="DROW_190.png" loading="lazy" alt="график"></div>
@@ -1501,10 +1544,25 @@
         // =========================================
         // 9. СЕКРЕТНЫЕ ПАСХАЛКИ (EASTER EGGS)
         // =========================================
-        function showSecret(subtitle, text) {
-            document.getElementById('secret-subtitle').textContent = subtitle;
-            document.getElementById('secret-text').textContent = text;
-            document.getElementById('secret-alert').classList.remove('hidden');
+         function showSecret(subtitle, text) {
+            const alertBox = document.getElementById('secret-alert');
+            const subtitleBox = document.getElementById('secret-subtitle');
+            const textBox = document.getElementById('secret-text');
+
+            if (!alertBox || !subtitleBox || !textBox) return;
+
+            // 1. Меняем текст
+            subtitleBox.textContent = subtitle;
+            textBox.textContent = text;
+            
+            // 2. Убираем класс скрытия
+            alertBox.classList.remove('hidden');
+
+            // 3. ПИНАЕМ БРАУЗЕР: принудительная перерисовка (reflow)
+            void alertBox.offsetWidth; 
+
+            // 4. Поднимаем окно поверх всего
+            alertBox.style.zIndex = '99999';
         }
         function closeSecret() { document.getElementById('secret-alert').classList.add('hidden'); }
 
