@@ -1170,15 +1170,6 @@
                 
                 el.style.setProperty('transform', originalTransform, 'important');
                 el.style.removeProperty('box-shadow');
-
-                            function stopDrag() {
-                if (!isDragging) return;
-                isDragging = false;
-                el.style.cursor = 'grab';
-                el.style.setProperty('z-index', '50', 'important');
-                
-                el.style.setProperty('transform', originalTransform, 'important');
-                el.style.removeProperty('box-shadow');
                 
                 // === НОВАЯ ЛОГИКА ПАСХАЛОК ПРИ БРОСАНИИ КАРТОЧКИ ===
                 const elRect = el.getBoundingClientRect();
