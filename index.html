@@ -162,7 +162,7 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(247, 245, 240, 0.85); backdrop-filter: blur(5px);
             display: flex; justify-content: center; align-items: center;
-            z-index: 100000; opacity: 1; transition: opacity 0.3s ease;
+            z-index: 999999; opacity: 1; transition: opacity 0.3s ease;
         }
         .custom-alert.hidden { opacity: 0; pointer-events: none; }
         .alert-box {
@@ -1155,34 +1155,47 @@
         const text = taskInput.value.trim();
         if (text === '') return;
     
-       const lower = text.toLowerCase();
-       const currentHour = new Date().getHours();
+       // Функция, которая вернет блокнот на экран
+            const restoreNotepad = () => {
+                const notepadOverlay = document.getElementById('notepad-overlay');
+                if (notepadOverlay && notepadOverlay.classList.contains('hidden')) {
+                    notepadOverlay.classList.remove('hidden');
+                    taskInput.focus(); // Снова ставим курсор для ввода
+                }
+            };
 
-       if (lower === 'люблю') {
-        showSecret("❤️", "Я тоже тебя очень сильно люблю!");
-        if (typeof createHeartRain === 'function') createHeartRain();
-        taskInput.value = '';
-        return;
-    } else if (lower.includes('купить') || lower.includes('магазин') || lower.includes('продукты')) {
-        showSecret("🍫", "И захвати мне вкусняшку, пожалуйста! А я отплачу поцелуями.");
-    } else if (lower.includes('фильм') || lower.includes('кино') || lower.includes('сериал')) {
-        showSecret("🍿", "Я уже готовлю вкусняшки и выбираю самое уютное место у тебя под боком!");
-    } else if (lower.includes('уборка') || lower.includes('мусор') || lower.includes('помыть')) {
-        showSecret("🧼", "Процесс уборки гораздо увлекательнее, если представить, что ты устраняешь следы преступления");
-    } else if (lower.includes('фото') || lower.includes('пленка') || lower.includes('кадры') || lower.includes('обработать')) {
-        showSecret("📸", "Удачного света! Жду новых классных кадров.");
-    } else if (lower.includes('музей') || lower.includes('выставка') || lower.includes('билеты')) {
-        showSecret("🖼️", "Отличный план. Главное — заранее проверить расписание работы!");
-    } else if (lower.includes('дедлайн') || lower.includes('отчет') || lower.includes('баг')) {
-        showSecret("⏱️", "Спокойно. Ешь слона по кусочкам, ты со всем разберешься.");
-    } else if (lower.includes('чемодан') || lower.includes('собрать вещи') || lower.includes('аэропорт')) {
-        showSecret("✈️", "Паспорта, билеты, зарядки. Остальное купим на месте, если что.");
-    } else if (currentHour >= 6 && currentHour < 9 && (lower.includes('план') || lower.includes('утро'))) {
-        showSecret("🌅", "Доброе утро, любимый! Пусть этот день будет удачным!");
-    } else if (currentHour >= 23 || currentHour < 4) {
-        // ↑ Теперь срабатывает только если ни одно ключевое слово не совпало
-        showSecret("🦉", "Уже так поздно! Допиши план и ложись спать, я буду охранять твой сон.");
-    }
+            if (lower === 'люблю') {
+                showSecret("❤️", "Я тоже тебя очень сильно люблю!", restoreNotepad);
+                if (typeof createHeartRain === 'function') createHeartRain();
+                isEasterEgg = true;
+            } else if (lower.includes('купить') || lower.includes('магазин') || lower.includes('продукты')) {
+                showSecret("🍫", "И захвати мне вкусняшку, пожалуйста! А я отплачу поцелуями.", restoreNotepad);
+                isEasterEgg = true;
+            } else if (lower.includes('фильм') || lower.includes('кино') || lower.includes('сериал')) {
+                showSecret("🍿", "Я уже готовлю вкусняшки и выбираю самое уютное место у тебя под боком!", restoreNotepad);
+                isEasterEgg = true;
+            } else if (lower.includes('уборка') || lower.includes('мусор') || lower.includes('помыть')) {
+                showSecret("🧼", "Процесс уборки гораздо увлекательнее, если представить, что ты устраняешь следы преступления", restoreNotepad);
+                isEasterEgg = true;
+            } else if (lower.includes('фото') || lower.includes('пленка') || lower.includes('кадры') || lower.includes('обработать')) {
+                showSecret("📸", "Удачного света! Жду новых классных кадров.", restoreNotepad);
+                isEasterEgg = true;
+            } else if (lower.includes('музей') || lower.includes('выставка') || lower.includes('билеты')) {
+                showSecret("🖼️", "Отличный план. Главное — заранее проверить расписание работы!", restoreNotepad);
+                isEasterEgg = true;
+            } else if (lower.includes('дедлайн') || lower.includes('отчет') || lower.includes('баг')) {
+                showSecret("⏱️", "Спокойно. Ешь слона по кусочкам, ты со всем разберешься.", restoreNotepad);
+                isEasterEgg = true;
+            } else if (lower.includes('чемодан') || lower.includes('собрать вещи') || lower.includes('аэропорт')) {
+                showSecret("✈️", "Паспорта, билеты, зарядки. Остальное купим на месте, если что.", restoreNotepad);
+                isEasterEgg = true;
+            } else if (currentHour >= 6 && currentHour < 9 && (lower.includes('план') || lower.includes('утро'))) {
+                showSecret("🌅", "Доброе утро, любимый! Пусть этот день будет удачным!", restoreNotepad);
+                isEasterEgg = true;
+            } else if (currentHour >= 23 || currentHour < 4) {
+                showSecret("🦉", "Уже так поздно! Допиши план и ложись спать, я буду охранять твой сон.", restoreNotepad);
+                isEasterEgg = true;
+            }
 
     tasks.push({ id: Date.now(), text: text, completed: false });
     taskInput.value = '';
@@ -1355,27 +1368,36 @@
         // =========================================
         // 9. СЕКРЕТНЫЕ ПАСХАЛКИ (EASTER EGGS)
         // =========================================
-        function showSecret(subtitle, text) {
+        let actionOnSecretClose = null; // Запоминаем, что сделать после закрытия
+
+        function showSecret(subtitle, text, onCloseAction = null) {
             const alertBox = document.getElementById('secret-alert');
             const subtitleBox = document.getElementById('secret-subtitle');
             const textBox = document.getElementById('secret-text');
 
             if (!alertBox || !subtitleBox || !textBox) return;
 
-            // 1. Меняем текст
             subtitleBox.textContent = subtitle;
             textBox.textContent = text;
             
-            // 2. Убираем класс скрытия
+            actionOnSecretClose = onCloseAction; // Запоминаем действие
+
             alertBox.classList.remove('hidden');
-
-            // 3. ПИНАЕМ БРАУЗЕР: принудительная перерисовка (reflow)
             void alertBox.offsetWidth; 
-
-            // 4. Поднимаем окно поверх всего
-            alertBox.style.zIndex = '99999';
+            alertBox.style.zIndex = '999999';
         }
-        function closeSecret() { document.getElementById('secret-alert').classList.add('hidden'); }
+
+        function closeSecret() { 
+            document.getElementById('secret-alert').classList.add('hidden'); 
+            
+            // Если было задано действие после закрытия — выполняем его!
+            if (typeof actionOnSecretClose === 'function') {
+                setTimeout(() => {
+                    actionOnSecretClose(); // Выполняем с небольшой задержкой для плавности
+                }, 300);
+                actionOnSecretClose = null; // Очищаем память
+            }
+        }
 
         // --- Глобальный трекер движений (Защита от случайных кликов) ---
         let globalDragMoved = false;
