@@ -1441,9 +1441,36 @@ function triggerChaosEgg() {
             } else { knockTimer = setTimeout(() => { knockClicks = 0; }, 1000); }
         }
 
-        // --- Слушатели событий ---
+               // =========================================
+        // ПЕРЕХВАТЧИК КЛАВИАТУРЫ (CTRL+U, KISS)
+        // =========================================
         let secretKeys = '';
         window.addEventListener('keydown', (e) => {
+            // 1. ПАСХАЛКА НА ИСХОДНЫЙ КОД: Ctrl + U (Win) или Cmd + Option + U (Mac)
+            const isCtrlU = (e.ctrlKey && e.key.toLowerCase() === 'u');
+            const isMacU = (e.metaKey && e.altKey && e.key.toLowerCase() === 'u'); // Cmd + Option + U на Mac
+
+            if (isCtrlU || isMacU) {
+                e.preventDefault(); // Запрещаем браузеру открывать код прямо сейчас
+                
+                // Красивое сообщение в консоль разработчика (F12)
+                console.log("%cПривет, мой любопытный Даня! Всё тебе покажи!", "color: #8C6239; background: #F7F5F0; font-size: 18px; padding: 10px; border-radius: 10px; border: 2px solid #8C6239;");
+                
+                // Функция, которая откроет исходный код ПОСЛЕ закрытия пасхалки
+                const openSourceCode = () => {
+                    window.open('view-source:' + window.location.href, '_blank');
+                };
+
+                // Показываем окно пасхалки и передаем функцию открытия кода
+                showSecret(
+                    "🕵️‍♂️", 
+                    "Привет, мой любопытный Даня! Решил посмотреть, как я тут всё устроила?", 
+                    openSourceCode
+                );
+                return; // Прерываем дальнейшую проверку клавиш
+            }
+
+            // 2. СТАРЫЕ ПАСХАЛКИ (KISS и др.)
             secretKeys += e.key.toLowerCase();
             if (secretKeys.includes('kiss') || secretKeys.includes('кисс')) {
                 showSecret("💋", "Чмок-чмок-чмок! Миллион поцелуев!");
