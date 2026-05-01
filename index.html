@@ -1426,25 +1426,27 @@ function triggerChaosEgg() {
             } else { knockTimer = setTimeout(() => { knockClicks = 0; }, 1000); }
         }
 
-               // =========================================
+                // =========================================
         // ПЕРЕХВАТЧИК КЛАВИАТУРЫ (CTRL+U, KISS)
         // =========================================
-                let secretKeys = '';
+        let secretKeys = '';
         window.addEventListener('keydown', (e) => {
-            // Безопасная проверка: если у клавиши нет имени, прерываем, чтобы не было ошибки
-            if (!e.key) return;
-            const keyStr = e.key.toLowerCase();
+            if (!e.code && !e.key) return; // Защита от ошибок
 
+            // Проверяем физическую кнопку 'U' (игнорируя русскую раскладку 'Г')
+            const isU = (e.code === 'KeyU' || (e.key && e.key.toLowerCase() === 'u'));
+            
             // 1. ПАСХАЛКА НА ИСХОДНЫЙ КОД (Ctrl+U или Cmd+Option+U)
-            const isCtrlU = (e.ctrlKey && keyStr === 'u');
-            const isMacU = (e.metaKey && e.altKey && keyStr === 'u'); 
+            const isCtrlU = (e.ctrlKey && isU);
+            const isMacU = (e.metaKey && e.altKey && isU); 
 
             if (isCtrlU || isMacU) {
-                e.preventDefault(); 
+                e.preventDefault(); // Останавливаем браузер
                 
                 console.log("%cПривет, мой любопытный Даня! Всё тебе покажи!", "color: #8C6239; background: #F7F5F0; font-size: 18px; padding: 10px; border-radius: 10px; border: 2px solid #8C6239;");
                 
                 const openSourceCode = () => {
+                    // Пытаемся открыть исходный код
                     window.open('view-source:' + window.location.href, '_blank');
                 };
 
@@ -1453,10 +1455,11 @@ function triggerChaosEgg() {
                     "Привет, мой любопытный Даня! Решил посмотреть, как я тут всё устроила?", 
                     openSourceCode
                 );
-                return; 
+                return; // Прерываем дальнейшую проверку
             }
 
             // 2. СТАРЫЕ ПАСХАЛКИ (KISS)
+            const keyStr = e.key ? e.key.toLowerCase() : '';
             secretKeys += keyStr;
             if (secretKeys.includes('kiss') || secretKeys.includes('кисс')) {
                 showSecret("💋", "Чмок-чмок-чмок! Миллион поцелуев!");
