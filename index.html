@@ -1151,71 +1151,46 @@
             }
         }
         
-                function addTask() {
+            function addTask() {
             const text = taskInput.value.trim();
             if (text === '') return;
         
             const lower = text.toLowerCase();
             const currentHour = new Date().getHours();
-            
-            let isEasterEgg = false;
 
-            // Функция возврата блокнота
-            const restoreNotepad = () => {
-                const notepadOverlay = document.getElementById('notepad-overlay');
-                if (notepadOverlay && notepadOverlay.classList.contains('hidden')) {
-                    notepadOverlay.classList.remove('hidden');
-                    taskInput.focus();
-                }
-            };
-
+            // Проверяем пасхалки (просто показываем секрет, ничего не пряча)
             if (lower === 'люблю') {
-                showSecret("❤️", "Я тоже тебя очень сильно люблю!", restoreNotepad);
+                showSecret("❤️", "Я тоже тебя очень сильно люблю!");
                 if (typeof createHeartRain === 'function') createHeartRain();
-                isEasterEgg = true;
             } else if (lower.includes('купить') || lower.includes('магазин') || lower.includes('продукты')) {
-                showSecret("🍫", "И захвати мне вкусняшку, пожалуйста! А я отплачу поцелуями.", restoreNotepad);
-                isEasterEgg = true;
+                showSecret("🍫", "И захвати мне вкусняшку, пожалуйста! А я отплачу поцелуями.");
             } else if (lower.includes('фильм') || lower.includes('кино') || lower.includes('сериал')) {
-                showSecret("🍿", "Я уже готовлю вкусняшки и выбираю самое уютное место у тебя под боком!", restoreNotepad);
-                isEasterEgg = true;
+                showSecret("🍿", "Я уже готовлю вкусняшки и выбираю самое уютное место у тебя под боком!");
             } else if (lower.includes('уборка') || lower.includes('мусор') || lower.includes('помыть')) {
-                showSecret("🧼", "Процесс уборки гораздо увлекательнее, если представить, что ты устраняешь следы преступления", restoreNotepad);
-                isEasterEgg = true;
+                showSecret("🧼", "Процесс уборки гораздо увлекательнее, если представить, что ты устраняешь следы преступления");
             } else if (lower.includes('фото') || lower.includes('пленка') || lower.includes('кадры') || lower.includes('обработать')) {
-                showSecret("📸", "Удачного света! Жду новых классных кадров.", restoreNotepad);
-                isEasterEgg = true;
+                showSecret("📸", "Удачного света! Жду новых классных кадров.");
             } else if (lower.includes('музей') || lower.includes('выставка') || lower.includes('билеты')) {
-                showSecret("🖼️", "Отличный план. Главное — заранее проверить расписание работы!", restoreNotepad);
-                isEasterEgg = true;
+                showSecret("🖼️", "Отличный план. Главное — заранее проверить расписание работы!");
             } else if (lower.includes('дедлайн') || lower.includes('отчет') || lower.includes('баг')) {
-                showSecret("⏱️", "Спокойно. Ешь слона по кусочкам, ты со всем разберешься.", restoreNotepad);
-                isEasterEgg = true;
+                showSecret("⏱️", "Спокойно. Ешь слона по кусочкам, ты со всем разберешься.");
             } else if (lower.includes('чемодан') || lower.includes('собрать вещи') || lower.includes('аэропорт')) {
-                showSecret("✈️", "Паспорта, билеты, зарядки. Остальное купим на месте, если что.", restoreNotepad);
-                isEasterEgg = true;
+                showSecret("✈️", "Паспорта, билеты, зарядки. Остальное купим на месте, если что.");
             } else if (currentHour >= 6 && currentHour < 9 && (lower.includes('план') || lower.includes('утро'))) {
-                showSecret("🌅", "Доброе утро, любимый! Пусть этот день будет удачным!", restoreNotepad);
-                isEasterEgg = true;
+                showSecret("🌅", "Доброе утро, любимый! Пусть этот день будет удачным!");
             } else if (currentHour >= 23 || currentHour < 4) {
-                showSecret("🦉", "Уже так поздно! Допиши план и ложись спать, я буду охранять твой сон.", restoreNotepad);
-                isEasterEgg = true;
+                showSecret("🦉", "Уже так поздно! Допиши план и ложись спать, я буду охранять твой сон.");
             }
 
+            // Сохраняем задачу
             tasks.push({ id: Date.now(), text: text, completed: false });
             taskInput.value = '';
             saveAndRenderTasks();
 
-            if (isEasterEgg) {
-                const notepadOverlay = document.getElementById('notepad-overlay');
-                if (notepadOverlay) notepadOverlay.classList.add('hidden');
-            }
-
+            // Пасхалка на 8+ планов (тоже без закрытия блокнота)
             if (tasks.length >= 8) {
                 setTimeout(() => {
                     showSecret("🤯", "Ого, сколько планов. Не забывай, что половину из этого можно просто не делать.");
-                    const notepadOverlay = document.getElementById('notepad-overlay');
-                    if (notepadOverlay) notepadOverlay.classList.add('hidden');
                 }, 1000); 
             }
         }
