@@ -1417,45 +1417,64 @@ function triggerChaosEgg() {
     }
 }
 
-        let knockClicks = 0, knockTimer;
+                let knockClicks = 0, knockTimer;
         function triggerKnockEgg() {
-            knockClicks++; clearTimeout(knockTimer);
+            // Если мы случайно сдвинули мышку (начали тащить элемент) — игнорируем клик
+            if (typeof globalDragMoved !== 'undefined' && globalDragMoved) return; 
+
+            knockClicks++; 
+            clearTimeout(knockTimer);
             if (knockClicks === 3) {
-                if (typeof showPinPhoto === 'function') showPinPhoto('pictures_15.png', 'Тук-тук!', 'Кто там? Твоя самая любимая девочка пришла сказать, что соскучилась.');
+                if (typeof showPinPhoto === 'function') {
+                    showPinPhoto('pictures_15.png', 'Тук-тук!', 'Кто там? Твоя самая любимая девочка пришла сказать, что соскучилась.');
+                }
                 knockClicks = 0;
-            } else { knockTimer = setTimeout(() => { knockClicks = 0; }, 1000); }
+            } else { 
+                knockTimer = setTimeout(() => { knockClicks = 0; }, 1000); 
+            }
         }
 
-                // =========================================
+               // =========================================
         // ПЕРЕХВАТЧИК КЛАВИАТУРЫ (CTRL+U, KISS)
         // =========================================
         let secretKeys = '';
-        window.addEventListener('keydown', (e) => {
-            if (!e.code && !e.key) return; // Защита от ошибок
+        let ctrlUBlocked = true; // Блокируем первое нажатие
+        let ctrlUResetTimer;     // Таймер на случай, если он передумал
 
-            // Проверяем физическую кнопку 'U' (игнорируя русскую раскладку 'Г')
+        window.addEventListener('keydown', (e) => {
+            if (!e.code && !e.key) return; 
+
             const isU = (e.code === 'KeyU' || (e.key && e.key.toLowerCase() === 'u'));
-            
-            // 1. ПАСХАЛКА НА ИСХОДНЫЙ КОД (Ctrl+U или Cmd+Option+U)
             const isCtrlU = (e.ctrlKey && isU);
             const isMacU = (e.metaKey && e.altKey && isU); 
 
             if (isCtrlU || isMacU) {
-                e.preventDefault(); // Останавливаем браузер
-                
-                console.log("%cПривет, мой любопытный Даня! Всё тебе покажи!", "color: #8C6239; background: #F7F5F0; font-size: 18px; padding: 10px; border-radius: 10px; border: 2px solid #8C6239;");
-                
-                const openSourceCode = () => {
-                    // Пытаемся открыть исходный код
-                    window.open('view-source:' + window.location.href, '_blank');
-                };
-
-                showSecret(
-                    "🕵️‍♂️", 
-                    "Привет, мой любопытный Даня! Решил посмотреть, как я тут всё устроила?", 
-                    openSourceCode
-                );
-                return; // Прерываем дальнейшую проверку
+                if (ctrlUBlocked) {
+                    // ПЕРВОЕ НАЖАТИЕ
+                    e.preventDefault(); 
+                    
+                    console.log("%cПривет, мой любопытный Даня! Всё тебе покажи!", "color: #8C6239; background: #F7F5F0; font-size: 18px; padding: 10px; border-radius: 10px; border: 2px solid #8C6239;");
+                    
+                    showSecret(
+                        "🕵️‍♂️", 
+                        "Решил посмотреть, как я тут всё устроила? 😉 Ладно уж, нажми Ctrl+U ещё раз, разрешаю!"
+                    );
+                    
+                    ctrlUBlocked = false; // Открываем "дверь"
+                    
+                    // Если он отвлекся и не нажал второй раз, через 1 минуту всё сбрасывается
+                    clearTimeout(ctrlUResetTimer);
+                    ctrlUResetTimer = setTimeout(() => { ctrlUBlocked = true; }, 60000);
+                    
+                    return; 
+                } else {
+                    // ВТОРОЕ НАЖАТИЕ
+                    // Мы не делаем e.preventDefault(), поэтому браузер открывает код!
+                    
+                    // И сразу же снова закрываем "дверь" для будущих попыток
+                    ctrlUBlocked = true;
+                    clearTimeout(ctrlUResetTimer);
+                }
             }
 
             // 2. СТАРЫЕ ПАСХАЛКИ (KISS)
@@ -1471,16 +1490,28 @@ function triggerChaosEgg() {
         
         console.log("%cПривет, мой любопытный Даня! Всё тебе покажи!", "color: #8C6239; background: #F7F5F0; font-size: 18px; padding: 10px; border-radius: 10px; border: 2px solid #8C6239;");
 
-        // Кнопка компаса
-        const mapBtn = document.querySelector('.map-toggle-btn');
+               // Кнопка компаса (Пасхалка на долгое нажатие - 2 секунды)
+        const mapBtns = document.querySelectorAll('.map-toggle-btn');
         let compassTimer;
-        if(mapBtn) {
-            mapBtn.addEventListener('pointerdown', () => { compassTimer = setTimeout(() => { showSecret("🧭", "С тобой хоть на край света!"); }, 2000); });
-            mapBtn.addEventListener('pointerup', () => clearTimeout(compassTimer));
-            mapBtn.addEventListener('pointerleave', () => clearTimeout(compassTimer));
-            mapBtn.addEventListener('pointercancel', () => clearTimeout(compassTimer));
-            mapBtn.addEventListener('contextmenu', () => clearTimeout(compassTimer));
-        }
+        
+        mapBtns.forEach(btn => {
+            // Блокируем выделение текста при долгом нажатии
+            btn.addEventListener('pointerdown', (e) => { 
+                e.preventDefault(); // Защита от выделения
+                compassTimer = setTimeout(() => { 
+                    showSecret("🧭", "С тобой хоть на край света!"); 
+                }, 2000); 
+            });
+            
+            btn.addEventListener('pointerup', () => clearTimeout(compassTimer));
+            btn.addEventListener('pointerleave', () => clearTimeout(compassTimer));
+            btn.addEventListener('pointercancel', () => clearTimeout(compassTimer));
+            btn.addEventListener('contextmenu', (e) => { 
+                // Предотвращаем вызов системного меню на телефоне при долгом нажатии
+                if (e.pointerType === 'touch') e.preventDefault();
+                clearTimeout(compassTimer); 
+            });
+        });
 
         // Блокнот: проверка пустых планов при закрытии
         const notepadCloseBtns = document.querySelectorAll('.notepad-box .notepad-close');
@@ -1503,15 +1534,27 @@ function triggerChaosEgg() {
             });
         }
 
-        // Таймер: клики
-        const timerDisplayObj = document.getElementById('timer-display');
+               // Таймер: клики (5 быстрых нажатий)
+        // Ищем таймер по ID или по классу (на случай, если в HTML указан класс)
+        const timerDisplayObj = document.querySelector('#timer-display, .time-display, .clock-face');
+        
         if (timerDisplayObj) {
-            timerDisplayObj.addEventListener('pointerdown', (e) => e.preventDefault());
             let timerClicks = 0, timerClickTimeout;
-            timerDisplayObj.addEventListener('click', () => {
-                timerClicks++; clearTimeout(timerClickTimeout);
-                if (timerClicks === 5) { showSecret("⏳", "Хватит щелкать таймер! Либо фокус на работу, либо закрывай ноут и иди обниматься."); timerClicks = 0; } 
-                else { timerClickTimeout = setTimeout(() => { timerClicks = 0; }, 800); }
+            
+            // Считаем нажатия прямо в момент касания (pointerdown), а не клика
+            timerDisplayObj.addEventListener('pointerdown', (e) => {
+                e.preventDefault();  // Запрещаем выделять цифры синим
+                e.stopPropagation(); // Не даем клику улететь под таймер
+
+                timerClicks++; 
+                clearTimeout(timerClickTimeout);
+                
+                if (timerClicks === 5) { 
+                    showSecret("⏳", "Хватит щелкать таймер! Либо фокус на работу, либо закрывай ноут и иди обниматься."); 
+                    timerClicks = 0; 
+                } else { 
+                    timerClickTimeout = setTimeout(() => { timerClicks = 0; }, 800); 
+                }
             });
         }
 
@@ -1590,96 +1633,196 @@ function triggerChaosEgg() {
         // Иконки и вырезки
         document.querySelectorAll('img[src*="DROW"], img[src*="PNG"]').forEach(img => { if(img.parentElement) img.parentElement.style.pointerEvents = 'auto'; });
 
-        const starePolaroid = document.getElementById('stare-polaroid');
+               const starePolaroid = document.getElementById('stare-polaroid');
+        
         if (starePolaroid) {
             let stareTimer;
-            starePolaroid.addEventListener('mouseenter', () => {
-                if (!globalDragMoved) stareTimer = setTimeout(() => showSecret("👀", "Хватит пялиться, я стесняюсь! (Ладно, шучу, смотри сколько хочешь)."), 4000);
+            
+            starePolaroid.addEventListener('pointerenter', () => {
+                // Безопасная проверка: если мы сейчас перетаскиваем элемент, игнорируем
+                const isDragging = typeof globalDragMoved !== 'undefined' && globalDragMoved;
+                
+                if (!isDragging) {
+                    stareTimer = setTimeout(() => {
+                        showSecret("👀", "Хватит пялиться, я стесняюсь! (Ладно, шучу, смотри сколько хочешь).");
+                    }, 4000);
+                }
             });
-            starePolaroid.addEventListener('mouseleave', () => clearTimeout(stareTimer));
+            
+            starePolaroid.addEventListener('pointerleave', () => clearTimeout(stareTimer));
+            
+            // Если начали тащить картинку или кликнули — сбрасываем "гляделки"
             starePolaroid.addEventListener('pointerdown', () => clearTimeout(stareTimer));
+            starePolaroid.addEventListener('pointercancel', () => clearTimeout(stareTimer));
         }
 
-        const tapePolaroid = document.getElementById('tape-polaroid');
+                const tapePolaroid = document.getElementById('tape-polaroid');
         if (tapePolaroid) {
             const tapeEl = tapePolaroid.querySelector('.tape');
+            
             if (tapeEl) {
-                tapeEl.addEventListener('pointerdown', (e) => e.preventDefault());
                 let tapeClicks = 0, tapeTimer;
-                tapeEl.addEventListener('click', (e) => {
-                    if (globalDragMoved) return;
-                    tapeClicks++; clearTimeout(tapeTimer);
-                    if (tapeClicks === 5) { showSecret("🛑", "Эй, не отковыривай скотч! У нас тут и так всё держится на честном слове и безграничной любви."); tapeClicks = 0; } 
-                    else { tapeTimer = setTimeout(() => { tapeClicks = 0; }, 1000); }
-                    e.stopPropagation();
+                
+                tapeEl.addEventListener('pointerdown', (e) => {
+                    e.preventDefault();  // Чтобы скотч не выделялся синим
+                    e.stopPropagation(); // Чтобы клик не улетел на саму фотографию
+
+                    // Безопасная проверка на перетаскивание доски/фото
+                    if (typeof globalDragMoved !== 'undefined' && globalDragMoved) return;
+                    
+                    tapeClicks++; 
+                    clearTimeout(tapeTimer);
+                    
+                    if (tapeClicks === 5) { 
+                        showSecret("🛑", "Эй, не отковыривай скотч! У нас тут и так всё держится на честном слове и безграничной любви."); 
+                        tapeClicks = 0; 
+                    } else { 
+                        tapeTimer = setTimeout(() => { tapeClicks = 0; }, 1000); 
+                    }
                 });
             }
         }
 
+                // 1. Лупа (Скролл колесиком) — ТОЛЬКО ДЛЯ ПК
         const zoomPolaroid = document.getElementById('zoom-polaroid');
-        if (zoomPolaroid) zoomPolaroid.addEventListener('wheel', (e) => { if (e.ctrlKey || e.deltaY < 0) { showSecret("🔍", "Да-да, я знаю, что я тут отлично получилась. Можешь не приближать, пиксели полезут."); e.preventDefault(); } }, { passive: false });
+        if (zoomPolaroid) {
+            zoomPolaroid.addEventListener('wheel', (e) => { 
+                if (e.ctrlKey || e.deltaY < 0) { 
+                    showSecret("🔍", "Да-да, я знаю, что я тут отлично получилась. Можешь не приближать, пиксели полезут."); 
+                    e.preventDefault(); 
+                } 
+            }, { passive: false });
+        }
 
+        // 2. Волга (Shift + Клик) — ТОЛЬКО ДЛЯ ПК (Исправлена ошибка переменной)
         const volgaPolaroid = document.querySelector('img[src*="pictures_6.png"]');
-        if (volgaPolaroid) volgaPolaroid.addEventListener('click', (e) => { if (!globalDragMoved && e.shiftKey) showSecret("⛺", "Телепорт на речку активирован... Шучу. Зато палатка всегда наготове!"); });
+        if (volgaPolaroid) {
+            volgaPolaroid.addEventListener('pointerdown', (e) => { 
+                const isDragging = typeof globalDragMoved !== 'undefined' && globalDragMoved;
+                if (!isDragging && e.shiftKey) showSecret("⛺", "Телепорт на речку активирован... Шучу. Зато палатка всегда наготове!"); 
+            });
+        }
 
+        // 3. Кебаб (Правая кнопка мыши ПК / Долгое нажатие на телефоне)
         const istPolaroid = document.querySelector('img[src*="pictures_24.png"]');
-        if (istPolaroid) istPolaroid.addEventListener('contextmenu', (e) => { e.preventDefault(); showSecret("🥙", "Хочешь скачать кебаб? Иди лучше на кухню, там наверняка есть что-то вкусное."); });
+        if (istPolaroid) {
+            istPolaroid.addEventListener('contextmenu', (e) => { 
+                e.preventDefault(); 
+                showSecret("🥙", "Хочешь скачать кебаб? Иди лучше на кухню, там наверняка есть что-то вкусное."); 
+            });
+        }
 
+        // 4. Корова (Наведение + буква M) — ТОЛЬКО ДЛЯ ПК
         const cowImg = document.querySelector('img[src*="DROW_60.png"]');
         if (cowImg) {
-            cowImg.addEventListener('mouseenter', () => { cowImg.dataset.hovered = 'true'; });
-            cowImg.addEventListener('mouseleave', () => { cowImg.dataset.hovered = 'false'; });
-            window.addEventListener('keydown', (e) => { if (cowImg.dataset.hovered === 'true' && String(e.key).toLowerCase() === 'm') showSecret("🐄", "Мууу! Корова передает привет и говорит, что Даня классный."); });
-        }
-
-        const moscowImg = document.querySelector('img[src*="DROW_170.png"]');
-        if (moscowImg) {
-            moscowImg.addEventListener('pointerdown', (e) => e.preventDefault());
-            moscowImg.addEventListener('dblclick', () => { showSecret("🏙️", "Москва слезам не верит. Зато верит в упорный труд и нашу любовь."); });
-        }
-
-        const climbShoes = document.querySelector('img[src*="PNG_3.png"]');
-        if (climbShoes) climbShoes.addEventListener('pointerdown', (e) => { if (e.shiftKey) showSecret("🧗", "Когда уже пойдём покорять цветные стены?!"); });
-
-                const holdsImg = document.querySelector('img[src*="PNG_9.png"]'); 
-        if (holdsImg) {
-            let holdsStartX, holdsStartY;
-            holdsImg.addEventListener('pointerdown', (e) => {
-                holdsStartX = e.clientX;
-                holdsStartY = e.clientY;
-            });
-            holdsImg.addEventListener('pointerup', (e) => {
-                const dy = e.clientY - holdsStartY;
-                if (dy > 80) showSecret("🧗‍♂️", "Держит намертво! Но не расслабляйся, лезть еще высоко.");
-                else if (dy < -50) showSecret("⚠️", "Эй, это пассив! Его надо грузить вниз, а не вверх!");
-            });
-        }
-
-        const pieImg = document.querySelector('img[src*="PNG_2.png"]'); 
-        if (pieImg) {
-            pieImg.addEventListener('pointerdown', (e) => e.preventDefault());
-            let pieClicks = 0, pieTimer;
-            pieImg.addEventListener('click', (e) => {
-                if (globalDragMoved) return;
-                const rect = pieImg.getBoundingClientRect();
-                if (e.clientX < rect.left + 20 || e.clientX > rect.right - 20 || e.clientY < rect.top + 20 || e.clientY > rect.bottom - 20) {
-                    pieClicks++; clearTimeout(pieTimer);
-                    if (pieClicks === 3) { showSecret("🥧", "Ам! Оставишь мне кусочек или всё сам съешь?"); pieClicks = 0; } 
-                    else { pieTimer = setTimeout(() => { pieClicks = 0; }, 1000); }
+            cowImg.addEventListener('pointerenter', () => { cowImg.dataset.hovered = 'true'; });
+            cowImg.addEventListener('pointerleave', () => { cowImg.dataset.hovered = 'false'; });
+            window.addEventListener('keydown', (e) => { 
+                if (cowImg.dataset.hovered === 'true' && String(e.key).toLowerCase() === 'm') {
+                    showSecret("🐄", "Мууу! Корова передает привет и говорит, что Даня классный."); 
                 }
             });
         }
 
-        const ticketsImg = document.querySelector('img[src*="PNG_7.png"]'); 
-        if (ticketsImg) ticketsImg.addEventListener('click', (e) => { if (!globalDragMoved && (e.ctrlKey || e.metaKey)) { showSecret("🎟️", "Билет проверен. Добро пожаловать в мир искусства!"); e.preventDefault(); } });
+        // 5. Москва (Двойной тап) — Работает везде! (Заменили dblclick на ручной счетчик)
+        const moscowImg = document.querySelector('img[src*="DROW_170.png"]');
+        if (moscowImg) {
+            let moscowClicks = 0, moscowTimer;
+            moscowImg.addEventListener('pointerdown', (e) => { 
+                e.preventDefault(); 
+                moscowClicks++;
+                clearTimeout(moscowTimer);
+                if (moscowClicks === 2) { 
+                    showSecret("🏙️", "Москва слезам не верит. Зато верит в упорный труд и нашу любовь."); 
+                    moscowClicks = 0; 
+                } else { 
+                    moscowTimer = setTimeout(() => { moscowClicks = 0; }, 400); 
+                }
+            });
+        }
 
+        // 6. Скальники (Shift + Клик) — ТОЛЬКО ДЛЯ ПК
+        const climbShoes = document.querySelector('img[src*="PNG_3.png"]');
+        if (climbShoes) climbShoes.addEventListener('pointerdown', (e) => { 
+            if (e.shiftKey) showSecret("🧗", "Когда уже пойдём покорять цветные стены?!"); 
+        });
+
+                // 7. Зацеп (Свайп вверх/вниз) — Теперь работает И на ПК, И на телефоне!
+        const holdsImg = document.querySelector('img[src*="PNG_9.png"]'); 
+        if (holdsImg) {
+            let holdsStartY;
+
+            // Отключаем системное "перетаскивание файла" на компьютере
+            holdsImg.addEventListener('dragstart', (e) => e.preventDefault());
+
+            holdsImg.addEventListener('pointerdown', (e) => {
+                holdsStartY = e.clientY;
+                // "Захватываем" мышь: даже если курсор улетит с картинки, отпускание всё равно засчитается
+                holdsImg.setPointerCapture(e.pointerId);
+            });
+
+            holdsImg.addEventListener('pointerup', (e) => {
+                if (!holdsStartY) return; // Защита от случайных кликов
+
+                const dy = e.clientY - holdsStartY;
+                
+                if (dy > 80) {
+                    showSecret("🧗‍♂️", "Держит намертво! Но не расслабляйся, лезть еще высоко.");
+                } else if (dy < -50) {
+                    showSecret("⚠️", "Эй, это пассив! Его надо грузить вниз, а не вверх!");
+                }
+
+                holdsStartY = null; // Сбрасываем старт
+                holdsImg.releasePointerCapture(e.pointerId); // Отпускаем мышь
+            });
+        }
+
+        // 8. Пирог (3 клика по краям) — Работает везде! (Перенесли в pointerdown)
+        const pieImg = document.querySelector('img[src*="PNG_2.png"]'); 
+        if (pieImg) {
+            let pieClicks = 0, pieTimer;
+            pieImg.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                const isDragging = typeof globalDragMoved !== 'undefined' && globalDragMoved;
+                if (isDragging) return;
+                
+                const rect = pieImg.getBoundingClientRect();
+                // Проверяем, что нажали ближе 20px к краю
+                if (e.clientX < rect.left + 20 || e.clientX > rect.right - 20 || e.clientY < rect.top + 20 || e.clientY > rect.bottom - 20) {
+                    pieClicks++; clearTimeout(pieTimer);
+                    if (pieClicks === 3) { 
+                        showSecret("🥧", "Ам! Оставишь мне кусочек или всё сам съешь?"); 
+                        pieClicks = 0; 
+                    } else { 
+                        pieTimer = setTimeout(() => { pieClicks = 0; }, 1000); 
+                    }
+                }
+            });
+        }
+
+        // 9. Билеты (Ctrl/Cmd + Клик) — ТОЛЬКО ДЛЯ ПК
+        const ticketsImg = document.querySelector('img[src*="PNG_7.png"]'); 
+        if (ticketsImg) ticketsImg.addEventListener('pointerdown', (e) => { 
+            const isDragging = typeof globalDragMoved !== 'undefined' && globalDragMoved;
+            if (!isDragging && (e.ctrlKey || e.metaKey)) { 
+                showSecret("🎟️", "Билет проверен. Добро пожаловать в мир искусства!"); 
+                e.preventDefault(); 
+            } 
+        });
+
+        // 10. Статуя (Скролл вниз-вверх) — ТОЛЬКО ДЛЯ ПК
         const statueImg = document.querySelector('img[src*="PNG_5.png"]'); 
         if (statueImg) {
             let scrolledDown = false, statueTimer;
             statueImg.addEventListener('wheel', (e) => {
                 e.preventDefault(); 
-                if (e.deltaY > 0) { scrolledDown = true; clearTimeout(statueTimer); statueTimer = setTimeout(() => { scrolledDown = false; }, 2000); } 
-                else if (e.deltaY < 0 && scrolledDown) { showSecret("🗿", "Хм, со всех ракурсов хороша. Прямо как ты."); scrolledDown = false; }
+                if (e.deltaY > 0) { 
+                    scrolledDown = true; clearTimeout(statueTimer); 
+                    statueTimer = setTimeout(() => { scrolledDown = false; }, 2000); 
+                } else if (e.deltaY < 0 && scrolledDown) { 
+                    showSecret("🗿", "Хм, со всех ракурсов хороша. Прямо как ты."); 
+                    scrolledDown = false; 
+                }
             }, { passive: false });
         }
 
