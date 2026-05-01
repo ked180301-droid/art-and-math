@@ -1151,16 +1151,21 @@
             }
         }
         
-        function addTask() {
-        const text = taskInput.value.trim();
-        if (text === '') return;
-    
-       // Функция, которая вернет блокнот на экран
+                function addTask() {
+            const text = taskInput.value.trim();
+            if (text === '') return;
+        
+            const lower = text.toLowerCase();
+            const currentHour = new Date().getHours();
+            
+            let isEasterEgg = false;
+
+            // Функция возврата блокнота
             const restoreNotepad = () => {
                 const notepadOverlay = document.getElementById('notepad-overlay');
                 if (notepadOverlay && notepadOverlay.classList.contains('hidden')) {
                     notepadOverlay.classList.remove('hidden');
-                    taskInput.focus(); // Снова ставим курсор для ввода
+                    taskInput.focus();
                 }
             };
 
@@ -1197,16 +1202,23 @@
                 isEasterEgg = true;
             }
 
-    tasks.push({ id: Date.now(), text: text, completed: false });
-    taskInput.value = '';
-    saveAndRenderTasks();
+            tasks.push({ id: Date.now(), text: text, completed: false });
+            taskInput.value = '';
+            saveAndRenderTasks();
 
-    if (tasks.length >= 8) {
-    setTimeout(() => {
-        showSecret("🤯", "Ого, сколько планов. Не забывай, что половину из этого можно просто не делать.");
-    }, 3000); // показать через 3 секунды, после закрытия предыдущей пасхалки
-    }
-}
+            if (isEasterEgg) {
+                const notepadOverlay = document.getElementById('notepad-overlay');
+                if (notepadOverlay) notepadOverlay.classList.add('hidden');
+            }
+
+            if (tasks.length >= 8) {
+                setTimeout(() => {
+                    showSecret("🤯", "Ого, сколько планов. Не забывай, что половину из этого можно просто не делать.");
+                    const notepadOverlay = document.getElementById('notepad-overlay');
+                    if (notepadOverlay) notepadOverlay.classList.add('hidden');
+                }, 1000); 
+            }
+        }
         // =========================================
         // 6. РАНДОМАЙЗЕР СВИДАНИЙ
         // =========================================
@@ -1368,7 +1380,7 @@
         // =========================================
         // 9. СЕКРЕТНЫЕ ПАСХАЛКИ (EASTER EGGS)
         // =========================================
-        let actionOnSecretClose = null; // Запоминаем, что сделать после закрытия
+        let actionOnSecretClose = null; 
 
         function showSecret(subtitle, text, onCloseAction = null) {
             const alertBox = document.getElementById('secret-alert');
@@ -1380,7 +1392,7 @@
             subtitleBox.textContent = subtitle;
             textBox.textContent = text;
             
-            actionOnSecretClose = onCloseAction; // Запоминаем действие
+            actionOnSecretClose = onCloseAction; 
 
             alertBox.classList.remove('hidden');
             void alertBox.offsetWidth; 
@@ -1388,14 +1400,12 @@
         }
 
         function closeSecret() { 
-            document.getElementById('secret-alert').classList.add('hidden'); 
+            const alertBox = document.getElementById('secret-alert');
+            if (alertBox) alertBox.classList.add('hidden'); 
             
-            // Если было задано действие после закрытия — выполняем его!
             if (typeof actionOnSecretClose === 'function') {
-                setTimeout(() => {
-                    actionOnSecretClose(); // Выполняем с небольшой задержкой для плавности
-                }, 300);
-                actionOnSecretClose = null; // Очищаем память
+                setTimeout(() => { actionOnSecretClose(); }, 300);
+                actionOnSecretClose = null; 
             }
         }
 
@@ -1444,34 +1454,35 @@ function triggerChaosEgg() {
                // =========================================
         // ПЕРЕХВАТЧИК КЛАВИАТУРЫ (CTRL+U, KISS)
         // =========================================
-        let secretKeys = '';
+                let secretKeys = '';
         window.addEventListener('keydown', (e) => {
-            // 1. ПАСХАЛКА НА ИСХОДНЫЙ КОД: Ctrl + U (Win) или Cmd + Option + U (Mac)
-            const isCtrlU = (e.ctrlKey && e.key.toLowerCase() === 'u');
-            const isMacU = (e.metaKey && e.altKey && e.key.toLowerCase() === 'u'); // Cmd + Option + U на Mac
+            // Безопасная проверка: если у клавиши нет имени, прерываем, чтобы не было ошибки
+            if (!e.key) return;
+            const keyStr = e.key.toLowerCase();
+
+            // 1. ПАСХАЛКА НА ИСХОДНЫЙ КОД (Ctrl+U или Cmd+Option+U)
+            const isCtrlU = (e.ctrlKey && keyStr === 'u');
+            const isMacU = (e.metaKey && e.altKey && keyStr === 'u'); 
 
             if (isCtrlU || isMacU) {
-                e.preventDefault(); // Запрещаем браузеру открывать код прямо сейчас
+                e.preventDefault(); 
                 
-                // Красивое сообщение в консоль разработчика (F12)
                 console.log("%cПривет, мой любопытный Даня! Всё тебе покажи!", "color: #8C6239; background: #F7F5F0; font-size: 18px; padding: 10px; border-radius: 10px; border: 2px solid #8C6239;");
                 
-                // Функция, которая откроет исходный код ПОСЛЕ закрытия пасхалки
                 const openSourceCode = () => {
                     window.open('view-source:' + window.location.href, '_blank');
                 };
 
-                // Показываем окно пасхалки и передаем функцию открытия кода
                 showSecret(
                     "🕵️‍♂️", 
                     "Привет, мой любопытный Даня! Решил посмотреть, как я тут всё устроила?", 
                     openSourceCode
                 );
-                return; // Прерываем дальнейшую проверку клавиш
+                return; 
             }
 
-            // 2. СТАРЫЕ ПАСХАЛКИ (KISS и др.)
-            secretKeys += e.key.toLowerCase();
+            // 2. СТАРЫЕ ПАСХАЛКИ (KISS)
+            secretKeys += keyStr;
             if (secretKeys.includes('kiss') || secretKeys.includes('кисс')) {
                 showSecret("💋", "Чмок-чмок-чмок! Миллион поцелуев!");
                 if(typeof createHeartRain === 'function') createHeartRain();
@@ -1479,7 +1490,7 @@ function triggerChaosEgg() {
             }
             if (secretKeys.length > 10) secretKeys = secretKeys.slice(-10); 
         });
-
+        
         console.log("%cПривет, мой любопытный Даня! Всё тебе покажи!", "color: #8C6239; background: #F7F5F0; font-size: 18px; padding: 10px; border-radius: 10px; border: 2px solid #8C6239;");
 
         // Кнопка компаса
