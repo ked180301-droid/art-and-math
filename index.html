@@ -442,39 +442,33 @@
             .blend-mode { display: none !important; }
             .blend-mode-mobile { display: block !important; position: absolute !important; }
         }
-           /* Стили для кнопки-таблетки */
-.notion-pill-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px; /* Расстояние между иконкой и текстом */
-    padding: 10px 24px; /* Отступы внутри кнопки */
-    
-    background-color: #ffffff; /* Белый фон */
-    color: #333333; /* Темно-серый цвет текста */
-    
-    /* Тонкая серая рамка и тень (как на картинке) */
-    border: 1px solid #e0e0e0;
-    border-radius: 30px; /* Делаем форму овала (таблетки) */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Легкая тень для объема */
-    
-    /* Шрифт (рукописный, если он у тебя подключен) */
-    font-family: 'Caveat', 'Cormorant Garamond', cursive, serif; 
-    font-size: 20px;
-    
+          /* ========================================= */
+/* КНОПКА ИСТОРИИ (ДЕСКТОП)                  */
+/* ========================================= */
+.story-btn {
+    position: fixed; 
+    top: 140px; /* Сдвигаем вниз, чтобы она была ровно под кнопкой Карты (у карты top: 80px) */
+    left: 20px; /* Выравниваем по левому краю, как кнопку Хаоса и Карты */
+    background: rgba(255, 255, 255, 0.9); 
+    backdrop-filter: blur(5px);
+    border: 1px solid #ccc; 
+    padding: 10px 15px; 
+    border-radius: 30px;
+    font-family: 'Caveat', cursive; 
+    font-size: 1.3rem; 
     cursor: pointer;
-    transition: all 0.2s ease;
+    z-index: 9998; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
+    transition: 0.3s;
+    display: flex; 
+    align-items: center; 
+    gap: 8px;
 }
 
-/* Эффект при наведении мышкой */
-.notion-pill-btn:hover {
-    background-color: #f9f9f9; /* Чуть темнеет фон */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень становится чуть больше */
-    transform: translateY(-1px); /* Кнопка слегка приподнимается */
-}
-
-/* Настройка самой иконки */
-.notion-pill-btn .icon {
-    font-size: 20px; /* Размер эмодзи */
+.story-btn:hover { 
+    transform: scale(1.05); 
+    background: #333; 
+    color: #fff; 
 }
 
 .story-modal {
@@ -533,10 +527,11 @@ body.modal-open {
     <button class="notepad-btn" onclick="toggleNotepad()">📝 План на день</button>
              <!-- КНОПКА-КОМПАС ДЛЯ КАРТЫ -->
     <button class="map-toggle-btn" onclick="toggleMap()">🌍Карта</button>
-    <button id="openStoryBtn" class="notion-pill-btn"><span class="icon">📖</span> Читать историю</button>
-             </div>
+     <!-- КНОПКА ИСТОРИИ (НОВАЯ) -->
+        <button id="openStoryBtn" class="story-btn">📖 Читать историю</button>
     </div>
-
+</div>
+          
     <!-- РИСУНКИ ТУШЬЮ (ФОНОВЫЕ) -->
     <div class="blend-mode" style="top: 40px; right: 10%; width: 180px; transform: rotate(-5deg);"><img src="DROW_190.png" loading="lazy" alt="график"></div>
     <div class="blend-mode" style="top: 500px; left: 8%; width: 550px; transform: rotate(10deg); pointer-events: auto;"><img src="DROW_40.png" loading="lazy" alt="Стамбул" oncontextmenu="showSecret('📸', 'Эту картинку нельзя сохранить на компьтере, зато можно сохранить в своем сердце!'); return false;"></div>
