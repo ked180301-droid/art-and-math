@@ -128,6 +128,52 @@
             .story-text, .story-visual { width: 100%; text-align: center; }
             .story-visual { margin-top: 30px; min-height: 150px; }
         }
+        /* ========================================= */
+/* МОБИЛЬНАЯ АДАПТАЦИЯ ДЛЯ ИСТОРИИ (до 768px)*/
+/* ========================================= */
+@media screen and (max-width: 768px) {
+    /* 1. Убираем большие отступы у страницы */
+    body {
+        padding: 15px !important; 
+    }
+
+    /* 2. Сужаем основной контейнер (если он у тебя называется story-container или похоже) */
+    .story-container, main, article {
+        width: 100% !important;
+        padding: 20px 15px !important; /* Делаем внутренние отступы меньше */
+        box-sizing: border-box !important;
+        margin: 0 auto !important;
+        box-shadow: none !important; /* Можно убрать тень для легкости */
+    }
+
+    /* 3. Уменьшаем шрифты, чтобы они не были гигантскими */
+    h1 {
+        font-size: 2rem !important;
+        margin-top: 10px !important;
+    }
+    h2, h3 {
+        font-size: 1.5rem !important;
+    }
+    p {
+        font-size: 1.1rem !important; /* Оптимальный размер для чтения с экрана */
+        line-height: 1.5 !important;
+        text-align: left !important; /* На телефоне текст лучше не выравнивать по ширине/центру */
+    }
+
+    /* 4. Картинки: строго вписываем в экран */
+    .story-image, img {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important; /* Сохраняем пропорции */
+        margin: 15px 0 !important;
+        border-radius: 8px !important; /* Чуть скругляем края для красоты */
+    }
+    
+    /* 5. Уменьшаем отступы у линий */
+    hr {
+        margin: 20px 0 !important;
+    }
+}
     </style>
 </head>
 <body>
