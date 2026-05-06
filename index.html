@@ -442,32 +442,39 @@
             .blend-mode { display: none !important; }
             .blend-mode-mobile { display: block !important; position: absolute !important; }
         }
-           .open-story-btn {
-    display: inline-flex;       /* Выстраиваем иконку и текст в ряд */
-    align-items: center;        /* Центрируем по вертикали */
-    justify-content: center;    /* Центрируем по горизонтали */
-    gap: 10px;                  /* Расстояние между иконкой и текстом */
-    padding: 15px 30px;
-    font-size: 18px;
-    background-color: #d93838;
-    color: white;
-    border: none;
-    border-radius: 8px;
+           /* Стили для кнопки-таблетки */
+.notion-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* Расстояние между иконкой и текстом */
+    padding: 10px 24px; /* Отступы внутри кнопки */
+    
+    background-color: #ffffff; /* Белый фон */
+    color: #333333; /* Темно-серый цвет текста */
+    
+    /* Тонкая серая рамка и тень (как на картинке) */
+    border: 1px solid #e0e0e0;
+    border-radius: 30px; /* Делаем форму овала (таблетки) */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Легкая тень для объема */
+    
+    /* Шрифт (рукописный, если он у тебя подключен) */
+    font-family: 'Caveat', 'Cormorant Garamond', cursive, serif; 
+    font-size: 20px;
+    
     cursor: pointer;
-    font-family: 'Cormorant Garamond', serif;
-    transition: background-color 0.3s, transform 0.2s; /* Плавное наведение */
+    transition: all 0.2s ease;
 }
 
 /* Эффект при наведении мышкой */
-.open-story-btn:hover {
-    background-color: #b92b2b;
-    transform: translateY(-2px); /* Кнопка чуть-чуть приподнимается */
+.notion-pill-btn:hover {
+    background-color: #f9f9f9; /* Чуть темнеет фон */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень становится чуть больше */
+    transform: translateY(-1px); /* Кнопка слегка приподнимается */
 }
 
-/* Стили самой иконки книжки */
-.book-icon {
-    width: 24px;
-    height: 24px;
+/* Настройка самой иконки */
+.notion-pill-btn .icon {
+    font-size: 20px; /* Размер эмодзи */
 }
 
 .story-modal {
@@ -526,6 +533,7 @@ body.modal-open {
     <button class="notepad-btn" onclick="toggleNotepad()">📝 План на день</button>
              <!-- КНОПКА-КОМПАС ДЛЯ КАРТЫ -->
     <button class="map-toggle-btn" onclick="toggleMap()">🌍Карта</button>
+    <button id="openStoryBtn" class="notion-pill-btn"><span class="icon">📖</span> Читать историю</button>
              </div>
     </div>
 
@@ -904,14 +912,6 @@ body.modal-open {
     <!-- ЗВУК ТАЙМЕРА -->
     <!-- Скачай любой приятный звук в формате mp3, назови его alarm.mp3 и положи в папку к фотографиям -->
     <audio id="timer-sound" src="muzik.mp3" preload="auto"></audio>
-
-    <!-- Кнопка, по которой будет открываться история -->
-<button id="openStoryBtn" class="open-story-btn">
-    <svg class="book-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-    </svg>
-    Читать историю 
-</button>
 
 <!-- Само модальное окно -->
 <div id="storyModal" class="story-modal">
