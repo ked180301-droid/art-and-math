@@ -137,36 +137,29 @@
         padding: 15px !important; 
     }
 
-    /* 2. Сужаем основной контейнер (если он у тебя называется story-container или похоже) */
-    .story-container, main, article {
+    /* 1. Включаем две колонки для мобильных устройств */
+    .story-container { /* Замени на свой класс, если он называется иначе */
+        column-count: 2 !important;
+        column-gap: 15px !important;
+        display: block !important;
         width: 100% !important;
-        padding: 20px 15px !important; /* Делаем внутренние отступы меньше */
-        box-sizing: border-box !important;
-        margin: 0 auto !important;
-        box-shadow: none !important; /* Можно убрать тень для легкости */
     }
 
-    /* 3. Уменьшаем шрифты, чтобы они не были гигантскими */
-    h1 {
-        font-size: 2rem !important;
-        margin-top: 10px !important;
-    }
-    h2, h3 {
-        font-size: 1.5rem !important;
-    }
+    /* 2. Настраиваем шрифт для узких колонок */
     p {
-        font-size: 1.1rem !important; /* Оптимальный размер для чтения с экрана */
-        line-height: 1.5 !important;
-        text-align: left !important; /* На телефоне текст лучше не выравнивать по ширине/центру */
+        font-size: 0.95rem !important; /* Чуть меньше обычного, чтобы слова влезали */
+        line-height: 1.3 !important;
+        margin-bottom: 15px !important;
+        break-inside: avoid; /* Чтобы абзац не разрывался пополам между колонками */
     }
 
-    /* 4. Картинки: строго вписываем в экран */
+    /* 3. Не даем картинкам разрываться и подгоняем их под ширину колонки */
     .story-image, img {
         width: 100% !important;
-        max-width: 100% !important;
-        height: auto !important; /* Сохраняем пропорции */
-        margin: 15px 0 !important;
-        border-radius: 8px !important; /* Чуть скругляем края для красоты */
+        height: auto !important;
+        display: block !important;
+        margin-bottom: 15px !important;
+        break-inside: avoid !important; /* Очень важно! Картинка не "разрежется" на две части */
     }
     
     /* 5. Уменьшаем отступы у линий */
