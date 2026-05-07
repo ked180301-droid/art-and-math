@@ -67,7 +67,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 3; /* Линия всегда ПОВЕРХ всего */
+            z-index: 3;
             pointer-events: none;
             overflow: visible;
         }
@@ -77,8 +77,7 @@
             stroke: #d93838;
             stroke-width: 1.5;
             stroke-linecap: round;
-            stroke-linejoin: miter;
-            stroke-miterlimit: 4;
+            stroke-linejoin: round;
         }
 
         .layout-text-left { flex-direction: row; }
@@ -98,7 +97,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 2; /* Картинки ПОД линией */
+            z-index: 2;
             min-height: 200px;
         }
 
@@ -139,308 +138,265 @@
 
     <div class="story-container" id="container">
 
-        <!-- 1 -->
         <div class="story-block layout-text-left">
             <div class="story-text">Иногда самое важное начинается почти незаметно.</div>
             <div class="story-visual"></div>
         </div>
 
-        <!-- 2 -->
         <div class="story-block layout-text-right">
             <div class="story-text">В японском искусстве есть понятие "Ма" — свободное пространство. Но оно никогда не бывает пустым.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image1.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image1.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 3 -->
         <div class="story-block layout-text-left">
             <div class="story-text">В день нашей первой встречи пространство, между нами, вдруг перестало быть пустым и наполнилось смыслом.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_1.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_1.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 4: ПЕТЛЯ -->
         <div class="story-block layout-text-right" id="loop-block">
             <div class="story-text">С тех пор эта невидимая нить всегда, между нами.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 5 -->
         <div class="story-block layout-text-left">
             <div class="story-text">Иногда близость начинается ещё до того, как люди успевают стать друг другу привычными.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_2.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_2.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 6 -->
         <div class="story-block layout-text-right">
-            <div class="story-text">В скалолазании «восьмерка» — главный узел страховки, который символизирует абсолютную надежность и доверие.Мне нравится думать, что в какой-то момент эта нить между нами затянулась чуть крепче — и уже никогда не развязалась.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_3.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-text">В скалолазании «восьмерка» — главный узел страховки, который символизирует абсолютную надежность и доверие. Мне нравится думать, что в какой-то момент эта нить между нами затянулась чуть крепче — и уже никогда не развязалась.</div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_3.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 8 -->
         <div class="story-block layout-text-left">
             <div class="story-text">У нашей истории появилось расстояние. Но оно не разъединяло, а только яснее показывало, как ты мне дорог.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_4.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_4.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 9 -->
         <div class="story-block layout-text-right">
             <div class="story-text">Километры стали не преградой, а дорогой навстречу.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_5.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_5.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 10 -->
         <div class="story-block layout-text-left">
             <div class="story-text">Я помню это чувство: ещё немного — и мы снова будем рядом.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_6.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_6.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 11 -->
         <div class="story-block layout-text-right">
             <div class="story-text">Мы могли смотреть из разных окон, но всё равно были внутри одного ожидания.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_7.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_7.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 12 -->
         <div class="story-block layout-text-left">
-            <div class="story-text">Когда мы засыпаем порознь, я чувствую натяжение этой нити. Но я закрываю глаза и вспоминаю твое тепло.Мы можем просыпаться в разных городах, но утро у нас одно на двоих.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_8.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-text">Когда мы засыпаем порознь, я чувствую натяжение этой нити. Но я закрываю глаза и вспоминаю твое тепло. Мы можем просыпаться в разных городах, но утро у нас одно на двоих.</div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_8.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 14: ЗВУК (Слева) -->
         <div class="story-block layout-text-right" id="voice-block">
             <div class="story-text">Твой голос всегда сокращал расстояние лучше любых поездов.</div>
             <div class="story-visual"></div>
         </div>
 
-        <!-- 15 -->
         <div class="story-block layout-text-left">
-            <div class="story-text">Есть вещи, которые особенно ясно понимаешь в скалолазании: В скалолазании самое главное — доверять тому, кто тебя страхует.В хорошей страховке есть нечто очень похожее на любовь: внимательность, точность и готовность подхватить.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_9.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-text">Есть вещи, которые особенно ясно понимаешь в скалолазании: В скалолазании самое главное — доверять тому, кто тебя страхует. В хорошей страховке есть нечто очень похожее на любовь: внимательность, точность и готовность подхватить.</div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_9.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 17 -->
         <div class="story-block layout-text-right">
             <div class="story-text">С тобой мне не страшно брать новую высоту.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_10.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_10.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 18 -->
         <div class="story-block layout-text-left">
             <div class="story-text">Потому что знаю — если я оступлюсь...<br>...ты меня удержишь.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_11.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_11.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 19 -->
         <div class="story-block layout-text-right">
             <div class="story-text">Ты не сдерживаешь меня — ты даёшь мне пространство быть собой и даришь чувство безопасности.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_12.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_12.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 20 -->
         <div class="story-block layout-text-left">
             <div class="story-text">В какой-то момент стало мало просто приезжать друг к другу. Хотелось оставаться.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_13.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_13.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 21 -->
         <div class="story-block layout-text-right">
             <div class="story-text">У каждого большого чувства однажды появляется простая материальная форма.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_14.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_14.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 22 -->
         <div class="story-block layout-text-left">
             <div class="story-text">Примерно год назад рядом у двери встала еще одна пара обуви. Или не одна…</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_15.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_15.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 23 -->
         <div class="story-block layout-text-right">
             <div class="story-text">С тех пор любовь для меня — это не только ждать встречи. Это ещё и делать самые обычные вещи сразу на двоих.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_16.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_16.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 24 -->
         <div class="story-block layout-text-left">
             <div class="story-text">Я люблю не только наши большие моменты. Мне нравится то, как мы справляемся с обычной жизнью вдвоём.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_17.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_17.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 25 -->
         <div class="story-block layout-text-right">
             <div class="story-text">Любовь вдруг стала состоять из мелочей. И именно поэтому стала еще сильнее.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_18.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_18.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 26 -->
         <div class="story-block layout-text-left">
             <div class="story-text">Мне очень дорого, что рядом с тобой можно просто помолчать и при этом не чувствовать пустоты.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_19.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_19.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 27 -->
         <div class="story-block layout-text-right">
             <div class="story-text">Раньше я чувствовала расстояние особенно остро ночью. Теперь ночью я просто ищу тебя рукой сквозь сон.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_20.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_20.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 28 -->
         <div class="story-block layout-text-left">
             <div class="story-text">Тогда нить связывала нас через расстояние. Сейчас она стала теплом.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_21.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_21.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 29 -->
         <div class="story-block layout-text-right">
             <div class="story-text">Я люблю твой спокойный взгляд, который умеет останавливать мою тревогу. И то, как ты улыбаешься, когда думаешь, что я не смотрю.</div>
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_22.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_22.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
-        <!-- 30: СЕРДЦЕ ПОВЕРХ РИСУНКА (Справа) -->
         <div class="story-block layout-text-left" id="heart-block">
             <div class="story-text">
                 Ты — мой самый ровный ритм и самое сильное сердцебиение.<br><br>
                 Ты человек, рядом с которым мне спокойно, интересно, смешно и по-настоящему хорошо. Для меня это и есть любовь.<br><br>
                 И я хочу, чтобы так было всегда…
             </div>
-            <!-- Добавлена картинка, которая будет лежать ПОД кардиограммой -->
-            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_23.png" class="story-image" loading="lazy" onerror="this.style.display='none'"></div></div>
+            <div class="story-visual"><div class="image-placeholder anim-float"><img src="image_23.png" class="story-image" onerror="this.style.display='none'"></div></div>
         </div>
 
     </div>
 
-   <script>
-    window.addEventListener("load", () => {
-        gsap.registerPlugin(ScrollTrigger);
+    <script>
+        // Этот скрипт гарантированно чистый, без pin: true и конфликтов
+        window.addEventListener("load", () => {
+            gsap.registerPlugin(ScrollTrigger);
 
-        const blocks = document.querySelectorAll('.story-block');
+            const blocks = document.querySelectorAll('.story-block');
 
-        // ГЕНЕРИРУЕМ ПУТИ (ЗАМОРОЗОК БОЛЬШЕ НЕТ, СКРОЛЛ СВОБОДНЫЙ)
-        blocks.forEach((block, index) => {
-            
-            // 1. Создаем SVG с координатами в процентах (0-100)
-            block.insertAdjacentHTML('afterbegin', `
-                <svg class="local-svg" preserveAspectRatio="none" viewBox="0 0 100 100" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; overflow: visible;">
-                    <path class="path-front" vector-effect="non-scaling-stroke" fill="none" stroke="#d93838" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                </svg>
-            `);
+            blocks.forEach((block, index) => {
+                
+                // Создаем SVG. viewBox="0 0 100 100" позволяет линии растягиваться как резина без разрывов
+                block.insertAdjacentHTML('afterbegin', `
+                    <svg class="local-svg" preserveAspectRatio="none" viewBox="0 0 100 100">
+                        <path class="path-front" vector-effect="non-scaling-stroke"></path>
+                    </svg>
+                `);
 
-            const path = block.querySelector('.path-front');
-            
-            // Координаты теперь всегда от 0 до 100
-            const centerX = 50; 
-            const centerY = 50;
-            
-            let startX = centerX;
-            let d = `M${startX},0 `; // Начинаем всегда сверху по центру (0%)
+                const path = block.querySelector('.path-front');
+                const centerX = 50; 
+                const centerY = 50;
+                
+                let startX = centerX;
+                let d = `M${startX},0 `; 
 
-            const isLeftLayout = block.classList.contains('layout-text-left');
-            // Картинка занимает либо левую (25%), либо правую (75%) часть
-            const targetX = isLeftLayout ? 75 : 25;
+                const isLeftLayout = block.classList.contains('layout-text-left');
+                const targetX = isLeftLayout ? 75 : 25;
 
-            if (block.id === 'loop-block') {
-                // === ПЕТЛЯ (без остановки экрана) ===
-                const loopCenter = targetX; 
-                const sign = isLeftLayout ? 1 : -1; 
-                
-                d += `C${centerX},25 ${loopCenter + (10 * sign)},30 ${loopCenter + (10 * sign)},40 `;
-                d += `C${loopCenter + (10 * sign)},60 ${loopCenter - (15 * sign)},60 ${loopCenter - (15 * sign)},50 `;
-                d += `C${loopCenter - (15 * sign)},35 ${loopCenter + (5 * sign)},35 ${loopCenter},50 `;
-                d += `C${loopCenter - (5 * sign)},70 ${centerX},75 ${centerX},100 `;
+                if (block.id === 'loop-block') {
+                    const loopCenter = targetX; 
+                    const sign = isLeftLayout ? 1 : -1; 
+                    
+                    d += `C${centerX},25 ${loopCenter + (10 * sign)},30 ${loopCenter + (10 * sign)},40 `;
+                    d += `C${loopCenter + (10 * sign)},60 ${loopCenter - (15 * sign)},60 ${loopCenter - (15 * sign)},50 `;
+                    d += `C${loopCenter - (15 * sign)},35 ${loopCenter + (5 * sign)},35 ${loopCenter},50 `;
+                    d += `C${loopCenter - (5 * sign)},70 ${centerX},75 ${centerX},100 `;
 
-            } else if (block.id === 'voice-block') {
-                // === ЗВУКОВАЯ ВОЛНА ===
-                const waveStartX = isLeftLayout ? 55 : 5; 
-                const waveEndX = isLeftLayout ? 95 : 45; 
-                
-                d += `C${startX},25 ${waveStartX},40 ${waveStartX},50 `;
-                
-                const amps = [0, 5, -5, 10, -10, 15, -15, 20, -20, 25, -25, 30, -30, 20, -20, 10, -10, 5, -5, 0];
-                const stepX = (waveEndX - waveStartX) / (amps.length - 1);
-                
-                amps.forEach((amp, i) => { 
-                    d += `L${waveStartX + i * stepX},${centerY + amp} `; 
-                });
-                
-                d += `C${waveEndX},60 ${centerX},75 ${centerX},100 `;
+                } else if (block.id === 'voice-block') {
+                    const waveStartX = isLeftLayout ? 55 : 5; 
+                    const waveEndX = isLeftLayout ? 95 : 45; 
+                    
+                    d += `C${startX},25 ${waveStartX},40 ${waveStartX},50 `;
+                    
+                    const amps = [0, 5, -5, 10, -10, 15, -15, 20, -20, 25, -25, 30, -30, 20, -20, 10, -10, 5, -5, 0];
+                    const stepX = (waveEndX - waveStartX) / (amps.length - 1);
+                    
+                    amps.forEach((amp, i) => { d += `L${waveStartX + i * stepX},${centerY + amp} `; });
+                    
+                    d += `C${waveEndX},60 ${centerX},75 ${centerX},100 `;
 
-            } else if (block.id === 'heart-block') {
-                // === КАРДИОГРАММА ===
-                const heartStartX = isLeftLayout ? 55 : 5; 
-                const heartEndX = isLeftLayout ? 95 : 45; 
-                
-                d += `C${startX},25 ${heartStartX},40 ${heartStartX},50 `;
-                
-                const amps = [0, 2, -2, 5, -5, 8, -8, 15, -20, 35, -40, 20, -15, 5, -5, 2, -2, 0];
-                const stepX = (heartEndX - heartStartX) / (amps.length - 1);
-                
-                amps.forEach((amp, i) => { 
-                    d += `L${heartStartX + i * stepX},${centerY + amp} `; 
-                });
-                
-                d += `C${heartEndX},60 ${centerX},75 ${centerX},100 `;
+                } else if (block.id === 'heart-block') {
+                    const heartStartX = isLeftLayout ? 55 : 5; 
+                    const heartEndX = isLeftLayout ? 95 : 45; 
+                    
+                    d += `C${startX},25 ${heartStartX},40 ${heartStartX},50 `;
+                    
+                    const amps = [0, 2, -2, 5, -5, 8, -8, 15, -20, 35, -40, 20, -15, 5, -5, 2, -2, 0];
+                    const stepX = (heartEndX - heartStartX) / (amps.length - 1);
+                    
+                    amps.forEach((amp, i) => { d += `L${heartStartX + i * stepX},${centerY + amp} `; });
+                    
+                    d += `C${heartEndX},60 ${centerX},75 ${centerX},100 `;
 
-            } else {
-                // === ОБЫЧНЫЕ БЛОКИ ===
-                const hasImage = block.querySelector('.story-image') && block.querySelector('.story-image').getAttribute('src') !== "";
-                
-                if (hasImage) {
-                    d += `C${startX},25 ${targetX},40 ${targetX},50 `;
-                    d += `C${targetX},60 ${centerX},75 ${centerX},100 `;
                 } else {
-                    d += `L${centerX},100 `; // Прямая линия до самого низа (100%)
-                }
-            }
-
-            path.setAttribute('d', d);
-
-            // 3. АНИМАЦИЯ (привязана строго к скроллу)
-            requestAnimationFrame(() => {
-                const pathLength = path.getTotalLength() + 5; 
-                path.style.strokeDasharray = pathLength;
-                path.style.strokeDashoffset = pathLength;
-
-                // Для самого последнего блока рисуем линию до конца страницы
-                const isLastBlock = index === blocks.length - 1;
-                
-                gsap.to(path, {
-                    strokeDashoffset: 0,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: block,
-                        start: "top center", 
-                        end: isLastBlock ? "bottom bottom" : "bottom center", 
-                        scrub: true
+                    const hasImage = block.querySelector('.story-image') && block.querySelector('.story-image').getAttribute('src') !== "";
+                    
+                    if (hasImage) {
+                        d += `C${startX},25 ${targetX},40 ${targetX},50 `;
+                        d += `C${targetX},60 ${centerX},75 ${centerX},100 `;
+                    } else {
+                        d += `L${centerX},100 `; 
                     }
+                }
+
+                path.setAttribute('d', d);
+
+                // Привязка линии к скроллу
+                requestAnimationFrame(() => {
+                    const pathLength = path.getTotalLength() + 5; 
+                    path.style.strokeDasharray = pathLength;
+                    path.style.strokeDashoffset = pathLength;
+
+                    const isLastBlock = index === blocks.length - 1;
+                    
+                    gsap.to(path, {
+                        strokeDashoffset: 0,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: block,
+                            start: "top center", 
+                            end: isLastBlock ? "bottom bottom" : "bottom center", 
+                            scrub: true
+                        }
+                    });
                 });
+
+                // Анимация текста и картинок
+                const text = block.querySelector(".story-text");
+                const visual = block.querySelector(".story-visual");
+
+                if(text) {
+                    gsap.from(text, {
+                        scrollTrigger: { trigger: block, start: "top 80%" },
+                        y: 30, opacity: 0, duration: 1.2, ease: "power2.out"
+                    });
+                }
+                if(visual && visual.innerHTML.trim() !== "") {
+                    gsap.from(visual, {
+                        scrollTrigger: { trigger: block, start: "top 80%" },
+                        y: 30, opacity: 0, duration: 1.2, ease: "power2.out", delay: 0.2
+                    });
+                }
             });
 
-            // 4. ПОЯВЛЕНИЕ ТЕКСТА
-            const text = block.querySelector(".story-text");
-            const visual = block.querySelector(".story-visual");
-
-            if(text) {
-                gsap.from(text, {
-                    scrollTrigger: { trigger: block, start: "top 80%" },
-                    y: 30, opacity: 0, duration: 1.2, ease: "power2.out"
-                });
-            }
-            if(visual && visual.innerHTML.trim() !== "") {
-                gsap.from(visual, {
-                    scrollTrigger: { trigger: block, start: "top 80%" },
-                    y: 30, opacity: 0, duration: 1.2, ease: "power2.out", delay: 0.2
-                });
-            }
+            // Наблюдатель за изменением размеров страницы (если картинки загрузятся позже)
+            const resizeObserver = new ResizeObserver(() => {
+                ScrollTrigger.refresh();
+            });
+            resizeObserver.observe(document.body);
         });
-
-        // Пересчет координат, если загрузились шрифты
-        setTimeout(() => { ScrollTrigger.refresh(); }, 500);
-
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => { ScrollTrigger.refresh(); }, 250);
-        });
-    });
-</script>
+    </script>
 </body>
 </html>
