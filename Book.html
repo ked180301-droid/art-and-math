@@ -157,6 +157,10 @@
 
         const blocks = document.querySelectorAll('.story-block');
 
+        // Базовая длина "простой" линии в пикселях — используем для калибровки
+        // Простая линия через блок высотой ~400px ≈ 500px пути
+        const BASE_PATH_LENGTH = 500;
+
         blocks.forEach((block, index) => {
             let svg = block.querySelector('.local-svg');
             if (!svg) {
@@ -185,79 +189,73 @@
 
                 if (block.id === 'loop-block') {
                     const sign = isLeft ? 1 : -1;
-                    d += `C${cx},${cy - 150} ${tx + 60 * sign},${cy - 100} ${tx + 60 * sign},${cy - 40} `;
-                    d += `C${tx + 60 * sign},${cy + 60} ${tx - 80 * sign},${cy + 60} ${tx - 80 * sign},${cy} `;
-                    d += `C${tx - 80 * sign},${cy - 80} ${tx + 30 * sign},${cy - 80} ${tx},${cy} `;
-                    d += `C${tx - 30 * sign},${cy + 100} ${cx},${cy + 100} ${cx},${h} `;
+                    d += `C${cx},${cy-150} ${tx+60*sign},${cy-100} ${tx+60*sign},${cy-40} `;
+                    d += `C${tx+60*sign},${cy+60} ${tx-80*sign},${cy+60} ${tx-80*sign},${cy} `;
+                    d += `C${tx-80*sign},${cy-80} ${tx+30*sign},${cy-80} ${tx},${cy} `;
+                    d += `C${tx-30*sign},${cy+100} ${cx},${cy+100} ${cx},${h} `;
                 } else if (block.id === 'voice-block') {
-                    const wx1 = isLeft ? cx + 20 : 20;
-                    const wx2 = isLeft ? w - 20 : cx - 20;
-                    d += `C${cx},${cy - 80} ${wx1},${cy - 40} ${wx1},${cy} `;
+                    const wx1 = isLeft ? cx+20 : 20;
+                    const wx2 = isLeft ? w-20 : cx-20;
+                    d += `C${cx},${cy-80} ${wx1},${cy-40} ${wx1},${cy} `;
                     const amps = [0,3,-2,5,-4,8,-6,12,-10,18,-15,25,-20,35,-30,50,-45,65,-55,85,-75,110,-100,80,-70,60,-50,45,-35,30,-25,50,-45,80,-75,120,-110,90,-85,60,-50,40,-30,25,-20,15,-10,8,-6,5,-3,0];
-                    const step = (wx2 - wx1) / (amps.length - 1);
-                    amps.forEach((amp, i) => { d += `L${wx1 + i * step},${cy + amp} `; });
-                    d += `C${wx2},${cy + 40} ${cx},${cy + 80} ${cx},${h} `;
+                    const step = (wx2-wx1)/(amps.length-1);
+                    amps.forEach((amp,i) => { d += `L${wx1+i*step},${cy+amp} `; });
+                    d += `C${wx2},${cy+40} ${cx},${cy+80} ${cx},${h} `;
                 } else if (block.id === 'heart-block') {
-                    const hx1 = isLeft ? cx + 20 : 20;
-                    const hx2 = isLeft ? w - 20 : cx - 20;
-                    d += `C${cx},${cy - 80} ${hx1},${cy - 40} ${hx1},${cy} `;
+                    const hx1 = isLeft ? cx+20 : 20;
+                    const hx2 = isLeft ? w-20 : cx-20;
+                    d += `C${cx},${cy-80} ${hx1},${cy-40} ${hx1},${cy} `;
                     const amps = [0,4,-3,6,-5,8,-6,10,-8,12,-10,18,-25,28,-35,38,-45,48,-55,58,-65,68,-75,80,-60,90,-40,100,-20,130,-20,100,-40,90,-60,80,-75,68,-65,58,-55,48,-45,38,-35,28,-25,18,-10,12,-8,10,-6,8,-5,6,-3,4,0];
-                    const step = (hx2 - hx1) / (amps.length - 1);
-                    amps.forEach((amp, i) => { d += `L${hx1 + i * step},${cy + amp} `; });
-                    d += `C${hx2},${cy + 40} ${cx},${cy + 80} ${cx},${h} `;
+                    const step = (hx2-hx1)/(amps.length-1);
+                    amps.forEach((amp,i) => { d += `L${hx1+i*step},${cy+amp} `; });
+                    d += `C${hx2},${cy+40} ${cx},${cy+80} ${cx},${h} `;
                 } else {
-                    const hasImg = block.querySelector('.story-image') && block.querySelector('.story-image').getAttribute('src') !== "";
+                    const hasImg = block.querySelector('.story-image')?.getAttribute('src') !== "";
                     if (hasImg) {
-                        d += `C${cx},${cy - 120} ${tx},${cy - 60} ${tx},${cy} `;
-                        d += `C${tx},${cy + 60} ${cx},${cy + 120} ${cx},${h} `;
+                        d += `C${cx},${cy-120} ${tx},${cy-60} ${tx},${cy} `;
+                        d += `C${tx},${cy+60} ${cx},${cy+120} ${cx},${h} `;
                     } else {
                         d += `L${cx},${h} `;
                     }
                 }
+
                 path.setAttribute('d', d);
 
-                const pathLength = path.getTotalLength() + 5;
-                gsap.set(path, { strokeDasharray: pathLength, strokeDashoffset: pathLength });
+                const pathLength = path.getTotalLength();
+                gsap.set(path, { strokeDasharray: pathLength + 5, strokeDashoffset: pathLength + 5 });
 
-                // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ:
-                // Для блоков с длинным путём (волна, кардиограмма) начинаем рисовать РАНЬШЕ,
-                // чтобы линия успела дорисоваться пока блок ещё виден на экране.
-                let startPos = "top center";
-                let endPos = index === blocks.length - 1 ? "bottom 95%" : "bottom center";
+                // КЛЮЧЕВАЯ МАТЕМАТИКА:
+                // Насколько этот путь длиннее обычного? 
+                // Пропорционально растягиваем диапазон скролла.
+                const ratio = pathLength / BASE_PATH_LENGTH;
+                
+                // Стандартный блок (~400px высотой) прокручивается от top center до bottom center = ~400px скролла
+                // Для кардиограммы путь в ~5 раз длиннее, значит нужно ~2000px скролла
+                // Но мы ограничиваем: не меньше высоты блока и не больше 3х высот блока
+                const blockH = block.offsetHeight;
+                const scrollDistance = Math.min(Math.max(blockH * ratio * 0.5, blockH), blockH * 3);
 
-                if (block.id === 'voice-block' || block.id === 'heart-block') {
-                    startPos = "top 80%"; // начинаем раньше — как только блок появился
-                    endPos = "bottom 20%"; // заканчиваем раньше — пока ещё видно нижнюю часть
-                }
+                const isLastBlock = index === blocks.length - 1;
 
-                if (block.id === 'loop-block') {
-                    startPos = "top 70%";
-                    endPos = "bottom 30%";
-                }
-
-                gsap.to(path, {
-                    strokeDashoffset: 0,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: block,
-                        start: startPos,
-                        end: endPos,
-                        scrub: true,
-                    }
+                ScrollTrigger.create({
+                    trigger: block,
+                    start: "top center",
+                    end: isLastBlock ? "bottom bottom" : `top+=${scrollDistance} center`,
+                    scrub: true,
+                    animation: gsap.to(path, { strokeDashoffset: 0, ease: "none" })
                 });
             }
 
             setupLine();
 
-            const ro = new ResizeObserver(() => { setupLine(); });
-            ro.observe(block);
+            new ResizeObserver(() => { setupLine(); }).observe(block);
 
             if (!block.dataset.animated) {
                 block.dataset.animated = "true";
                 const text = block.querySelector(".story-text");
                 const visual = block.querySelector(".story-visual");
                 if (text) gsap.from(text, { scrollTrigger: { trigger: block, start: "top 80%" }, y: 30, opacity: 0, duration: 1.2, ease: "power2.out" });
-                if (visual && visual.innerHTML.trim() !== "") gsap.from(visual, { scrollTrigger: { trigger: block, start: "top 80%" }, y: 30, opacity: 0, duration: 1.2, ease: "power2.out", delay: 0.2 });
+                if (visual?.innerHTML.trim() !== "") gsap.from(visual, { scrollTrigger: { trigger: block, start: "top 80%" }, y: 30, opacity: 0, duration: 1.2, ease: "power2.out", delay: 0.2 });
             }
         });
     });
