@@ -308,7 +308,7 @@
 
     </div>
 
-    <script>
+   <script>
     window.addEventListener("load", () => {
         gsap.registerPlugin(ScrollTrigger);
 
@@ -339,7 +339,7 @@
         // ПЕРЕМЕННАЯ ДЛЯ ХРАНЕНИЯ ПОЗИЦИИ ПРЕДЫДУЩЕЙ ЛИНИИ
         let previousEndX = window.innerWidth / 2;
 
-         // 2. ГЕНЕРИРУЕМ ПУТИ
+        // 2. ГЕНЕРИРУЕМ ПУТИ
         blocks.forEach((block) => {
             block.insertAdjacentHTML('afterbegin', `
                 <svg class="local-svg" preserveAspectRatio="none">
@@ -446,6 +446,7 @@
             
             // Сохраняем конец этой линии как начало для следующего блока!
             previousEndX = currentEndX;
+
             // 3. АНИМИРУЕМ ОТРИСОВКУ
             const pathLength = path.getTotalLength();
             gsap.set(path, { strokeDasharray: pathLength, strokeDashoffset: pathLength });
