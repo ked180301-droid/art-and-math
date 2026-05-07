@@ -314,116 +314,107 @@
 
         const blocks = document.querySelectorAll('.story-block');
 
-        // ПРОХОДИМСЯ ПО ВСЕМ БЛОКАМ СТРОГО СВЕРХУ ВНИЗ
-        // Это навсегда решает проблему "догоняющих" блоков и разрывов после 15-го блока!
         blocks.forEach((block, index) => {
             
-            // 1. Создаем SVG
+            // 1. Создаем SVG с viewBox="0 0 100 100" (в процентах!)
             block.insertAdjacentHTML('afterbegin', `
-                <svg class="local-svg" preserveAspectRatio="none">
-                    <path class="path-front" vector-effect="non-scaling-stroke"></path>
+                <svg class="local-svg" preserveAspectRatio="none" viewBox="0 0 100 100" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; overflow: visible;">
+                    <path class="path-front" vector-effect="non-scaling-stroke" fill="none" stroke="#d93838" stroke-width="1.5" stroke-linecap="round"></path>
                 </svg>
             `);
 
-            const svg = block.querySelector('.local-svg');
             const path = block.querySelector('.path-front');
             
-            const width = block.offsetWidth;
-            const height = block.offsetHeight;
-            const centerX = width / 2;
-            const centerY = height / 2;
-
-            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-
-            // 2. Рисуем идеальную линию (всегда из центра)
+            // Координаты в процентах (0-100)
+            const centerX = 50; 
+            const centerY = 50;
+            
             let startX = centerX;
-            let d = `M${startX},0 `;
+            let d = `M${startX},0 `; // Начинаем всегда сверху по центру
 
             const isLeftLayout = block.classList.contains('layout-text-left');
-            const targetX = isLeftLayout ? centerX + (width * 0.25) : centerX - (width * 0.25);
+            // Картинка занимает либо левую (25%), либо правую (75%) часть экрана
+            const targetX = isLeftLayout ? 75 : 25;
 
             if (block.id === 'loop-block') {
                 const loopCenter = targetX; 
                 const sign = isLeftLayout ? 1 : -1; 
                 
-                d += `C${centerX},${centerY - 150} ${loopCenter + (60 * sign)},${centerY - 100} ${loopCenter + (60 * sign)},${centerY - 40} `;
-                d += `C${loopCenter + (60 * sign)},${centerY + 60} ${loopCenter - (80 * sign)},${centerY + 60} ${loopCenter - (80 * sign)},${centerY} `;
-                d += `C${loopCenter - (80 * sign)},${centerY - 80} ${loopCenter + (30 * sign)},${centerY - 80} ${loopCenter},${centerY} `;
-                d += `C${loopCenter - (30 * sign)},${centerY + 100} ${centerX},${centerY + 100} ${centerX},${height} `;
+                // Рисуем петлю в координатах от 0 до 100
+                d += `C${centerX},25 ${loopCenter + (10 * sign)},30 ${loopCenter + (10 * sign)},40 `;
+                d += `C${loopCenter + (10 * sign)},60 ${loopCenter - (15 * sign)},60 ${loopCenter - (15 * sign)},50 `;
+                d += `C${loopCenter - (15 * sign)},35 ${loopCenter + (5 * sign)},35 ${loopCenter},50 `;
+                d += `C${loopCenter - (5 * sign)},70 ${centerX},75 ${centerX},100 `;
+
             } else if (block.id === 'voice-block') {
-                const waveStartX = isLeftLayout ? centerX + 20 : 20; 
-                const waveEndX = isLeftLayout ? width - 20 : centerX - 20; 
+                const waveStartX = isLeftLayout ? 55 : 5; 
+                const waveEndX = isLeftLayout ? 95 : 45; 
                 
-                d += `C${startX},${centerY - 80} ${waveStartX},${centerY - 40} ${waveStartX},${centerY} `;
+                d += `C${startX},25 ${waveStartX},40 ${waveStartX},50 `;
                 
-                const amps = [0, 3, -2, 5, -4, 8, -6, 12, -10, 18, -15, 25, -20, 35, -30, 50, -45, 65, -55, 85, -75, 110, -100, 80, -70, 60, -50, 45, -35, 30, -25, 50, -45, 80, -75, 120, -110, 90, -85, 60, -50, 40, -30, 25, -20, 15, -10, 8, -6, 5, -3, 0];
+                const amps = [0, 5, -5, 10, -10, 15, -15, 20, -20, 25, -25, 30, -30, 20, -20, 10, -10, 5, -5, 0];
                 const stepX = (waveEndX - waveStartX) / (amps.length - 1);
-                amps.forEach((amp, i) => { d += `L${waveStartX + i * stepX},${centerY + amp} `; });
                 
-                d += `C${waveEndX},${centerY + 40} ${centerX},${centerY + 80} ${centerX},${height} `;
+                amps.forEach((amp, i) => { 
+                    d += `L${waveStartX + i * stepX},${centerY + amp} `; 
+                });
+                
+                d += `C${waveEndX},60 ${centerX},75 ${centerX},100 `;
+
             } else if (block.id === 'heart-block') {
-                const heartStartX = isLeftLayout ? centerX + 20 : 20; 
-                const heartEndX = isLeftLayout ? width - 20 : centerX - 20; 
+                const heartStartX = isLeftLayout ? 55 : 5; 
+                const heartEndX = isLeftLayout ? 95 : 45; 
                 
-                d += `C${startX},${centerY - 80} ${heartStartX},${centerY - 40} ${heartStartX},${centerY} `;
+                d += `C${startX},25 ${heartStartX},40 ${heartStartX},50 `;
                 
-                const amps = [0, 4, -3, 6, -5, 8, -6, 10, -8, 12, -10, 18, -25, 28, -35, 38, -45, 48, -55, 58, -65, 68, -75, 80, -60, 90, -40, 100, -20, 130, -20, 100, -40, 90, -60, 80, -75, 68, -65, 58, -55, 48, -45, 38, -35, 28, -25, 18, -10, 12, -8, 10, -6, 8, -5, 6, -3, 4, 0];
+                const amps = [0, 2, -2, 5, -5, 8, -8, 15, -20, 35, -40, 20, -15, 5, -5, 2, -2, 0];
                 const stepX = (heartEndX - heartStartX) / (amps.length - 1);
-                amps.forEach((amp, i) => { d += `L${heartStartX + i * stepX},${centerY + amp} `; });
                 
-                d += `C${heartEndX},${centerY + 40} ${centerX},${centerY + 80} ${centerX},${height} `;
+                amps.forEach((amp, i) => { 
+                    d += `L${heartStartX + i * stepX},${centerY + amp} `; 
+                });
+                
+                d += `C${heartEndX},60 ${centerX},75 ${centerX},100 `;
+
             } else {
                 const hasImage = block.querySelector('.story-image') && block.querySelector('.story-image').getAttribute('src') !== "";
+                
                 if (hasImage) {
-                    d += `C${startX},${centerY - 120} ${targetX},${centerY - 60} ${targetX},${centerY} `;
-                    d += `C${targetX},${centerY + 60} ${centerX},${centerY + 120} ${centerX},${height} `;
+                    // Плавно огибаем картинку
+                    d += `C${startX},25 ${targetX},40 ${targetX},50 `;
+                    d += `C${targetX},60 ${centerX},75 ${centerX},100 `;
                 } else {
-                    d += `L${centerX},${height} `;
+                    // Прямая линия ровно по центру
+                    d += `L${centerX},100 `;
                 }
             }
+
             path.setAttribute('d', d);
 
-            // 3. Проверяем, нужна ли заморозка для ЭТОГО блока
-            let pinDistance = 0;
-            if (block.id === 'loop-block') pinDistance = 900;
-            if (block.id === 'voice-block') pinDistance = 1200;
-            if (block.id === 'heart-block') pinDistance = 1500;
+            // 3. АНИМИРУЕМ ЛИНИЮ
+            // Используем requestAnimationFrame, чтобы браузер точно успел отрендерить SVG
+            requestAnimationFrame(() => {
+                const pathLength = path.getTotalLength() + 5; // Небольшой запас
+                path.style.strokeDasharray = pathLength;
+                path.style.strokeDashoffset = pathLength;
 
-            // Если нужна — замораживаем
-            if (pinDistance > 0) {
-                ScrollTrigger.create({
-                    trigger: block,
-                    start: "center center",
-                    end: `+=${pinDistance}`,
-                    pin: true,
+                const isLastBlock = index === blocks.length - 1;
+                
+                // Начинаем анимацию, когда верх блока пересекает центр экрана
+                // Заканчиваем, когда низ блока пересекает центр экрана
+                gsap.to(path, {
+                    strokeDashoffset: 0,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: block,
+                        start: "top center", 
+                        end: isLastBlock ? "bottom bottom" : "bottom center", 
+                        scrub: true
+                    }
                 });
-            }
-
-            // 4. АНИМИРУЕМ ЛИНИЮ
-            const pathLength = path.getTotalLength() + 10;
-            path.style.strokeDasharray = pathLength;
-            path.style.strokeDashoffset = pathLength;
-
-            // Если это самый последний блок — линия дорисовывается до упора вниз экрана
-            const isLastBlock = index === blocks.length - 1;
-            let endTriggerPos = "bottom center";
-            
-            // Если блок заморожен, линия рисуется дольше, пока идет заморозка
-            if (pinDistance > 0) endTriggerPos = `bottom+=${pinDistance} center`;
-            if (isLastBlock) endTriggerPos = "bottom bottom"; 
-
-            gsap.to(path, {
-                strokeDashoffset: 0,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: block,
-                    start: "top center",
-                    end: endTriggerPos,
-                    scrub: true
-                }
             });
 
-            // 5. АНИМАЦИЯ ПОЯВЛЕНИЯ ТЕКСТА И КАРТИНОК
+            // 4. АНИМАЦИЯ ПОЯВЛЕНИЯ ТЕКСТА И КАРТИНОК
             const text = block.querySelector(".story-text");
             const visual = block.querySelector(".story-visual");
 
@@ -441,15 +432,17 @@
             }
         });
 
-        // 6. Безопасная перезагрузка (только если реально изменилась ширина экрана)
-        let windowWidth = window.innerWidth;
+        // Обновляем триггеры после загрузки всех картинок/шрифтов
+        setTimeout(() => {
+            ScrollTrigger.refresh();
+        }, 500);
+
         let resizeTimer;
         window.addEventListener('resize', () => {
-            if (window.innerWidth !== windowWidth) {
-                windowWidth = window.innerWidth;
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => { window.location.reload(); }, 250);
-            }
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => { 
+                ScrollTrigger.refresh(); 
+            }, 250);
         });
     });
 </script>
