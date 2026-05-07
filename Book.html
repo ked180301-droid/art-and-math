@@ -340,6 +340,10 @@
         let previousEndX = window.innerWidth / 2;
 
         // 2. ГЕНЕРИРУЕМ ПУТИ
+               // ПЕРЕМЕННАЯ ДЛЯ ХРАНЕНИЯ ПОЗИЦИИ ПРЕДЫДУЩЕЙ ЛИНИИ
+        let previousEndX = window.innerWidth / 2;
+
+        // 2. ГЕНЕРИРУЕМ ПУТИ
         blocks.forEach((block) => {
             block.insertAdjacentHTML('afterbegin', `
                 <svg class="local-svg" preserveAspectRatio="none">
@@ -359,19 +363,21 @@
 
             // Линия ВСЕГДА начинается там, где закончилась предыдущая
             let startX = previousEndX;
-            let currentEndX = centerX; // По умолчанию стремимся в центр в конце блока
+            let currentEndX = centerX; // По умолчанию стремимся в центр
             let d = `M${startX},0 `;
 
             const isLeftLayout = block.classList.contains('layout-text-left');
-            // Куда отклоняться линии в этом блоке
             const targetX = isLeftLayout ? centerX + 150 : centerX - 150;
 
             if (block.id === 'loop-block') {
                 // === ЛЁГКАЯ ПЕТЛЯ ===
                 const hx = targetX;
-                currentEndX = targetX; // Остаемся на этой стороне
+                currentEndX = targetX; // Петля заканчивается на стороне картинки!
                 
+                // Плавно подводим линию к началу петли
                 d += `C${startX},${centerY - 100} ${hx},${centerY - 80} ${hx},${centerY - 80} `;
+                
+                // Рисуем саму петлю
                 d += `C${hx},${centerY} ${hx - 80},${centerY + 100} ${hx - 20},${centerY + 10} `;
                 d += `C${hx + 80},${centerY - 140} ${hx - 100},${centerY - 140} ${hx + 20},${centerY + 10} `;
                 d += `C${hx + 80},${centerY + 100} ${currentEndX},${centerY + 40} ${currentEndX},${height} `;
@@ -380,9 +386,10 @@
                 // === ГУСТАЯ ЗВУКОВАЯ ВОЛНА ===
                 const waveStartX = isLeftLayout ? width - 20 : 20; 
                 const waveEndX = isLeftLayout ? centerX + 40 : centerX - 40; 
-                currentEndX = targetX;
+                currentEndX = targetX; // Звуковая волна заканчивается на стороне картинки!
                 
-                d += `C${startX},${centerY - 40} ${targetX},${centerY - 20} ${targetX},${centerY - 20} `;
+                // Плавно подводим линию к волне
+                d += `C${startX},${centerY - 60} ${targetX},${centerY - 20} ${targetX},${centerY - 20} `;
                 d += `C${targetX},${centerY} ${waveStartX},${centerY} ${waveStartX},${centerY} `;
                 
                 const amps = [
@@ -399,15 +406,17 @@
                     d += `L${waveStartX + i * stepX},${centerY + amp} `;
                 });
                 
-                d += `C${waveEndX},${centerY} ${currentEndX},${centerY} ${currentEndX},${height} `;
+                // От конца волны ведем вниз
+                d += `C${waveEndX},${centerY} ${currentEndX},${centerY + 20} ${currentEndX},${height} `;
 
             } else if (block.id === 'heart-block') {
                 // === ГУСТОЕ СЕРДЦЕ (Кардиограмма) ===
                 const heartStartX = isLeftLayout ? width - 20 : 20; 
                 const heartEndX = isLeftLayout ? centerX + 40 : centerX - 40; 
-                currentEndX = targetX;
+                currentEndX = targetX; // Кардиограмма заканчивается на стороне картинки
                 
-                d += `C${startX},${centerY - 40} ${targetX},${centerY - 20} ${targetX},${centerY - 20} `;
+                // Плавно подводим линию к кардиограмме
+                d += `C${startX},${centerY - 60} ${targetX},${centerY - 20} ${targetX},${centerY - 20} `;
                 d += `C${targetX},${centerY} ${heartStartX},${centerY} ${heartStartX},${centerY} `;
                 
                 const amps = [
@@ -426,25 +435,26 @@
                     d += `L${heartStartX + i * stepX},${centerY + amp} `;
                 });
                 
-                d += `C${heartEndX},${centerY} ${currentEndX},${centerY} ${currentEndX},${height} `;
+                // От конца кардиограммы ведем вниз
+                d += `C${heartEndX},${centerY} ${currentEndX},${centerY + 20} ${currentEndX},${height} `;
 
             } else {
                 // === ОБЫЧНЫЕ БЛОКИ ===
                 const hasImage = block.querySelector('.story-image') && block.querySelector('.story-image').getAttribute('src') !== "";
                 
                 if (hasImage) {
-                    currentEndX = targetX; // Линия заканчивается у картинки
+                    currentEndX = targetX; // Обычная картинка - линия заканчивается у картинки
                     d += `C${startX},${centerY - 100} ${targetX},${centerY - 50} ${targetX},${centerY} `;
                     d += `C${targetX},${centerY + 50} ${currentEndX},${centerY + 100} ${currentEndX},${height} `;
                 } else {
-                    currentEndX = centerX; // Возвращаемся в центр
+                    currentEndX = centerX; // Нет картинки - возвращаемся в центр
                     d += `C${startX},${centerY - 100} ${currentEndX},${centerY} ${currentEndX},${height} `;
                 }
             }
 
             path.setAttribute('d', d);
             
-            // Сохраняем конец этой линии как начало для следующего блока!
+            // ЖЕСТКО сохраняем конец этой линии как начало для следующего блока!
             previousEndX = currentEndX;
 
             // 3. АНИМИРУЕМ ОТРИСОВКУ
