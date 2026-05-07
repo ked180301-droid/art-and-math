@@ -148,121 +148,129 @@
         <div class="story-block layout-text-left" id="heart-block"><div class="story-text">Ты — мой самый ровный ритм и самое сильное сердцебиение.<br><br>Ты человек, рядом с которым мне спокойно, интересно, смешно и по-настоящему хорошо. Для меня это и есть любовь.<br><br>И я хочу, чтобы так было всегда…</div><div class="story-visual"><div class="image-placeholder anim-float"><img src="image_23.png" class="story-image" onerror="this.style.display='none'"></div></div></div>
     </div>
 
-    <script>
-        window.addEventListener("load", () => {
-            gsap.registerPlugin(ScrollTrigger);
+   <script>
+    window.addEventListener("load", () => {
+        gsap.registerPlugin(ScrollTrigger);
 
-            const container = document.getElementById("container");
-            const blocks = document.querySelectorAll(".story-block");
+        // Удаляем старый глобальный SVG, если он остался от прошлого кода
+        const oldGlobal = document.getElementById('global-svg');
+        if (oldGlobal) oldGlobal.remove();
 
-            // 1. СОЗДАЕМ ОДИН ЕДИНЫЙ SVG ПОВЕРХ ВСЕГО КОНТЕЙНЕРА (Никаких кусков!)
-            container.insertAdjacentHTML('afterbegin', `
-                <svg id="global-svg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; overflow: visible;">
-                    <path id="global-path" fill="none" stroke="#d93838" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                </svg>
-            `);
+        const blocks = document.querySelectorAll('.story-block');
 
-            const svg = document.getElementById("global-svg");
-            const path = document.getElementById("global-path");
-            let lineAnim;
+        blocks.forEach((block, index) => {
+            // 1. Создаем локальный SVG для каждого блока
+            let svg = block.querySelector('.local-svg');
+            if (!svg) {
+                block.insertAdjacentHTML('afterbegin', `
+                    <svg class="local-svg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; overflow: visible;">
+                        <path class="path-front" fill="none" stroke="#d93838" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                `);
+                svg = block.querySelector('.local-svg');
+            }
+            const path = block.querySelector('.path-front');
+            let currentST = null;
 
-            // Функция отрисовки ЕДИНОЙ линии
-            function drawLine() {
-                const cWidth = container.offsetWidth;
-                const cHeight = container.offsetHeight;
+            // Функция отрисовки линии для КОНКРЕТНОГО блока
+            function setupLine() {
+                const w = block.offsetWidth;
+                const h = block.offsetHeight;
                 
-                // SVG растягивается точно по размеру всего контейнера
-                svg.setAttribute('viewBox', `0 0 ${cWidth} ${cHeight}`);
+                if(w === 0 || h === 0) return; // Защита от ошибок до загрузки
 
-                const centerX = cWidth / 2;
-                let d = `M${centerX},0 `; // Начинаем из самого верха контейнера
+                svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
 
-                // Проходимся по всем блокам и дописываем координаты в ОДИН путь
-                blocks.forEach((block) => {
-                    const blockTop = block.offsetTop; // Отступ блока от верха контейнера
-                    const bHeight = block.offsetHeight;
-                    const centerY = blockTop + (bHeight / 2); // Центр конкретного блока
-                    const endY = blockTop + bHeight; // Низ конкретного блока
+                const centerX = w / 2;
+                const centerY = h / 2;
+                
+                // ЛИНИЯ ВСЕГДА НАЧИНАЕТСЯ И ЗАКАНЧИВАЕТСЯ В ЦЕНТРЕ - РАЗРЫВЫ НЕВОЗМОЖНЫ
+                let d = `M${centerX},0 `;
 
-                    const isLeftLayout = block.classList.contains('layout-text-left');
-                    const targetX = isLeftLayout ? centerX + (cWidth * 0.25) : centerX - (cWidth * 0.25);
+                const isLeft = block.classList.contains('layout-text-left');
+                const targetX = isLeft ? centerX + (w * 0.25) : centerX - (w * 0.25);
 
-                    if (block.id === 'loop-block') {
-                        const loopCenter = targetX;
-                        const sign = isLeftLayout ? 1 : -1;
-                        d += `C${centerX},${centerY - 150} ${loopCenter + (60 * sign)},${centerY - 100} ${loopCenter + (60 * sign)},${centerY - 40} `;
-                        d += `C${loopCenter + (60 * sign)},${centerY + 60} ${loopCenter - (80 * sign)},${centerY + 60} ${loopCenter - (80 * sign)},${centerY} `;
-                        d += `C${loopCenter - (80 * sign)},${centerY - 80} ${loopCenter + (30 * sign)},${centerY - 80} ${loopCenter},${centerY} `;
-                        d += `C${loopCenter - (30 * sign)},${centerY + 100} ${centerX},${centerY + 100} ${centerX},${endY} `;
-                    } else if (block.id === 'voice-block') {
-                        const waveStartX = isLeftLayout ? centerX + 20 : 20;
-                        const waveEndX = isLeftLayout ? cWidth - 20 : centerX - 20;
-                        d += `C${centerX},${centerY - 80} ${waveStartX},${centerY - 40} ${waveStartX},${centerY} `;
-                        const amps = [0, 3, -2, 5, -4, 8, -6, 12, -10, 18, -15, 25, -20, 35, -30, 50, -45, 65, -55, 85, -75, 110, -100, 80, -70, 60, -50, 45, -35, 30, -25, 50, -45, 80, -75, 120, -110, 90, -85, 60, -50, 40, -30, 25, -20, 15, -10, 8, -6, 5, -3, 0];
-                        const stepX = (waveEndX - waveStartX) / (amps.length - 1);
-                        amps.forEach((amp, i) => { d += `L${waveStartX + i * stepX},${centerY + amp} `; });
-                        d += `C${waveEndX},${centerY + 40} ${centerX},${centerY + 80} ${centerX},${endY} `;
-                    } else if (block.id === 'heart-block') {
-                        const heartStartX = isLeftLayout ? centerX + 20 : 20;
-                        const heartEndX = isLeftLayout ? cWidth - 20 : centerX - 20;
-                        d += `C${centerX},${centerY - 80} ${heartStartX},${centerY - 40} ${heartStartX},${centerY} `;
-                        const amps = [0, 4, -3, 6, -5, 8, -6, 10, -8, 12, -10, 18, -25, 28, -35, 38, -45, 48, -55, 58, -65, 68, -75, 80, -60, 90, -40, 100, -20, 130, -20, 100, -40, 90, -60, 80, -75, 68, -65, 58, -55, 48, -45, 38, -35, 28, -25, 18, -10, 12, -8, 10, -6, 8, -5, 6, -3, 4, 0];
-                        const stepX = (heartEndX - heartStartX) / (amps.length - 1);
-                        amps.forEach((amp, i) => { d += `L${heartStartX + i * stepX},${centerY + amp} `; });
-                        d += `C${heartEndX},${centerY + 40} ${centerX},${centerY + 80} ${centerX},${endY} `;
+                if (block.id === 'loop-block') {
+                    const sign = isLeft ? 1 : -1;
+                    d += `C${centerX},${centerY - 150} ${targetX + (60 * sign)},${centerY - 100} ${targetX + (60 * sign)},${centerY - 40} `;
+                    d += `C${targetX + (60 * sign)},${centerY + 60} ${targetX - (80 * sign)},${centerY + 60} ${targetX - (80 * sign)},${centerY} `;
+                    d += `C${targetX - (80 * sign)},${centerY - 80} ${targetX + (30 * sign)},${centerY - 80} ${targetX},${centerY} `;
+                    d += `C${targetX - (30 * sign)},${centerY + 100} ${centerX},${centerY + 100} ${centerX},${h} `;
+                } else if (block.id === 'voice-block') {
+                    const wx1 = isLeft ? centerX + 20 : 20;
+                    const wx2 = isLeft ? w - 20 : centerX - 20;
+                    d += `C${centerX},${centerY - 80} ${wx1},${centerY - 40} ${wx1},${centerY} `;
+                    const amps = [0, 3, -2, 5, -4, 8, -6, 12, -10, 18, -15, 25, -20, 35, -30, 50, -45, 65, -55, 85, -75, 110, -100, 80, -70, 60, -50, 45, -35, 30, -25, 50, -45, 80, -75, 120, -110, 90, -85, 60, -50, 40, -30, 25, -20, 15, -10, 8, -6, 5, -3, 0];
+                    const step = (wx2 - wx1) / (amps.length - 1);
+                    amps.forEach((amp, i) => { d += `L${wx1 + i * step},${centerY + amp} `; });
+                    d += `C${wx2},${centerY + 40} ${centerX},${centerY + 80} ${centerX},${h} `;
+                } else if (block.id === 'heart-block') {
+                    const hx1 = isLeft ? centerX + 20 : 20;
+                    const hx2 = isLeft ? w - 20 : centerX - 20;
+                    d += `C${centerX},${centerY - 80} ${hx1},${centerY - 40} ${hx1},${centerY} `;
+                    const amps = [0, 4, -3, 6, -5, 8, -6, 10, -8, 12, -10, 18, -25, 28, -35, 38, -45, 48, -55, 58, -65, 68, -75, 80, -60, 90, -40, 100, -20, 130, -20, 100, -40, 90, -60, 80, -75, 68, -65, 58, -55, 48, -45, 38, -35, 28, -25, 18, -10, 12, -8, 10, -6, 8, -5, 6, -3, 4, 0];
+                    const step = (hx2 - hx1) / (amps.length - 1);
+                    amps.forEach((amp, i) => { d += `L${hx1 + i * step},${centerY + amp} `; });
+                    d += `C${hx2},${centerY + 40} ${centerX},${centerY + 80} ${centerX},${h} `;
+                } else {
+                    const hasImg = block.querySelector('.story-image') && block.querySelector('.story-image').getAttribute('src') !== "";
+                    if (hasImg) {
+                        d += `C${centerX},${centerY - 120} ${targetX},${centerY - 60} ${targetX},${centerY} `;
+                        d += `C${targetX},${centerY + 60} ${centerX},${centerY + 120} ${centerX},${h} `;
                     } else {
-                        const hasImage = block.querySelector('.story-image') && block.querySelector('.story-image').getAttribute('src') !== "";
-                        if (hasImage) {
-                            d += `C${centerX},${centerY - 120} ${targetX},${centerY - 60} ${targetX},${centerY} `;
-                            d += `C${targetX},${centerY + 60} ${centerX},${centerY + 120} ${centerX},${endY} `;
-                        } else {
-                            d += `L${centerX},${endY} `;
-                        }
+                        d += `L${centerX},${h} `;
                     }
-                });
-
-                // Вставляем этот огромный единый путь в SVG
+                }
                 path.setAttribute('d', d);
 
-                // 2. АНИМИРУЕМ ЭТУ ЕДИНУЮ ЛИНИЮ
-                const pathLength = path.getTotalLength() + 50; // +50px запаса, чтобы дошло до самого конца
-                path.style.strokeDasharray = pathLength;
-                path.style.strokeDashoffset = pathLength;
+                // 2. Инициализируем анимацию
+                const pathLength = path.getTotalLength() + 5; // +5px запаса для полного закрытия швов
+                gsap.set(path, { strokeDasharray: pathLength, strokeDashoffset: pathLength });
 
-                if (lineAnim) lineAnim.kill(); // Если перерисовываем, убиваем старую анимацию
+                if (currentST) {
+                    currentST.animation.kill();
+                    currentST.kill();
+                }
 
-                // Привязываем анимацию ко всему контейнеру сразу
-                lineAnim = ScrollTrigger.create({
-                    trigger: container,
-                    start: "top center", // Начинаем рисовать, когда самый верх сайта доходит до центра
-                    end: "bottom center", // Заканчиваем, когда самый низ доходит до центра
+                const isLastBlock = index === blocks.length - 1;
+                
+                // СПЕЦИАЛЬНО ДЛЯ ПОСЛЕДНЕГО БЛОКА:
+                // "bottom 95%" значит, что линия 100% успеет дорисоваться ДО того, как ты упрешься в конец экрана
+                const triggerEnd = isLastBlock ? "bottom 95%" : "bottom center";
+
+                const anim = gsap.to(path, {
+                    strokeDashoffset: 0,
+                    ease: "none"
+                });
+
+                currentST = ScrollTrigger.create({
+                    trigger: block,
+                    start: "top center",
+                    end: triggerEnd,
                     scrub: true,
-                    animation: gsap.to(path, { strokeDashoffset: 0, ease: "none" })
+                    animation: anim
                 });
             }
 
-            // Рисуем в первый раз
-            drawLine();
+            // Первый запуск
+            setupLine();
 
-            // 3. АНИМАЦИЯ ПОЯВЛЕНИЯ ТЕКСТА
-            blocks.forEach((block) => {
+            // 3. Автоматическая перерисовка, если картинки раздвинули текст
+            const ro = new ResizeObserver(() => {
+                setupLine();
+            });
+            ro.observe(block);
+
+            // 4. Появление текста и картинок
+            if (!block.dataset.animated) {
+                block.dataset.animated = "true";
                 const text = block.querySelector(".story-text");
                 const visual = block.querySelector(".story-visual");
                 if(text) gsap.from(text, { scrollTrigger: { trigger: block, start: "top 80%" }, y: 30, opacity: 0, duration: 1.2, ease: "power2.out" });
                 if(visual && visual.innerHTML.trim() !== "") gsap.from(visual, { scrollTrigger: { trigger: block, start: "top 80%" }, y: 30, opacity: 0, duration: 1.2, ease: "power2.out", delay: 0.2 });
-            });
-
-            // 4. ЕСЛИ ЗАГРУЗЯТСЯ КАРТИНКИ И РАЗДВИНУТ БЛОКИ — ЛИНИЯ АВТОМАТИЧЕСКИ ПЕРЕРИСУЕТСЯ
-            let resizeTimer;
-            const resizeObserver = new ResizeObserver(() => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    drawLine();
-                    ScrollTrigger.refresh();
-                }, 150);
-            });
-            resizeObserver.observe(container); // Следим за изменением высоты контейнера
+            }
         });
-    </script>
+    });
+</script>
 </body>
 </html>
