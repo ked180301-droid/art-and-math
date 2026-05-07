@@ -279,124 +279,139 @@
 
     </div>
 
-    <script>
-        // Этот скрипт гарантированно чистый, без pin: true и конфликтов
-        window.addEventListener("load", () => {
-            gsap.registerPlugin(ScrollTrigger);
+   <script>
+    window.addEventListener("load", () => {
+        gsap.registerPlugin(ScrollTrigger);
 
-            const blocks = document.querySelectorAll('.story-block');
+        const blocks = document.querySelectorAll('.story-block');
 
-            blocks.forEach((block, index) => {
+        // ГЕНЕРИРУЕМ ПУТИ (ЗАМОРОЗОК БОЛЬШЕ НЕТ, СКРОЛЛ СВОБОДНЫЙ)
+        blocks.forEach((block, index) => {
+            
+            // 1. Создаем SVG с координатами в процентах (0-100)
+            block.insertAdjacentHTML('afterbegin', `
+                <svg class="local-svg" preserveAspectRatio="none" viewBox="0 0 100 100" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; overflow: visible;">
+                    <path class="path-front" vector-effect="non-scaling-stroke" fill="none" stroke="#d93838" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            `);
+
+            const path = block.querySelector('.path-front');
+            
+            // Координаты теперь всегда от 0 до 100
+            const centerX = 50; 
+            const centerY = 50;
+            
+            let startX = centerX;
+            let d = `M${startX},0 `; // Начинаем всегда сверху по центру (0%)
+
+            const isLeftLayout = block.classList.contains('layout-text-left');
+            // Картинка занимает либо левую (25%), либо правую (75%) часть
+            const targetX = isLeftLayout ? 75 : 25;
+
+            if (block.id === 'loop-block') {
+                // === ПЕТЛЯ (без остановки экрана) ===
+                const loopCenter = targetX; 
+                const sign = isLeftLayout ? 1 : -1; 
                 
-                // Создаем SVG. viewBox="0 0 100 100" позволяет линии растягиваться как резина без разрывов
-                block.insertAdjacentHTML('afterbegin', `
-                    <svg class="local-svg" preserveAspectRatio="none" viewBox="0 0 100 100">
-                        <path class="path-front" vector-effect="non-scaling-stroke"></path>
-                    </svg>
-                `);
+                d += `C${centerX},25 ${loopCenter + (10 * sign)},30 ${loopCenter + (10 * sign)},40 `;
+                d += `C${loopCenter + (10 * sign)},60 ${loopCenter - (15 * sign)},60 ${loopCenter - (15 * sign)},50 `;
+                d += `C${loopCenter - (15 * sign)},35 ${loopCenter + (5 * sign)},35 ${loopCenter},50 `;
+                d += `C${loopCenter - (5 * sign)},70 ${centerX},75 ${centerX},100 `;
 
-                const path = block.querySelector('.path-front');
-                const centerX = 50; 
-                const centerY = 50;
+            } else if (block.id === 'voice-block') {
+                // === ЗВУКОВАЯ ВОЛНА ===
+                const waveStartX = isLeftLayout ? 55 : 5; 
+                const waveEndX = isLeftLayout ? 95 : 45; 
                 
-                let startX = centerX;
-                let d = `M${startX},0 `; 
-
-                const isLeftLayout = block.classList.contains('layout-text-left');
-                const targetX = isLeftLayout ? 75 : 25;
-
-                if (block.id === 'loop-block') {
-                    const loopCenter = targetX; 
-                    const sign = isLeftLayout ? 1 : -1; 
-                    
-                    d += `C${centerX},25 ${loopCenter + (10 * sign)},30 ${loopCenter + (10 * sign)},40 `;
-                    d += `C${loopCenter + (10 * sign)},60 ${loopCenter - (15 * sign)},60 ${loopCenter - (15 * sign)},50 `;
-                    d += `C${loopCenter - (15 * sign)},35 ${loopCenter + (5 * sign)},35 ${loopCenter},50 `;
-                    d += `C${loopCenter - (5 * sign)},70 ${centerX},75 ${centerX},100 `;
-
-                } else if (block.id === 'voice-block') {
-                    const waveStartX = isLeftLayout ? 55 : 5; 
-                    const waveEndX = isLeftLayout ? 95 : 45; 
-                    
-                    d += `C${startX},25 ${waveStartX},40 ${waveStartX},50 `;
-                    
-                    const amps = [0, 5, -5, 10, -10, 15, -15, 20, -20, 25, -25, 30, -30, 20, -20, 10, -10, 5, -5, 0];
-                    const stepX = (waveEndX - waveStartX) / (amps.length - 1);
-                    
-                    amps.forEach((amp, i) => { d += `L${waveStartX + i * stepX},${centerY + amp} `; });
-                    
-                    d += `C${waveEndX},60 ${centerX},75 ${centerX},100 `;
-
-                } else if (block.id === 'heart-block') {
-                    const heartStartX = isLeftLayout ? 55 : 5; 
-                    const heartEndX = isLeftLayout ? 95 : 45; 
-                    
-                    d += `C${startX},25 ${heartStartX},40 ${heartStartX},50 `;
-                    
-                    const amps = [0, 2, -2, 5, -5, 8, -8, 15, -20, 35, -40, 20, -15, 5, -5, 2, -2, 0];
-                    const stepX = (heartEndX - heartStartX) / (amps.length - 1);
-                    
-                    amps.forEach((amp, i) => { d += `L${heartStartX + i * stepX},${centerY + amp} `; });
-                    
-                    d += `C${heartEndX},60 ${centerX},75 ${centerX},100 `;
-
-                } else {
-                    const hasImage = block.querySelector('.story-image') && block.querySelector('.story-image').getAttribute('src') !== "";
-                    
-                    if (hasImage) {
-                        d += `C${startX},25 ${targetX},40 ${targetX},50 `;
-                        d += `C${targetX},60 ${centerX},75 ${centerX},100 `;
-                    } else {
-                        d += `L${centerX},100 `; 
-                    }
-                }
-
-                path.setAttribute('d', d);
-
-                // Привязка линии к скроллу
-                requestAnimationFrame(() => {
-                    const pathLength = path.getTotalLength() + 5; 
-                    path.style.strokeDasharray = pathLength;
-                    path.style.strokeDashoffset = pathLength;
-
-                    const isLastBlock = index === blocks.length - 1;
-                    
-                    gsap.to(path, {
-                        strokeDashoffset: 0,
-                        ease: "none",
-                        scrollTrigger: {
-                            trigger: block,
-                            start: "top center", 
-                            end: isLastBlock ? "bottom bottom" : "bottom center", 
-                            scrub: true
-                        }
-                    });
+                d += `C${startX},25 ${waveStartX},40 ${waveStartX},50 `;
+                
+                const amps = [0, 5, -5, 10, -10, 15, -15, 20, -20, 25, -25, 30, -30, 20, -20, 10, -10, 5, -5, 0];
+                const stepX = (waveEndX - waveStartX) / (amps.length - 1);
+                
+                amps.forEach((amp, i) => { 
+                    d += `L${waveStartX + i * stepX},${centerY + amp} `; 
                 });
+                
+                d += `C${waveEndX},60 ${centerX},75 ${centerX},100 `;
 
-                // Анимация текста и картинок
-                const text = block.querySelector(".story-text");
-                const visual = block.querySelector(".story-visual");
+            } else if (block.id === 'heart-block') {
+                // === КАРДИОГРАММА ===
+                const heartStartX = isLeftLayout ? 55 : 5; 
+                const heartEndX = isLeftLayout ? 95 : 45; 
+                
+                d += `C${startX},25 ${heartStartX},40 ${heartStartX},50 `;
+                
+                const amps = [0, 2, -2, 5, -5, 8, -8, 15, -20, 35, -40, 20, -15, 5, -5, 2, -2, 0];
+                const stepX = (heartEndX - heartStartX) / (amps.length - 1);
+                
+                amps.forEach((amp, i) => { 
+                    d += `L${heartStartX + i * stepX},${centerY + amp} `; 
+                });
+                
+                d += `C${heartEndX},60 ${centerX},75 ${centerX},100 `;
 
-                if(text) {
-                    gsap.from(text, {
-                        scrollTrigger: { trigger: block, start: "top 80%" },
-                        y: 30, opacity: 0, duration: 1.2, ease: "power2.out"
-                    });
+            } else {
+                // === ОБЫЧНЫЕ БЛОКИ ===
+                const hasImage = block.querySelector('.story-image') && block.querySelector('.story-image').getAttribute('src') !== "";
+                
+                if (hasImage) {
+                    d += `C${startX},25 ${targetX},40 ${targetX},50 `;
+                    d += `C${targetX},60 ${centerX},75 ${centerX},100 `;
+                } else {
+                    d += `L${centerX},100 `; // Прямая линия до самого низа (100%)
                 }
-                if(visual && visual.innerHTML.trim() !== "") {
-                    gsap.from(visual, {
-                        scrollTrigger: { trigger: block, start: "top 80%" },
-                        y: 30, opacity: 0, duration: 1.2, ease: "power2.out", delay: 0.2
-                    });
-                }
+            }
+
+            path.setAttribute('d', d);
+
+            // 3. АНИМАЦИЯ (привязана строго к скроллу)
+            requestAnimationFrame(() => {
+                const pathLength = path.getTotalLength() + 5; 
+                path.style.strokeDasharray = pathLength;
+                path.style.strokeDashoffset = pathLength;
+
+                // Для самого последнего блока рисуем линию до конца страницы
+                const isLastBlock = index === blocks.length - 1;
+                
+                gsap.to(path, {
+                    strokeDashoffset: 0,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: block,
+                        start: "top center", 
+                        end: isLastBlock ? "bottom bottom" : "bottom center", 
+                        scrub: true
+                    }
+                });
             });
 
-            // Наблюдатель за изменением размеров страницы (если картинки загрузятся позже)
-            const resizeObserver = new ResizeObserver(() => {
-                ScrollTrigger.refresh();
-            });
-            resizeObserver.observe(document.body);
+            // 4. ПОЯВЛЕНИЕ ТЕКСТА
+            const text = block.querySelector(".story-text");
+            const visual = block.querySelector(".story-visual");
+
+            if(text) {
+                gsap.from(text, {
+                    scrollTrigger: { trigger: block, start: "top 80%" },
+                    y: 30, opacity: 0, duration: 1.2, ease: "power2.out"
+                });
+            }
+            if(visual && visual.innerHTML.trim() !== "") {
+                gsap.from(visual, {
+                    scrollTrigger: { trigger: block, start: "top 80%" },
+                    y: 30, opacity: 0, duration: 1.2, ease: "power2.out", delay: 0.2
+                });
+            }
         });
-    </script>
+
+        // Пересчет координат, если загрузились шрифты
+        setTimeout(() => { ScrollTrigger.refresh(); }, 500);
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => { ScrollTrigger.refresh(); }, 250);
+        });
+    });
+</script>
 </body>
 </html>
