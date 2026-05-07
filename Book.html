@@ -314,39 +314,41 @@
 
         const blocks = document.querySelectorAll('.story-block');
 
+        // ГЕНЕРИРУЕМ ПУТИ (ЗАМОРОЗОК БОЛЬШЕ НЕТ, СКРОЛЛ СВОБОДНЫЙ)
         blocks.forEach((block, index) => {
             
-            // 1. Создаем SVG с viewBox="0 0 100 100" (в процентах!)
+            // 1. Создаем SVG с координатами в процентах (0-100)
             block.insertAdjacentHTML('afterbegin', `
                 <svg class="local-svg" preserveAspectRatio="none" viewBox="0 0 100 100" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; overflow: visible;">
-                    <path class="path-front" vector-effect="non-scaling-stroke" fill="none" stroke="#d93838" stroke-width="1.5" stroke-linecap="round"></path>
+                    <path class="path-front" vector-effect="non-scaling-stroke" fill="none" stroke="#d93838" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                 </svg>
             `);
 
             const path = block.querySelector('.path-front');
             
-            // Координаты в процентах (0-100)
+            // Координаты теперь всегда от 0 до 100
             const centerX = 50; 
             const centerY = 50;
             
             let startX = centerX;
-            let d = `M${startX},0 `; // Начинаем всегда сверху по центру
+            let d = `M${startX},0 `; // Начинаем всегда сверху по центру (0%)
 
             const isLeftLayout = block.classList.contains('layout-text-left');
-            // Картинка занимает либо левую (25%), либо правую (75%) часть экрана
+            // Картинка занимает либо левую (25%), либо правую (75%) часть
             const targetX = isLeftLayout ? 75 : 25;
 
             if (block.id === 'loop-block') {
+                // === ПЕТЛЯ (без остановки экрана) ===
                 const loopCenter = targetX; 
                 const sign = isLeftLayout ? 1 : -1; 
                 
-                // Рисуем петлю в координатах от 0 до 100
                 d += `C${centerX},25 ${loopCenter + (10 * sign)},30 ${loopCenter + (10 * sign)},40 `;
                 d += `C${loopCenter + (10 * sign)},60 ${loopCenter - (15 * sign)},60 ${loopCenter - (15 * sign)},50 `;
                 d += `C${loopCenter - (15 * sign)},35 ${loopCenter + (5 * sign)},35 ${loopCenter},50 `;
                 d += `C${loopCenter - (5 * sign)},70 ${centerX},75 ${centerX},100 `;
 
             } else if (block.id === 'voice-block') {
+                // === ЗВУКОВАЯ ВОЛНА ===
                 const waveStartX = isLeftLayout ? 55 : 5; 
                 const waveEndX = isLeftLayout ? 95 : 45; 
                 
@@ -362,6 +364,7 @@
                 d += `C${waveEndX},60 ${centerX},75 ${centerX},100 `;
 
             } else if (block.id === 'heart-block') {
+                // === КАРДИОГРАММА ===
                 const heartStartX = isLeftLayout ? 55 : 5; 
                 const heartEndX = isLeftLayout ? 95 : 45; 
                 
@@ -377,31 +380,28 @@
                 d += `C${heartEndX},60 ${centerX},75 ${centerX},100 `;
 
             } else {
+                // === ОБЫЧНЫЕ БЛОКИ ===
                 const hasImage = block.querySelector('.story-image') && block.querySelector('.story-image').getAttribute('src') !== "";
                 
                 if (hasImage) {
-                    // Плавно огибаем картинку
                     d += `C${startX},25 ${targetX},40 ${targetX},50 `;
                     d += `C${targetX},60 ${centerX},75 ${centerX},100 `;
                 } else {
-                    // Прямая линия ровно по центру
-                    d += `L${centerX},100 `;
+                    d += `L${centerX},100 `; // Прямая линия до самого низа (100%)
                 }
             }
 
             path.setAttribute('d', d);
 
-            // 3. АНИМИРУЕМ ЛИНИЮ
-            // Используем requestAnimationFrame, чтобы браузер точно успел отрендерить SVG
+            // 3. АНИМАЦИЯ (привязана строго к скроллу)
             requestAnimationFrame(() => {
-                const pathLength = path.getTotalLength() + 5; // Небольшой запас
+                const pathLength = path.getTotalLength() + 5; 
                 path.style.strokeDasharray = pathLength;
                 path.style.strokeDashoffset = pathLength;
 
+                // Для самого последнего блока рисуем линию до конца страницы
                 const isLastBlock = index === blocks.length - 1;
                 
-                // Начинаем анимацию, когда верх блока пересекает центр экрана
-                // Заканчиваем, когда низ блока пересекает центр экрана
                 gsap.to(path, {
                     strokeDashoffset: 0,
                     ease: "none",
@@ -414,7 +414,7 @@
                 });
             });
 
-            // 4. АНИМАЦИЯ ПОЯВЛЕНИЯ ТЕКСТА И КАРТИНОК
+            // 4. ПОЯВЛЕНИЕ ТЕКСТА
             const text = block.querySelector(".story-text");
             const visual = block.querySelector(".story-visual");
 
@@ -432,17 +432,13 @@
             }
         });
 
-        // Обновляем триггеры после загрузки всех картинок/шрифтов
-        setTimeout(() => {
-            ScrollTrigger.refresh();
-        }, 500);
+        // Пересчет координат, если загрузились шрифты
+        setTimeout(() => { ScrollTrigger.refresh(); }, 500);
 
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => { 
-                ScrollTrigger.refresh(); 
-            }, 250);
+            resizeTimer = setTimeout(() => { ScrollTrigger.refresh(); }, 250);
         });
     });
 </script>
