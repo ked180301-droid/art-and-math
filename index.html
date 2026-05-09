@@ -570,12 +570,16 @@ body.modal-open {
 
     <!-- ХАОТИЧНЫЕ КАРТОЧКИ И ЭЛЕМЕНТЫ -->
         <div class="cards-container">
-    <div class="polaroid" style="top: 200px; left: 15%; transform: rotate(-4deg); z-index: 6;">
-        <div class="tape" style="transform: rotate(-2deg);"></div>
-        <img src="pictures_7.png" loading="lazy" alt="Стол Дани">
-        <div class="caption">Рабочий стол Дани</div>
-    </div>
-
+   <div class="polaroid" style="top: 200px; left: 15%; transform: rotate(-4deg); z-index: 6;">
+    <div class="tape" style="transform: rotate(-2deg);"></div>
+    <img src="pictures_7.png" loading="lazy" alt="Стол Дани"
+         onmousedown="this.style.filter='blur(5px)'; showSecret('🔍', 'Где-то здесь гениальные идеи... но сейчас всё как в тумане.');"
+         onmouseup="this.style.filter='none';"
+         onmouseleave="this.style.filter='none';"
+         ontouchstart="this.style.filter='blur(5px)'; showSecret('🔍', 'Где-то здесь гениальные идеи... но сейчас всё как в тумане.');"
+         ontouchend="this.style.filter='none';">
+    <div class="caption">Рабочий стол Дани</div>
+</div>
     <div class="polaroid" style="top: 250px; right: 20%; transform: rotate(5deg); z-index: 7;">
         <div class="tape" style="transform: rotate(3deg);"></div>
         <img src="pictures_9.png" loading="lazy" alt="Стол Эвелины">
@@ -636,6 +640,26 @@ body.modal-open {
         <div class="caption"></div>
     </div>
 
+    <div class="polaroid" style="top: 1440px; right: 20%; transform: rotate(6deg); z-index: 5;">
+        <div class="tape" style="transform: rotate(4deg);"></div>
+        <img src="pictures_45.png" loading="lazy" alt="Первая прогулка по Москве">
+        <div class="caption">Ветер старался испортить кадр, но мы старались сильнее.</div>
+    </div>
+
+    <div class="polaroid" style="top: 1320px; right: 10%; transform: rotate(-6deg); perspective: 1000px; z-index: 7;">
+    <div class="tape" style="transform: rotate(-4deg); z-index: 10;"></div>
+    <!-- Контейнер для переворота -->
+    <div class="flip-inner" onclick="this.style.transform = this.style.transform === 'rotateY(180deg)' ? 'rotateY(0deg)' : 'rotateY(180deg)'" style="transition: transform 0.6s; transform-style: preserve-3d; position: relative;">
+        <!-- Лицевая сторона -->
+        <img src="pictures_47.png" loading="lazy" alt="В музее академии" style="backface-visibility: hidden;">
+        <!-- Обратная сторона (показывается при перевороте) -->
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #fff; backface-visibility: hidden; transform: rotateY(180deg); display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; border: 1px solid #ddd;">
+            <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; color: #d93838; text-align: center;">В следующий раз сначала ...., потом музей!</p>
+        </div>
+    </div>
+    <div class="caption">Что фоткаешь?</div>
+</div>
+
     <div class="scrap-item" style="top: 1450px; left: 40%; width: 200px; transform: rotate(-10deg); z-index: 10;">
         <img src="PNG_1.png" loading="lazy" alt="Слойки">
     </div>
@@ -643,18 +667,19 @@ body.modal-open {
     <div class="polaroid" style="top: 1550px; right: 10%; transform: rotate(-4deg); z-index: 6;">
         <div class="tape" style="transform: rotate(-2deg);"></div>
         <img src="pictures_28.png" loading="lazy" alt="Руки в кафе">
-        <div class="caption"></div>
+        <div class="caption">...разговоры и ещё один час вместе</div>
     </div>
 
     <div class="scrap-item" style="top: 1650px; right: 40%; width: 190px; transform: rotate(15deg); z-index: 8;">
         <img src="PNG_2.png" loading="lazy" alt="Пирог">
     </div>
 
-    <div class="polaroid" style="top: 1850px; right: 25%; transform: rotate(-6deg); z-index: 5;">
-        <div class="tape" style="transform: rotate(-4deg);"></div>
-        <img src="pictures_2.png" loading="lazy" alt="Даня на скалодроме">
-        <div class="caption">Покорение цветной стены</div>
-    </div>
+<div class="polaroid" style="top: 1850px; right: 25%; transform: rotate(-6deg); z-index: 5;">
+    <div class="tape" style="transform: rotate(-4deg);"></div>
+    <img src="pictures_2.png" loading="lazy" alt="Даня на скалодроме" 
+         onclick="this.style.transition='transform 1s ease'; this.style.transform = this.style.transform === 'rotate(180deg)' ? 'rotate(0deg)' : 'rotate(180deg)'; showSecret('🧗', 'Смена гравитации! Теперь потолок — это пол.');">
+    <div class="caption">Покорение цветной стены</div>
+</div>
 
     <div class="polaroid" style="top: 1850px; right: 60%; transform: rotate(-5deg); z-index: 5;">
         <div class="tape" style="transform: rotate(-4deg);"></div>
@@ -676,11 +701,12 @@ body.modal-open {
         <img src="PNG_7.png" loading="lazy" alt="Билеты в Пушкинский">
     </div>
 
-    <div class="polaroid" style="top: 2250px; left: 10%; transform: rotate(-5deg); z-index: 5;">
-        <div class="tape" style="transform: rotate(-3deg);"></div>
-        <img src="pictures_14.png" loading="lazy" alt="Следы на снегу">
-        <div class="caption">Тайна ночных следов</div>
-    </div>
+<div class="polaroid" style="top: 2250px; left: 10%; transform: rotate(-5deg); z-index: 5;">
+    <div class="tape" style="transform: rotate(-3deg);"></div>
+    <img src="pictures_14.png" loading="lazy" alt="Следы на снегу" 
+         onclick="this.style.transition='opacity 2s'; this.style.opacity='0.2'; setTimeout(() => this.style.opacity='1', 3000); showSecret('❄️', 'Весна пришла, следы растаяли. Но мы-то помним!');">
+    <div class="caption">Тайна ночных следов</div>
+</div>
 
     <div class="polaroid" style="top: 4250px; left: 30%; transform: rotate(-7deg); z-index: 5;">
         <div class="tape" style="transform: rotate(-3deg);"></div>
@@ -707,6 +733,13 @@ body.modal-open {
         <img src="pictures_1.png" loading="lazy" alt="Даня в ммаме">
         <div class="caption"></div>
     </div>
+            
+<div class="polaroid" style="top: 2100px; right: 25%; transform: rotate(3deg); z-index: 5;">
+    <div class="tape" style="transform: rotate(1deg);"></div>
+    <!-- Изначально opacity 0.05, при клике плавно становится 1 -->
+    <img src="pictures_48.png" loading="lazy" alt="Конференция" style="opacity: 0.05; transition: opacity 3s ease-in;" onclick="this.style.opacity = '1'; setTimeout(() => showSecret('📸', 'Некоторые моменты нужно просто подождать, чтобы они проявились.'), 3000);">
+    <div class="caption">Моя первая фотография тебя</div>
+</div>
 
     <div class="polaroid" id="zoom-polaroid" style="top: 2750px; left: 15%; transform: rotate(3deg); z-index: 5;">
         <div class="tape" style="transform: rotate(1deg);"></div>
@@ -792,28 +825,31 @@ body.modal-open {
         <div class="caption">Музей</div>
     </div>
 
-    <div class="polaroid" style="top: 4300px; left: 20%; transform: rotate(-3deg); z-index: 7;">
-        <div class="tape" style="transform: rotate(-4deg);"></div>
-        <img src="pictures_38.png" loading="lazy" alt="Даня с котиком">
-        <div class="caption"></div>
-    </div>
-
+<div class="polaroid" style="top: 4300px; left: 20%; transform: rotate(-3deg); z-index: 7;"
+     onmousemove="this.dataset.scratches = (parseInt(this.dataset.scratches || 0) + 1); if(this.dataset.scratches == 50) { showSecret('🐾' 'Ты погладил котика!'); this.dataset.scratches = 0; }">
+    <div class="tape" style="transform: rotate(-4deg);"></div>
+    <img src="pictures_38.png" loading="lazy" alt="Даня с котиком">
+    <div class="caption">Конкуренция за твое внимание была жесткой, но я победила</div>
+</div>
+            
     <div class="polaroid" style="top: 4250px; right: 50%; transform: rotate(6deg); z-index: 7;">
-        <div class="tape" style="transform: rotate(-4deg);"></div>
-        <img src="pictures_39.png" loading="lazy" alt="Мы танцуем">
-        <div class="caption">Любю с тобой танцевать!</div>
-    </div>
+    <div class="tape" style="transform: rotate(-4deg);"></div>
+    <img src="pictures_39.png" loading="lazy" alt="Мы танцуем"
+         onclick="this.parentElement.animate([{transform: 'rotate(6deg)'}, {transform: 'rotate(-6deg)'}, {transform: 'rotate(6deg)'}], {duration: 500, iterations: 2}); showSecret('💃🕺', 'Танцуй так, как будто никто не видит!');">
+    <div class="caption">Люблю с тобой танцевать!</div>
+</div>
 
-    <div class="polaroid" style="top: 4200px; right: 15%; transform: rotate(3deg); z-index: 7;">
-        <div class="tape" style="transform: rotate(-4deg);"></div>
-        <img src="pictures_40.png" loading="lazy" alt="Я на скалодроме">
-        <div class="caption"></div>
-    </div>
+<div class="polaroid" style="top: 4000px; left: 40%; transform: rotate(-6deg); z-index: 7; transition: transform 0.5s ease-in, top 0.5s ease-in;" id="fontanka-photo">
+    <!-- Клик по скотчу роняет его, а само фото смещается -->
+    <div class="tape" style="transform: rotate(-4deg); transition: top 1s, opacity 1s;" onclick="this.style.top = '100px'; this.style.opacity = '0'; document.getElementById('fontanka-photo').style.transform = 'rotate(25deg)'; document.getElementById('fontanka-photo').style.top = '4050px'; showSecret('📎', 'Ой, ты что?! Страшно ведь!.'); event.stopPropagation();"></div>
+    <img src="pictures_40.png" loading="lazy" alt="Я на скалодроме">
+    <div class="caption">Пытаюсь быть грациозной ланью, но пока так...</div>
+</div>
             
     <div class="polaroid" style="top: 4300px; left: 50%; transform: rotate(-6deg); z-index: 7;">
         <div class="tape" style="transform: rotate(-4deg);"></div>
         <img src="pictures_42.png" loading="lazy" alt="Даня на скалодроме">
-        <div class="caption"></div>
+        <div class="caption">Каждый раз восхищаюсь тобой.</div>
     </div>
 
     <div class="polaroid" style="top: 4500px; left: 20%; transform: rotate(6deg); z-index: 7;">
