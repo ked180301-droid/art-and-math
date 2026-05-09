@@ -736,15 +736,14 @@ body.modal-open {
             
 <div class="polaroid" style="top: 2100px; right: 25%; transform: rotate(3deg); z-index: 5;">
     <div class="tape" style="transform: rotate(1deg);"></div>
-    <!-- Изначально opacity 0.05, при клике плавно становится 1 -->
-    <img src="pictures_48.png" loading="lazy" alt="Конференция" style="opacity: 0.05; transition: opacity 3s ease-in;" onclick="this.style.opacity = '1'; setTimeout(() => showSecret('📸', 'Некоторые моменты нужно просто подождать, чтобы они проявились.'), 3000);">
+    <img src="pictures_48.png" loading="lazy" alt="Конференция"> 
     <div class="caption">Моя первая фотография тебя</div>
 </div>
 
     <div class="polaroid" id="zoom-polaroid" style="top: 2750px; left: 15%; transform: rotate(3deg); z-index: 5;">
         <div class="tape" style="transform: rotate(1deg);"></div>
         <img src="pictures_3.png" loading="lazy" alt="Селфи с рогами">
-        <div class="caption">Рога что надо!</div>
+        <div class="caption">Примерка новых рожек</div>
     </div>
 
     <div class="polaroid" style="top: 2850px; right: 10%; transform: rotate(-5deg); z-index: 6;">
@@ -822,26 +821,29 @@ body.modal-open {
     <div class="polaroid" style="top: 4150px; left: 15%; transform: rotate(4deg); z-index: 6;">
         <div class="tape" style="transform: rotate(2deg);"></div>
         <video src="VIDEO_5.mp4" preload="none" poster="" controls playsinline style="width: 100%; max-height: 400px; object-fit: cover; background: #000;"></video>
-        <div class="caption">Музей</div>
+        <div class="caption">Наш первый совместный поход в музей</div>
     </div>
 
+<!-- Пасхалка с котиком (поводи мышкой по фото 50 раз) -->
 <div class="polaroid" style="top: 4300px; left: 20%; transform: rotate(-3deg); z-index: 7;"
-     onmousemove="this.dataset.scratches = (parseInt(this.dataset.scratches || 0) + 1); if(this.dataset.scratches == 50) { showSecret('🐾' 'Ты погладил котика!'); this.dataset.scratches = 0; }">
+     onmousemove="this.dataset.scratches = (parseInt(this.dataset.scratches || 0) + 1); if(this.dataset.scratches == 50) { showSecret('🐾', 'Ты погладил котика!'); this.dataset.scratches = 0; }">
     <div class="tape" style="transform: rotate(-4deg);"></div>
     <img src="pictures_38.png" loading="lazy" alt="Даня с котиком">
     <div class="caption">Конкуренция за твое внимание была жесткой, но я победила</div>
 </div>
-            
-    <div class="polaroid" style="top: 4250px; right: 50%; transform: rotate(6deg); z-index: 7;">
+
+<!-- Пасхалка с танцами (клик по самой фотографии) -->
+<div class="polaroid" style="top: 4250px; right: 50%; transform: rotate(6deg); z-index: 7;">
     <div class="tape" style="transform: rotate(-4deg);"></div>
     <img src="pictures_39.png" loading="lazy" alt="Мы танцуем"
          onclick="this.parentElement.animate([{transform: 'rotate(6deg)'}, {transform: 'rotate(-6deg)'}, {transform: 'rotate(6deg)'}], {duration: 500, iterations: 2}); showSecret('💃🕺', 'Танцуй так, как будто никто не видит!');">
     <div class="caption">Люблю с тобой танцевать!</div>
 </div>
 
+<!-- Пасхалка с падающим фото (клик строго по КУСОЧКУ СКОТЧА сверху) -->
 <div class="polaroid" style="top: 4000px; left: 40%; transform: rotate(-6deg); z-index: 7; transition: transform 0.5s ease-in, top 0.5s ease-in;" id="fontanka-photo">
-    <!-- Клик по скотчу роняет его, а само фото смещается -->
-    <div class="tape" style="transform: rotate(-4deg); transition: top 1s, opacity 1s;" onclick="this.style.top = '100px'; this.style.opacity = '0'; document.getElementById('fontanka-photo').style.transform = 'rotate(25deg)'; document.getElementById('fontanka-photo').style.top = '4050px'; showSecret('📎', 'Ой, ты что?! Страшно ведь!.'); event.stopPropagation();"></div>
+    <!-- Обрати внимание на transform: translateY в скотче — так он точно упадет вниз -->
+    <div class="tape" style="transform: rotate(-4deg); transition: transform 1s, opacity 1s;" onclick="this.style.transform = 'translateY(150px) rotate(-20deg)'; this.style.opacity = '0'; document.getElementById('fontanka-photo').style.transform = 'rotate(25deg)'; document.getElementById('fontanka-photo').style.top = '4050px'; showSecret('📎', 'Ой, ты что?! Страшно ведь!.'); event.stopPropagation();"></div>
     <img src="pictures_40.png" loading="lazy" alt="Я на скалодроме">
     <div class="caption">Пытаюсь быть грациозной ланью, но пока так...</div>
 </div>
@@ -2056,6 +2058,54 @@ function triggerChaosEgg() {
 
         closeBtn.addEventListener('click', closeModal);
     });
+        function showSecret(icon, text) {
+    // Удаляем старую подсказку, если она есть
+    const existing = document.getElementById('secret-toast');
+    if (existing) existing.remove();
+
+    // Создаем новую красивую плашку
+    const toast = document.createElement('div');
+    toast.id = 'secret-toast';
+    toast.innerHTML = `<span style="font-size: 24px; margin-right: 10px;">${icon}</span> ${text}`;
+    
+    // Стилизуем её под дизайн твоего сайта
+    Object.assign(toast.style, {
+        position: 'fixed',
+        bottom: '30px',
+        left: '50%',
+        transform: 'translateX(-50%) translateY(50px)',
+        backgroundColor: '#d93838', // твой красный цвет
+        color: '#f8f4e6',           // цвет фона сайта
+        padding: '15px 25px',
+        borderRadius: '50px',
+        fontFamily: "'Cormorant Garamond', serif",
+        fontSize: '1.3rem',
+        fontStyle: 'italic',
+        display: 'flex',
+        alignItems: 'center',
+        boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
+        opacity: '0',
+        transition: 'all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+        zIndex: '9999',
+        pointerEvents: 'none',
+        whiteSpace: 'nowrap'
+    });
+
+    document.body.appendChild(toast);
+
+    // Плавное появление
+    setTimeout(() => {
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+        toast.style.opacity = '1';
+    }, 10);
+
+    // Исчезновение через 3 секунды
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => toast.remove(), 500);
+    }, 3000);
+}
 </script>
 </body>
 </html>
