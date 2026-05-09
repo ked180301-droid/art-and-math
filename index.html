@@ -2058,54 +2058,6 @@ function triggerChaosEgg() {
 
         closeBtn.addEventListener('click', closeModal);
     });
-        function showSecret(icon, text) {
-    // Удаляем старую подсказку, если она есть
-    const existing = document.getElementById('secret-toast');
-    if (existing) existing.remove();
-
-    // Создаем новую красивую плашку
-    const toast = document.createElement('div');
-    toast.id = 'secret-toast';
-    toast.innerHTML = `<span style="font-size: 24px; margin-right: 10px;">${icon}</span> ${text}`;
-    
-    // Стилизуем её под дизайн твоего сайта
-    Object.assign(toast.style, {
-        position: 'fixed',
-        bottom: '30px',
-        left: '50%',
-        transform: 'translateX(-50%) translateY(50px)',
-        backgroundColor: '#d93838', // твой красный цвет
-        color: '#f8f4e6',           // цвет фона сайта
-        padding: '15px 25px',
-        borderRadius: '50px',
-        fontFamily: "'Cormorant Garamond', serif",
-        fontSize: '1.3rem',
-        fontStyle: 'italic',
-        display: 'flex',
-        alignItems: 'center',
-        boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
-        opacity: '0',
-        transition: 'all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        zIndex: '9999',
-        pointerEvents: 'none',
-        whiteSpace: 'nowrap'
-    });
-
-    document.body.appendChild(toast);
-
-    // Плавное появление
-    setTimeout(() => {
-        toast.style.transform = 'translateX(-50%) translateY(0)';
-        toast.style.opacity = '1';
-    }, 10);
-
-    // Исчезновение через 3 секунды
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(-50%) translateY(20px)';
-        setTimeout(() => toast.remove(), 500);
-    }, 3000);
-}
 </script>
 </body>
 </html>
