@@ -2058,15 +2058,9 @@ function triggerChaosEgg() {
 
 <!-- ПАСХАЛКА НА ДЕНЬ РОЖДЕНИЯ (12 МАЯ) -->
 <style>
-    /* Анимация падающих цветов */
     @keyframes flowerFall {
         0% { transform: translateY(-10vh) rotate(0deg) scale(0.8); opacity: 1; }
         100% { transform: translateY(110vh) rotate(360deg) scale(1.2); opacity: 0; }
-    }
-    /* Легкое покачивание цветов на самом окне */
-    @keyframes gentleSway {
-        0%, 100% { margin-top: 0; }
-        50% { margin-top: -6px; }
     }
     
     .birthday-flower {
@@ -2091,7 +2085,6 @@ function triggerChaosEgg() {
     }
     
     .birthday-popup-content {
-        position: relative; /* Важно для позиционирования цветов по углам */
         background: #fff;
         padding: 40px;
         border-radius: 20px;
@@ -2103,21 +2096,6 @@ function triggerChaosEgg() {
         transform: scale(0.8);
         transition: transform 0.3s ease;
     }
-
-    /* Стили для цветочков на окне */
-    .box-flower {
-        position: absolute;
-        user-select: none;
-        pointer-events: none;
-        z-index: 10;
-        animation: gentleSway 3s ease-in-out infinite;
-        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); /* Легкая тень */
-    }
-    /* Расставляем их по разным краям */
-    .box-flower-1 { top: -20px; left: -15px; transform: rotate(-15deg); font-size: 2.2rem; }
-    .box-flower-2 { bottom: -15px; right: -20px; transform: rotate(25deg); animation-delay: 1s; font-size: 2.5rem; }
-    .box-flower-3 { top: -15px; right: 20px; transform: rotate(10deg); animation-delay: 2s; font-size: 1.8rem; }
-    .box-flower-4 { bottom: 10px; left: -10px; transform: rotate(-20deg); animation-delay: 0.5s; font-size: 1.5rem; }
 
     .birthday-popup-title {
         margin-top: 0;
@@ -2168,7 +2146,7 @@ function triggerChaosEgg() {
         if (isBirthday && !alreadySeen) {
             localStorage.setItem('danya_greeted_2026', 'true');
 
-            // 1. Падающие цветочки
+            // Падающие цветочки
             const flowers = ['🌸', '🌺', '💮', '🌼'];
             for (let i = 0; i < 40; i++) {
                 setTimeout(() => {
@@ -2185,21 +2163,15 @@ function triggerChaosEgg() {
                 }, Math.random() * 2000);
             }
 
-            // 2. Появление окна с цветами по краям
+            // Появление окна
             setTimeout(() => {
                 const overlay = document.createElement('div');
                 overlay.className = 'birthday-popup-overlay';
                 
                 overlay.innerHTML = `
                     <div class="birthday-popup-content">
-                        <!-- Цветочки, "прилипшие" к окну -->
-                        <div class="box-flower box-flower-1">🌸</div>
-                        <div class="box-flower box-flower-2">🌺</div>
-                        <div class="box-flower box-flower-3">🌼</div>
-                        <div class="box-flower box-flower-4">💮</div>
-                        
                         <h2 class="birthday-popup-title">С днём рождения, любимый! 🤍</h2>
-                        <p class="birthday-popup-text">Пусть твой новый год подарит тебе много ярких мгновений.</p>
+                        <p class="birthday-popup-text">Пусть твой новый год подарит тебя множество ярких мгновений.</p>
                         <button class="birthday-popup-btn" onclick="this.closest('.birthday-popup-overlay').style.opacity = '0'; this.closest('.birthday-popup-content').style.transform = 'scale(0.8)'; setTimeout(() => this.closest('.birthday-popup-overlay').remove(), 300)">Обнять и смотреть дальше</button>
                     </div>
                 `;
