@@ -2069,11 +2069,13 @@ function triggerChaosEgg() {
         user-select: none;
         top: -50px;
     }
+    
+    /* Светлый полупрозрачный фон, как стекло поверх сайта */
     .birthday-popup-overlay {
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(44, 44, 44, 0.6);
-        backdrop-filter: blur(3px);
+        background: rgba(248, 244, 230, 0.85); /* Цвет фона сайта #f8f4e6 с прозрачностью */
+        backdrop-filter: blur(4px);
         z-index: 10000;
         display: flex;
         align-items: center;
@@ -2081,43 +2083,69 @@ function triggerChaosEgg() {
         opacity: 0;
         transition: opacity 1s ease;
     }
+    
+    /* Сама записка (слегка под углом) */
     .birthday-popup-content {
+        position: relative;
         background-color: #f8f4e6;
-        padding: 40px;
-        border-radius: 8px;
+        padding: 50px 40px 40px;
         text-align: center;
-        max-width: 80%;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        transform: translateY(30px);
+        max-width: 400px;
+        border: 1px solid #d93838; /* Тонкая красная линия, как ваша невидимая нить */
+        transform: translateY(30px) rotate(-2deg); /* Слегка наклонена */
         transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-        border: 1px solid #d93838;
+        box-shadow: 5px 5px 20px rgba(0,0,0,0.05);
     }
+
+    /* Кусочек скотча сверху записки */
+    .birthday-popup-tape {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        width: 90px;
+        height: 25px;
+        background-color: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transform: translateX(-50%) rotate(3deg);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        z-index: 2;
+    }
+
+    /* Типографика как на сайте */
     .birthday-popup-title {
         font-family: 'Cormorant Garamond', serif;
-        font-size: 2.5rem;
+        font-size: 2.2rem;
+        font-weight: 300;
+        letter-spacing: 2px;
         color: #d93838;
         margin: 0 0 15px 0;
     }
+    
     .birthday-popup-text {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 1.5rem;
-        font-style: italic;
-        color: #4a4a4a;
-        margin: 0 0 25px 0;
-    }
-    .birthday-popup-btn {
-        background-color: #d93838;
-        color: #f8f4e6;
-        border: none;
-        padding: 10px 30px;
         font-family: 'Playfair Display', serif;
         font-size: 1.2rem;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: background-color 0.3s;
+        font-style: italic;
+        color: #4a4a4a;
+        margin: 0 0 30px 0;
+        line-height: 1.6;
     }
+
+    /* Изящная кнопка */
+    .birthday-popup-btn {
+        background-color: transparent;
+        color: #2c2c2c;
+        border: 1px solid #2c2c2c;
+        padding: 8px 25px;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.2rem;
+        font-style: italic;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
     .birthday-popup-btn:hover {
-        background-color: #b82b2b;
+        color: #d93838;
+        border-color: #d93838;
     }
 </style>
 
