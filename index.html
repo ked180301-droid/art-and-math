@@ -785,13 +785,13 @@ body.modal-open {
     <div class="polaroid" style="top: 3700px; right: 30%; transform: rotate(4deg); z-index: 7;">
         <div class="tape" style="transform: rotate(2deg);"></div>
         <img src="pictures_26.png" loading="lazy" alt="Селфи снизу">
-        <div class="caption"></div>
+        <div class="caption">Достаточно необычный ракурс</div>
     </div>
 
     <div class="polaroid" style="top: 3800px; left: 10%; transform: rotate(-3deg); z-index: 5;">
         <div class="tape" style="transform: rotate(-1deg);"></div>
         <img src="pictures_29.png" loading="lazy" alt="Даня за работой">
-        <div class="caption">Самый частый вид</div>
+        <div class="caption">Мне нравится подходить и обнимать тебя, когда ты работаешь</div>
     </div>
 
     <div class="polaroid" style="top: 3900px; right: 15%; transform: rotate(5deg); z-index: 6;">
@@ -2139,7 +2139,7 @@ function triggerChaosEgg() {
         const day = today.getDate();
         
         // Для проверки сейчас можно поменять на = true;
-        const isBirthday = true; // (month === 5 && day === 12);
+        const isBirthday = (month === 5 && day === 12);
         
         const alreadySeen = localStorage.getItem('danya_greeted_2026');
 
@@ -2171,7 +2171,7 @@ function triggerChaosEgg() {
                 overlay.innerHTML = `
                     <div class="birthday-popup-content">
                         <h2 class="birthday-popup-title">С днём рождения, любимый! 🤍</h2>
-                        <p class="birthday-popup-text">Пусть твой новый год подарит тебя множество ярких мгновений.</p>
+                        <p class="birthday-popup-text">Пусть твой новый год подарит тебе множество ярких мгновений.</p>
                         <button class="birthday-popup-btn" onclick="this.closest('.birthday-popup-overlay').style.opacity = '0'; this.closest('.birthday-popup-content').style.transform = 'scale(0.8)'; setTimeout(() => this.closest('.birthday-popup-overlay').remove(), 300)">Обнять и смотреть дальше</button>
                     </div>
                 `;
