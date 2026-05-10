@@ -2055,5 +2055,132 @@ function triggerChaosEgg() {
         closeBtn.addEventListener('click', closeModal);
     });
 </script>
+
+    <!-- ПАСХАЛКА НА ДЕНЬ РОЖДЕНИЯ (12 МАЯ) -->
+<style>
+    @keyframes flowerFall {
+        0% { transform: translateY(-10vh) rotate(0deg) scale(0.8); opacity: 1; }
+        100% { transform: translateY(110vh) rotate(360deg) scale(1.2); opacity: 0; }
+    }
+    .birthday-flower {
+        position: fixed;
+        z-index: 9999;
+        pointer-events: none;
+        user-select: none;
+        top: -50px;
+    }
+    .birthday-popup-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(44, 44, 44, 0.6);
+        backdrop-filter: blur(3px);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 1s ease;
+    }
+    .birthday-popup-content {
+        background-color: #f8f4e6;
+        padding: 40px;
+        border-radius: 8px;
+        text-align: center;
+        max-width: 80%;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        transform: translateY(30px);
+        transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border: 1px solid #d93838;
+    }
+    .birthday-popup-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.5rem;
+        color: #d93838;
+        margin: 0 0 15px 0;
+    }
+    .birthday-popup-text {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.5rem;
+        font-style: italic;
+        color: #4a4a4a;
+        margin: 0 0 25px 0;
+    }
+    .birthday-popup-btn {
+        background-color: #d93838;
+        color: #f8f4e6;
+        border: none;
+        padding: 10px 30px;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .birthday-popup-btn:hover {
+        background-color: #b82b2b;
+    }
+</style>
+
+<script>
+    window.addEventListener("load", () => {
+        const today = new Date();
+        const month = today.getMonth() + 1; // Месяцы начинаются с 0, поэтому +1
+        const day = today.getDate();
+        
+        // КЛЮЧЕВАЯ СТРОКА: Проверяем, что сегодня 12 мая (5 месяц, 12 число)
+        const isBirthday = true; // (month === 5 && day === 12);
+        
+        // Проверяем, видел ли он уже поздравление (сохраняем в память браузера)
+        const alreadySeen = localStorage.getItem('danya_greeted_2026');
+
+        if (isBirthday && !alreadySeen) {
+            // Запоминаем, что он уже видел поздравление
+            localStorage.setItem('danya_greeted_2026', 'true');
+
+            // 1. Создаем падающие цветочки
+            const flowers = ['🌸', '🌺', '💮', '🌼'];
+            for (let i = 0; i < 40; i++) {
+                setTimeout(() => {
+                    const flower = document.createElement('div');
+                    flower.className = 'birthday-flower';
+                    flower.innerText = flowers[Math.floor(Math.random() * flowers.length)];
+                    flower.style.left = Math.random() * 100 + 'vw';
+                    flower.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                    // Разная скорость и задержка падения для каждого цветка
+                    const duration = Math.random() * 3 + 3;
+                    flower.style.animation = `flowerFall ${duration}s linear forwards`;
+                    
+                    document.body.appendChild(flower);
+                    
+                    // Удаляем цветок после падения, чтобы не засорять память
+                    setTimeout(() => flower.remove(), duration * 1000);
+                }, Math.random() * 2000); // Разброс старта в течение 2 секунд
+            }
+
+            // 2. Создаем всплывающее окно с поздравлением
+            setTimeout(() => {
+                const overlay = document.createElement('div');
+                overlay.className = 'birthday-popup-overlay';
+                
+                overlay.innerHTML = `
+                    <div class="birthday-popup-content">
+                        <h2 class="birthday-popup-title">С днём рождения, любимый! 🤍</h2>
+                        <p class="birthday-popup-text">Пусть твой новый год подарит теде много ярких мгновений.</p>
+                        <button class="birthday-popup-btn" onclick="this.closest('.birthday-popup-overlay').style.opacity = '0'; setTimeout(() => this.closest('.birthday-popup-overlay').remove(), 1000)">Обнять и читать дальше</button>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+
+                // Плавное появление
+                setTimeout(() => {
+                    overlay.style.opacity = '1';
+                    overlay.querySelector('.birthday-popup-content').style.transform = 'translateY(0)';
+                }, 100);
+
+            }, 1500); // Окно появляется через 1.5 секунды после начала "дождя" из цветов
+        }
+    });
+</script>
+<!-- КОНЕЦ ПАСХАЛКИ НА ДЕНЬ РОЖДЕНИЯ -->
 </body>
 </html>
