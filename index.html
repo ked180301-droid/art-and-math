@@ -2161,7 +2161,7 @@ function triggerChaosEgg() {
         const day = today.getDate();
         
         // Для проверки сейчас можно поменять на = true;
-        const isBirthday = (month === 5 && day === 12);
+        const isBirthday = true; // (month === 5 && day === 12);
         
         const alreadySeen = localStorage.getItem('danya_greeted_2026');
 
@@ -2199,7 +2199,7 @@ function triggerChaosEgg() {
                         <div class="box-flower box-flower-4">💮</div>
                         
                         <h2 class="birthday-popup-title">С днём рождения, любимый! 🤍</h2>
-                        <p class="birthday-popup-text">Пусть твой новый год подарит тебя много ярких мгновений.</p>
+                        <p class="birthday-popup-text">Пусть твой новый год подарит тебе много ярких мгновений.</p>
                         <button class="birthday-popup-btn" onclick="this.closest('.birthday-popup-overlay').style.opacity = '0'; this.closest('.birthday-popup-content').style.transform = 'scale(0.8)'; setTimeout(() => this.closest('.birthday-popup-overlay').remove(), 300)">Обнять и смотреть дальше</button>
                     </div>
                 `;
