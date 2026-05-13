@@ -1020,45 +1020,99 @@ body.modal-open {
         // =========================================
         // 2. ЛОГИКА ТАЙМЕРА И УВЕДОМЛЕНИЙ
         // =========================================
-        let timeLeft = 55 * 60;
-        let timerId = null;
-        let initialTime = 55 * 60;
-        let currentModeMessage = "Время вышло! Пора отдохнуть :)"; 
+ // === НАЧАЛО НОВОГО КОДА ТАЙМЕРА ===
+    let timeLeft = 55 * 60;
+    let timerId = null;
+    let initialTime = 55 * 60;
+    let currentModeMessage = "Время вышло!";
+    let expectedEndTime = null;
 
-        const display = document.getElementById('time-display');
-        const widget = document.getElementById('timer-widget');
+    const display = document.getElementById('time-display');
+    const widget = document.getElementById('timer-widget');
 
-        function toggleTimer() { widget.classList.toggle('collapsed'); }
-
-        function updateDisplay() {
-            let minutes = Math.floor(timeLeft / 60);
-            let seconds = timeLeft % 60;
-            display.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
-        }
-
-        function startTimer() {
-            if (timerId === null) {
-                timerId = setInterval(() => {
-                    if (timeLeft > 0) {
-                        timeLeft--; updateDisplay();
-                    } else {
-                        clearInterval(timerId); timerId = null;
-                        showCustomAlert(currentModeMessage);
-                    }
-                }, 1000);
+    // 1. Создаем "незасыпающий" фоновый процесс для таймера
+    const timerWorkerCode = `
+        let interval = null;
+        self.onmessage = function(e) {
+            if (e.data === 'start') {
+                interval = setInterval(() => self.postMessage('tick'), 1000);
+            } else if (e.data === 'stop') {
+                clearInterval(interval);
             }
+        };
+    `;
+    const workerBlob = new Blob([timerWorkerCode], { type: 'application/javascript' });
+    const timerWorker = new Worker(URL.createObjectURL(workerBlob));
+
+    function toggleTimer() { widget.classList.toggle('collapsed'); }
+
+    function updateDisplay() {
+        let displayTime = timeLeft < 0 ? 0 : timeLeft;
+        let minutes = Math.floor(displayTime / 60);
+        let seconds = displayTime % 60;
+        display.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+    }
+
+    function startTimer() {
+        // Запрашиваем разрешение на системные уведомления при первом запуске
+        if ("Notification" in window && Notification.permission === "default") {
+            Notification.requestPermission();
         }
 
-        function pauseTimer() { clearInterval(timerId); timerId = null; }
-        function resetTimer() { pauseTimer(); timeLeft = initialTime; updateDisplay(); }
-        
-        function setMode(minutes, message) { 
-            pauseTimer(); 
-            initialTime = minutes * 60; 
-            timeLeft = initialTime; 
-            currentModeMessage = message; 
-            updateDisplay(); 
+        if (timerId === null) {
+            timerId = "running";
+            // Вычисляем точное время окончания по реальным часам
+            expectedEndTime = Date.now() + (timeLeft * 1000);
+            
+            timerWorker.onmessage = function() {
+                // Сверяемся с точным временем каждую секунду
+                timeLeft = Math.round((expectedEndTime - Date.now()) / 1000);
+                
+                if (timeLeft > 0) {
+                    updateDisplay();
+                } else {
+                    timeLeft = 0;
+                    updateDisplay();
+                    timerWorker.postMessage('stop');
+                    timerId = null;
+                    
+                    // Показываем окошко внутри сайта
+                    showCustomAlert(currentModeMessage);
+                    
+                    // Отправляем пуш-уведомление поверх других окон браузера
+                    if ("Notification" in window && Notification.permission === "granted") {
+                        new Notification("Таймер ⏳", {
+                            body: currentModeMessage || "Время вышло!",
+                            requireInteraction: true // Уведомление не исчезнет, пока на него не нажмут
+                        });
+                    }
+                }
+            };
+            timerWorker.postMessage('start');
         }
+    }
+
+    function pauseTimer() {
+        if (timerId !== null) {
+            timerWorker.postMessage('stop');
+            timerId = null;
+        }
+    }
+
+    function resetTimer() {
+        pauseTimer();
+        timeLeft = initialTime;
+        updateDisplay();
+    }
+
+    function setMode(minutes, message) {
+        pauseTimer();
+        initialTime = minutes * 60;
+        timeLeft = initialTime;
+        currentModeMessage = message;
+        updateDisplay();
+    }
+    // === КОНЕЦ НОВОГО КОДА ТАЙМЕРА ===
 
         function showCustomAlert(message) {
             document.getElementById('alert-message').textContent = message;
